@@ -1,0 +1,72 @@
+[
+  {
+    "id": "Q1",
+    "feature": "Add Customer Profile",
+    "topic": "Required fields ใน Add Profile มีอะไรบ้าง?\n✅ Email and Phone, ฟิลด์อื่น optional\n❌ มีฟิลด์อื่นที่บังคับด้วย → ระบุ",
+    "proposed": "Email and Phone, ฟิลด์อื่น optional",
+    "affects": "ACP1-TC3, ACP1-TC4, CP_TA04"
+  },
+  {
+    "id": "Q2",
+    "feature": "Add Customer Profile",
+    "topic": "Date of Birth validation — รับค่าไหนได้บ้าง?\n✅ อดีต + วันนี้ = ผ่าน, อนาคต = error\n❌ อดีตเท่านั้น (วันนี้ = error ด้วย)",
+    "proposed": "DOB ต้องเป็นวันในอดีตเท่านั้น (ห้ามอนาคต), วันนี้ = ผ่าน",
+    "affects": "ACP5-TC2, ACP5-TC3, CP_TA09"
+  },
+  {
+    "id": "Q3",
+    "feature": "Add Customer Profile",
+    "topic": "Photo upload — format และขนาดที่รองรับ?\n✅ JPG / PNG / JPEG, ขนาดสูงสุด 5MB\n❌ ต่างออกไป → ระบุ format + ขนาด",
+    "proposed": "รองรับ JPG/PNG/JPEG เท่านั้น, ขนาดสูงสุด 5MB",
+    "affects": "ACP6-TC2, ACP6-TC3, CP_TA10"
+  },
+  {
+    "id": "Q4",
+    "feature": ["View Customer Product", "View Customer Service"],
+    "topic": "Add Product / Add Service (Phase) — fields ที่ต้องกรอกมีอะไรบ้าง?\n✅ Required All Field\n❌ แค่บาง fields → ระบุ",
+    "proposed": "Required All Field",
+    "affects": "VPRD2-TC1, VSVC2-TC1, CP_TS08, CP_TS09"
+  },
+  {
+    "id": "Q5",
+    "feature": "Delete Customer Profile",
+    "topic": "Delete Flow — ตอนนี้ปุ่ม Delete ยังถูก Disable อยู่ถึงแม้จะมีสิทธิ์ - ขอให้ยืนยัน flow ที่ถูกต้อง\n✅ กดปุ่ม Delete → ขึ้น Confirmation Dialog → Confirm = ลบสำเร็จ / Cancel = ยกเลิก\n❌ Flow ต่างออกไป → ระบุ (เช่น ลบทันทีโดยไม่มี dialog / ต้องเข้าหน้า Detail ก่อนค่อยลบ)",
+    "proposed": "กดปุ่ม Delete → ขึ้น Confirmation Dialog → Confirm = ลบ / Cancel = ยกเลิก",
+    "affects": "DCP1-TC1, DCP2-TC1, DCP3-TC1, CP_TS04, CP_TA13"
+  },
+  {
+    "id": "Q6",
+    "feature": "Delete Customer Profile",
+    "topic": "Delete Customer ที่มี active Case/Product/Service — ระบบทำอะไร?\n✅ แจ้ง warning แต่ยังลบได้\n❌ บล็อกการลบจนกว่าจะ clear item ทั้งหมดก่อน",
+    "proposed": "ระบบแจ้ง warning แต่ยังลบได้ (ไม่บล็อก)",
+    "affects": "DCP2-TC1"
+  },
+  {
+    "id": "Q7",
+    "feature": "View Customer Profile",
+    "topic": "Search Customer — ค้นหาจากฟิลด์ไหนได้บ้าง?\n✅ Search by Name, Phone, Email and Type\n❌ ต่างออกไป → ระบุฟิลด์ที่ค้นได้",
+    "proposed": "ค้นหาจาก Search by Name, Phone, Email and Type",
+    "affects": "VCP2-TC1, VCP2-TC2, CP_TA02"
+  },
+  {
+    "id": "Q8",
+    "feature": "View Customer Case",
+    "topic": "View Customer Case — กด row แล้วไปหน้า Case detail ได้ไหม?\n✅ Read-only list เท่านั้น ไม่มี clickthrough (only phase นี้)\n❌ Clickthrough ไปหน้า Case detail ได้",
+    "proposed": "หน้า View Customer Case แค่แสดง history list (read-only) ไม่ clickthrough ไปหน้า Case detail ใน phase นี้",
+    "affects": "VCC1-TC1"
+  },
+  {
+    "id": "Q9",
+    "feature": "Add Customer Profile",
+    "topic": "มี Username ไหม?\n✅ ไม่มี Username\n❌ มี → ระบุ format",
+    "proposed": "ไม่มี Username",
+    "affects": "ACP2-TC1, ACP2-TC2"
+  },
+  {
+    "id": "Q10",
+    "feature": "Add Customer Profile",
+    "topic": "Citizen ID — ตรวจแค่ 13 หลัก หรือตรวจ checksum MOD11 ด้วย?\n✅ ตรวจเฉพาะ 13 หลักตัวเลข (ไม่ตรวจ MOD11)\n❌ ตรวจ checksum MOD11 ด้วย",
+    "proposed": "ตรวจเฉพาะ 13 หลักตัวเลข (ไม่ตรวจ checksum MOD11)",
+    "affects": "ACP4-TC2"
+  }
+]

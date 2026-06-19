@@ -1,0 +1,15 @@
+{
+  "name": "cc-super-app-qa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QA workspace — CC Super App",
+  "type": "module",
+  "scripts": {
+    "lark:oauth": "node scripts/lark-oauth.mjs",
+    "ask:po": "node scripts/ask-po.mjs",
+    "poll:po": "node scripts/poll-po.mjs"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0"
+  }
+}

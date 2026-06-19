@@ -1,0 +1,67 @@
+{
+  "formColSpan": 2,
+  "formFieldJson": [
+    {
+      "id": "eb9d8676-e198-428f-aa28-5ac30df77603",
+      "label": "Company Name",
+      "showLabel": true,
+      "type": "textInput",
+      "value": "",
+      "placeholder": "Company Name",
+      "required": false,
+      "colSpan": 1,
+      "isChild": false,
+      "formRule": {}
+    },
+    {
+      "id": "a4c66575-c5fc-453c-9102-c21365cfa6c7",
+      "label": "Employee ID",
+      "showLabel": true,
+      "type": "textInput",
+      "value": "",
+      "placeholder": "Employee ID",
+      "required": false,
+      "colSpan": 1,
+      "isChild": false,
+      "formRule": {}
+    },
+    {
+      "id": "dbd255a1-634a-4d82-b56a-cf5b9bc0c776",
+      "label": "Line ID ",
+      "showLabel": true,
+      "type": "textInput",
+      "value": "",
+      "placeholder": "Line ID ",
+      "required": false,
+      "colSpan": 1,
+      "isChild": false,
+      "formRule": {}
+    },
+    {
+      "id": "0ca38eca-4168-4076-b947-d9091a6c50d4",
+      "label": "Driving  License",
+      "showLabel": true,
+      "type": "textInput",
+      "value": "",
+      "placeholder": "Driving  License",
+      "required": false,
+      "colSpan": 1,
+      "isChild": false,
+      "formRule": {}
+    },
+    {
+      "id": "af5f2d59-f77f-49ac-ad59-1df83d9907be",
+      "label": "Position ",
+      "showLabel": true,
+      "type": "textInput",
+      "value": "",
+      "placeholder": "Position ",
+      "required": false,
+      "colSpan": 1,
+      "isChild": false,
+      "formRule": {}
+    }
+  ],
+  "formId": "9797b7f3-d72e-432a-bb94-c013c64a1bab",
+  "formName": "Contact Customization"
+}

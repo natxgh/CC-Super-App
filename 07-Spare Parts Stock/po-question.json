@@ -1,0 +1,86 @@
+[
+  {
+    "id": "Q1",
+    "feature": "Spare Parts Stock",
+    "topic": "Scope/นิยาม 'Spare Parts Stock' — ทะเบียน unit ราย Serial No. vs จำนวนคงเหลือ",
+    "proposed": "✅ รอบนี้ test 2 ส่วน: (1) Spare Parts Stock = ทะเบียน unit ราย Serial No. ที่ /cms/inventory/stock (View/Search/Filter/Edit/Delete) (2) Low/Out badge = นับจำนวน unit ต่อ part บนหน้า Spare Parts master (/cms/inventory/)\n❌ ต่างออกไป → ระบุ scope ที่ถูกต้อง",
+    "affects": "ทั้ง feature"
+  },
+  {
+    "id": "Q2",
+    "feature": "Spare Parts Stock",
+    "topic": "Add path — ไม่เห็นปุ่ม Add/Create บนหน้า Spare Parts Stock",
+    "proposed": "✅ การสร้าง stock unit (SN) อยู่นอกหน้านี้ (สร้างผ่าน flow อื่น / role อื่น) และ 'Add' ไม่อยู่ใน scope ทดสอบรอบนี้ — รอบนี้ครอบคลุมแค่ View/Search/Filter/Edit/Delete\n❌ ถ้า Add ควรอยู่บนหน้านี้/in scope → ระบุปุ่ม+flow",
+    "affects": "ทั้ง feature, SPS6, SPS15"
+  },
+  {
+    "id": "Q3",
+    "feature": "Spare Parts Stock",
+    "topic": "Serial No. ต้อง unique หรือไม่ (ตอน Edit)",
+    "proposed": "✅ Serial No. ต้อง unique ทั้งระบบ — เปลี่ยนเป็นค่าที่มี unit อื่นใช้แล้ว ระบบ error ไม่บันทึก\n❌ ต่างออกไป → ระบุ",
+    "affects": "SPS8-TC01, SPS_TA02"
+  },
+  {
+    "id": "Q4",
+    "feature": "Spare Parts Stock",
+    "topic": "Serial No. format / max length",
+    "proposed": "✅ รับ alphanumeric + dash (เช่น SN0000019, 5W-30-0005) · อักขระพิเศษ/เว้นวรรค = invalid · max length = ___ (ขอ PO ระบุ)\n❌ ต่างออกไป → ระบุ rule",
+    "affects": "SPS6, SPS8"
+  },
+  {
+    "id": "Q5",
+    "feature": "Spare Parts Stock",
+    "topic": "ความหมาย Status code (R001/R007) + เป็น read-only โดยตั้งใจ",
+    "proposed": "✅ Status เป็น system-managed (ไม่มีใน Edit form โดยตั้งใจ) เปลี่ยนตาม Order/Reservation lifecycle · ขอ mapping ความหมายของ code: R001 = ___, R007 = ___ (และ code อื่น)\n❌ ถ้า Status ควรแก้ในฟอร์มได้ = ขาด field → ระบุ",
+    "affects": "SPS11-TC01, SPS5-TC01"
+  },
+  {
+    "id": "Q6",
+    "feature": "Spare Parts Stock",
+    "topic": "ค่า Low Stock threshold (Out/Low/In)",
+    "proposed": "✅ 0 = Out of Stock · 1–5 = Low Stock · >5 = In Stock (เสนอเกณฑ์ Low ≤ 5) · ตั้งค่าได้ต่อ part / ต่อ company ไหม?\n❌ ต่างออกไป → ระบุค่า threshold จริง",
+    "affects": "SPS13-TC02, SPS13-TC03, SPS13-TC04"
+  },
+  {
+    "id": "Q7",
+    "feature": "Spare Parts Stock",
+    "topic": "Delete — hard/soft delete + confirm dialog + retention 365 วัน",
+    "proposed": "✅ Delete มี confirm dialog ก่อนลบ · ลบแล้ว unit หายจาก list ทันที + stock count ลด · สอดคล้อง BRD retention (part ไม่ใช้ >365 วันถูกลบ)\n❌ ต่างออกไป (soft delete/ไม่มี confirm) → ระบุ",
+    "affects": "SPS10-TC01, SPS_TS04"
+  },
+  {
+    "id": "Q8",
+    "feature": "Spare Parts Stock",
+    "topic": "RBAC — role ไหน edit/delete stock unit ได้ (สำรวจด้วย role 'P' เห็น Edit/Delete)",
+    "proposed": "✅ role ที่จัดการได้ = Spare Parts Warehouse Staff / Admin · role อ่านอย่างเดียว (เช่น Agent) ไม่เห็นปุ่ม Edit/Delete\n❌ ถ้าทุก role แก้ได้ / role 'P' ไม่ควรแก้ = ระบุสิทธิ์ที่ถูกต้อง",
+    "affects": "SPS15-TC01, SPS15-TC02, SPS_TA04"
+  },
+  {
+    "id": "Q9",
+    "feature": "Spare Parts Stock",
+    "topic": "แก้ Spare Part/Store ของ unit ที่ผูก Order/Customer แล้ว ได้ไหม (data integrity)",
+    "proposed": "✅ unit ที่ถูกผูก Order หรือจ่ายให้ลูกค้าแล้ว (Status ไม่ใช่ available) ห้ามแก้ Spare Part/Store — ระบบ lock หรือเตือน\n❌ ต่างออกไป (แก้ได้เสมอ) → ระบุ",
+    "affects": "SPS6, SPS7"
+  },
+  {
+    "id": "Q10",
+    "feature": "Spare Parts Stock",
+    "topic": "Out of Stock ตอน Pick ใน Order — อยู่ใน scope รอบนี้ไหม (known bug 'Research Stock Fail')",
+    "proposed": "✅ ทดสอบ Out of Stock alert ตอน Order Pick ในรอบ Order (cross-feature) ไม่รวมในชุด Spare Parts Stock นี้ + เฝ้าระวัง known bug\n❌ ถ้าต้องรวมในรอบนี้ → เพิ่ม TC integration",
+    "affects": "นอกชุด (Order)"
+  },
+  {
+    "id": "Q11",
+    "feature": "Spare Parts Stock",
+    "topic": "Exact text (toast / validation error / empty state)",
+    "proposed": "✅ ขอ exact text จริงของ: toast update success, validation error แต่ละ field (Serial/Spare Part/Store), duplicate Serial error, empty-state ตอน search ไม่เจอ (ตอนนี้ใส่ \"\" รอเติม)\n❌ ถ้ามีเอกสาร copy text แล้ว → แนบ/ชี้แหล่ง",
+    "affects": "ทุก TC ที่ Expected มี \"\""
+  },
+  {
+    "id": "Q12",
+    "feature": "Spare Parts Stock",
+    "topic": "Pagination — ไม่เห็นตัวควบคุมหน้า",
+    "proposed": "✅ หน้า Stock แสดงทั้งหมดแบบ scroll (ไม่มี pagination) หรือมี limit/หน้า = ___ (ขอ PO ระบุ) · ถ้า unit เยอะมากจะ lazy-load\n❌ ต่างออกไป → ระบุพฤติกรรม",
+    "affects": "SPS1, SPS2, SPS3"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  { "id": "Q1", "topic": "🔴 BUG สร้างเคสล้มเหลว (column \"versions\" NOT NULL)", "proposed": "ถือเป็น defect ที่บล็อก ต้องแก้ก่อนเริ่มรัน flow ปลายน้ำทั้งหมด (Add/Update/Close/Lifecycle) — ไม่มี workaround ฝั่ง user", "affects": "AC7,CTM_TS01,CTM_TS02,CTM_TS04" },
+  { "id": "Q2", "topic": "🔴 Delete Case — จุดลบ / สิทธิ์ / soft หรือ hard", "proposed": "ลบได้เฉพาะเคสสถานะ New, เป็น soft delete, เฉพาะผู้สร้างเคสหรือ admin", "affects": "DC1,CTM_TA10" },
+  { "id": "Q3", "topic": "🔴 Close Case flow", "proposed": "ปิดผ่าน 'ขออนุมัติปิดงาน' → แนบไฟล์ปิดงาน → ผู้อนุมัติกดอนุมัติ → สถานะ Completed (ตาม grooming)", "affects": "CC1,CC2,CTM_TS02" },
+  { "id": "Q4", "topic": "🔴 Update Workflow status — ทำที่ไหน / ใครมีสิทธิ์", "proposed": "เลื่อนสถานะจากปุ่มบน Case Detail ตาม PIC per step; ไม่รองรับ drag บน Kanban", "affects": "LC1,LC2" },
+  { "id": "Q5", "topic": "Event Notification scope รอบนี้", "proposed": "มี Real-time in-app notification บน Assignment Board (ตาม grooming); Email/SMS/Push = Next Phase", "affects": "EN1" },
+  { "id": "Q6", "topic": "Lifecycle 6 ขั้น config ต่อ Case Type ได้ไหม", "proposed": "STG ตั้ง default 6 ขั้นเหมือนกันหมด; รอบนี้ทดสอบ 6 ขั้นคงที่ (Received→Assigned→Acknowledged→En Route→On Site→Completed)", "affects": "LC1,LC3" },
+  { "id": "Q7", "topic": "Request Schedule Date บังคับเมื่อใด", "proposed": "บังคับเฉพาะ Case Type กลุ่ม Appointment/Service Request; กลุ่ม Camera Malfunction ไม่บังคับ", "affects": "AC1,AC7" },
+  { "id": "Q8", "topic": "Priority mapping ต่อ Case Type", "proposed": "1002-Camera Malfunction-Repair = High Priority; ขอ mapping เต็มทุก Case Type จาก PO", "affects": "AC3" },
+  { "id": "Q9", "topic": "Attach File limit + นามสกุลที่ไม่รับ", "proposed": "1MB = 1024KB, รับเฉพาะ jpg/png/pdf/doc/docx/txt, ปฏิเสธ mp4/zip/exe (ยืนยัน known bug แนบบางนามสกุลไม่ผ่าน)", "affects": "AC5,CTM_TA03" },
+  { "id": "Q10", "topic": "Save As Draft เก็บที่ไหน / แก้-ลบต่อได้ไหม", "proposed": "draft เก็บแยก เข้าถึงผ่าน Case List filter 'Draft', แก้และลบต่อได้", "affects": "AC7" },
+  { "id": "Q11", "topic": "Reopen หลัง Completed", "proposed": "ปิดแล้วแก้ไข/เปิดใหม่ไม่ได้ (Reopen = Next Phase ตาม BRD)", "affects": "UC1,LC2" },
+  { "id": "Q12", "topic": "คำมาตรฐาน Case vs Work Order", "proposed": "ใช้ 'Case' เป็นคำหลักใน UI; 'Work Order' เป็น legacy ที่ต้องแก้ให้ตรงกัน", "affects": "ALL" },
+  { "id": "Q13", "topic": "Advanced Filter Start Date > End Date", "proposed": "แสดง validation error และไม่ทำการค้นหา", "affects": "HS3,CTM_TA08" },
+  { "id": "Q14", "topic": "junk data บน STG (-string Service Center, --undefined, Invalid Date)", "proposed": "เป็น test data เสีย ต้องเคลียร์ก่อนเข้า SIT", "affects": "DATA_PREP" }
+]

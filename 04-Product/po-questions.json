@@ -1,0 +1,14 @@
+[
+  { "id": "Q1", "topic": "View mode ของหน้า Product List ที่ถูกต้องคืออะไร (Grooming เขียน Card/List/Small Card แต่ UI จริงมี List/Grid/Table)", "proposed": "ยึดตาม UI ปัจจุบัน = List / Grid / Table (ถือว่า Card/List/Small Card ใน Grooming เป็นชื่อเก่า)", "affects": "PIM2, TS-06" },
+  { "id": "Q2", "topic": "Product Code ต้องไม่ซ้ำ (unique) หรือไม่", "proposed": "ต้อง unique — กรอก Code ซ้ำของเดิม ระบบ error และไม่สร้าง", "affects": "PIM11, TA-02" },
+  { "id": "Q3", "topic": "ฟิลด์บังคับ (required) ของฟอร์ม Add/Edit มีอะไรบ้าง และ Image บังคับไหม", "proposed": "required = TH, EN, Code, Category, Brand, Year, Warranty, Price · Image ไม่บังคับ", "affects": "PIM10, PIM19, TA-01, TA-09" },
+  { "id": "Q4", "topic": "ขอบเขตค่า Warranty (Days) — ค่า 0 และค่าติดลบรับได้ไหม มี max ไหม", "proposed": "จำนวนเต็ม ≥ 1 · 0 และติดลบ = invalid · (ขอ max ถ้ามี)", "affects": "PIM12, TA-04" },
+  { "id": "Q5", "topic": "ขอบเขตค่า Price — 0/ติดลบรับได้ไหม รับทศนิยมไหม", "proposed": "ต้อง > 0 · 0/ติดลบ = invalid · รับทศนิยม 2 ตำแหน่ง", "affects": "PIM13, TA-03" },
+  { "id": "Q6", "topic": "Year เลือกได้เฉพาะ 2017–2026 ตาม dropdown ใช่ไหม (ไม่รองรับปีอนาคต)", "proposed": "ใช่ — เลือกได้เฉพาะ 2017–2026 ไม่รองรับ > 2026", "affects": "PIM14" },
+  { "id": "Q7", "topic": "Product Image รับไฟล์นามสกุลใด และ max file size เท่าไร", "proposed": "รับเฉพาะ JPG/PNG/GIF · ไฟล์อื่น (.pdf/.webp) ถูก reject · ขอค่า max size จริง", "affects": "PIM15, TA-05" },
+  { "id": "Q8", "topic": "ปุ่ม Delete = ลบถาวร และ Status Active/Inactive เป็นกลไกแยกใช่ไหม (Filter Inactive แสดงอะไร)", "proposed": "Delete = ลบถาวร (cannot be undone) · Active/Inactive = สถานะ soft แยกกัน ไม่ใช่ recycle bin", "affects": "PIM6, PIM20-22, TS-04, TA-06, TA-08" },
+  { "id": "Q9", "topic": "Search ค้นจากฟิลด์ใดบ้าง และเป็น partial / case-insensitive ไหม", "proposed": "ค้นจาก Product Name (TH+EN) + Product Code · partial + case-insensitive", "affects": "PIM3, TS-05, TA-07" },
+  { "id": "Q10", "topic": "ค่า Stock / badge (Out of Stock / Low Stock) บนหน้า Product เป็น read-only ใช่ไหม", "proposed": "ใช่ — read-only มาจาก Product Stock Management แก้จากหน้า Product ไม่ได้", "affects": "PIM9" },
+  { "id": "Q11", "topic": "ขอข้อความจริง (exact text) ของ toast create/update/delete สำเร็จ, error required ต่อ field, และ empty state ตอน search ไม่พบ", "proposed": "ขอ PO ส่งข้อความจริง หรืออนุญาตให้ QA แคปจาก UI (ตอนนี้ Expected ใส่ \"\" ไว้)", "affects": "ทุก TC ที่มี \"\"" },
+  { "id": "Q12", "topic": "คอลัมน์ที่ sort ได้, default sort, และ Warranty เก็บเป็นหน่วยวันหรือเดือน", "proposed": "sort ได้ที่ Name/Code/Year/Price/Warranty · Warranty เก็บเป็นจำนวนวัน แสดงเป็น pill (12 Months/1 Day) · ขอ default sort", "affects": "PIM8, PIM18-TC2, TS-07" }
+]

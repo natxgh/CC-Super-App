@@ -1,0 +1,86 @@
+[
+  {
+    "id": "Q1",
+    "feature": "Customer Appointment",
+    "topic": "Appointment Type — required field?",
+    "proposed": "✅ Appointment Type เป็น required field — ถ้าไม่เลือกแล้วกด Add ระบบแสดง validation error\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC5-TC2, TA-01"
+  },
+  {
+    "id": "Q2",
+    "feature": "Customer Appointment",
+    "topic": "Service Type — required field?",
+    "proposed": "✅ Service Type เป็น required field — ถ้าไม่เลือกแล้วกด Add ระบบแสดง validation error\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC6-TC2, TA-02"
+  },
+  {
+    "id": "Q3",
+    "feature": "Customer Appointment",
+    "topic": "Appoint Date ในอดีต — ระบบ block หรือยอมรับ?",
+    "proposed": "✅ ระบบ block วันที่ผ่านมาแล้ว (datepicker disable past date หรือแสดง error)\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC7-TC1, TA-04"
+  },
+  {
+    "id": "Q4",
+    "feature": "Customer Appointment",
+    "topic": "Appoint Date — required field?",
+    "proposed": "✅ Appoint Date เป็น required field — ถ้าว่างแล้วกด Add ระบบแสดง validation error\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC7-TC4, TA-03"
+  },
+  {
+    "id": "Q5",
+    "feature": "Customer Appointment",
+    "topic": "Note — optional หรือ required?",
+    "proposed": "✅ Note เป็น optional — ไม่กรอกก็ Add Appointment ได้สำเร็จ\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC8-TC2, TS-03"
+  },
+  {
+    "id": "Q6",
+    "feature": "Customer Appointment",
+    "topic": "Tab Appointment ไม่มี appointment — แสดงอะไร?",
+    "proposed": "✅ แสดง empty state ข้อความ 'No appointments found' หรือ icon พร้อมข้อความแจ้ง\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC3-TC2, TA-05"
+  },
+  {
+    "id": "Q7",
+    "feature": "Customer Appointment",
+    "topic": "หลัง Confirm — status เปลี่ยนเป็นอะไร?",
+    "proposed": "✅ Status เปลี่ยนจาก 'Pending' → 'Confirmed' และแสดงทันทีใน list\n❌ ต่างออกไป → ระบุ status name ที่ถูกต้อง",
+    "affects": "CAP-BC10-TC1, CAP-BC11, TS-04"
+  },
+  {
+    "id": "Q8",
+    "feature": "Customer Appointment",
+    "topic": "ปุ่ม Confirm แสดงเฉพาะ Pending หรือทุก status?",
+    "proposed": "✅ ปุ่ม 'Confirm' แสดงเฉพาะ appointment ที่มี status = 'Pending' เท่านั้น\n❌ ต่างออกไป → ระบุ",
+    "affects": "CAP-BC10-TC2"
+  },
+  {
+    "id": "Q9",
+    "feature": "Customer Appointment",
+    "topic": "Delete — มี confirmation dialog ก่อนลบหรือไม่?",
+    "proposed": "✅ มี dialog ยืนยัน เช่น 'คุณต้องการลบ appointment นี้หรือไม่?' ก่อนลบจริง\n❌ ลบทันทีโดยไม่มี dialog → ระบุ",
+    "affects": "CAP-BC12-TC1, CAP-BC12-TC2, TS-05"
+  },
+  {
+    "id": "Q10",
+    "feature": "Customer Appointment",
+    "topic": "ลบ appointment ที่ status 'Confirmed' ได้ไหม?",
+    "proposed": "✅ ไม่สามารถลบ 'Confirmed' appointment ได้ — ปุ่ม Delete ซ่อน/disable\n❌ ลบได้ → ระบุเงื่อนไข",
+    "affects": "CAP-BC12-TC2, TA-06"
+  },
+  {
+    "id": "Q11",
+    "feature": "Customer Appointment",
+    "topic": "Status name จริงๆ ในระบบคืออะไร?",
+    "proposed": "✅ หลัง Add = 'รอยืนยัน' · หลัง Confirm = 'Confirmed' (ได้ยินจาก Grooming)\n❌ ต่างออกไป → ระบุ exact name ที่แสดงใน UI",
+    "affects": "CAP-BC9-TC1, CAP-BC10-TC1, TS-02, TS-04, TA-01, TA-02, TA-03, TA-04"
+  },
+  {
+    "id": "Q12",
+    "feature": "Customer Appointment",
+    "topic": "Appointment Type dropdown — options มีอะไรบ้าง?",
+    "proposed": "✅ 'Follow Up', 'ขายสินค้า', 'บริการหลังการขาย' (จาก Grooming)\n❌ ต่างออกไป → ระบุ options จริงในระบบ",
+    "affects": "CAP-BC5-TC1, TS-02, TS-03"
+  }
+]

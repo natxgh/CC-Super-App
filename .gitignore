@@ -1,0 +1,20 @@
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+*.token.json
+.lark-token.json
+
+# Internal loop state
+.po-loop/
+
+# Dependencies
+node_modules/
+
+# OS junk
+.DS_Store
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/

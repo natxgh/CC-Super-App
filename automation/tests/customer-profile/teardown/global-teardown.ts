@@ -1,0 +1,43 @@
+import { request } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
+import { GQL, cachedToken, findIdsByEmail, deleteById } from '../fixtures/seed';
+
+/**
+ * Global Teardown — ลบ Customer ที่ seed สร้าง ผ่าน GraphQL DeleteCustomer
+ * ✅ VERIFIED API: GetListCustomer (หา id by email) → DeleteCustomer(GetIdInput{id})
+ * เปิดใช้เมื่อ env CP_TEARDOWN=1 (ดู playwright.config.ts)
+ *
+ * token = อ่านจาก cache ที่ seed เขียนไว้ (test-results/.token) — ไม่ต้อง login ซ้ำ
+ * emails = test-results/seeded-emails.json (อีเมลที่ automation สร้าง = marker จำกัด scope)
+ */
+const EMAIL_STORE = path.join(__dirname, '..', '..', '..', 'test-results', 'seeded-emails.json');
+
+export default async function globalTeardown() {
+  const token = cachedToken();
+  if (!token) {
+    console.log('[teardown] ไม่มี token cache (ยังไม่ได้ seed/login) → ข้าม');
+    return;
+  }
+  if (!fs.existsSync(EMAIL_STORE)) {
+    console.log('[teardown] ไม่มี seeded-emails.json → ไม่มีอะไรต้องลบ');
+    return;
+  }
+  const emails: string[] = JSON.parse(fs.readFileSync(EMAIL_STORE, 'utf8'));
+  if (!emails.length) return;
+
+  const req = await request.newContext({ ignoreHTTPSErrors: true });
+  console.log(`[teardown] ลบ customer ที่ seed สร้าง (${emails.length} อีเมล) ผ่าน ${GQL}`);
+  let deleted = 0;
+  for (const email of emails) {
+    const ids = await findIdsByEmail(req, token, email).catch(() => []);
+    for (const id of ids) {
+      const ok = await deleteById(req, token, id).catch(() => false);
+      console.log(`  DeleteCustomer id=${id} (${email}) → ${ok ? 'OK' : 'fail'}`);
+      if (ok) deleted++;
+    }
+  }
+  await req.dispose();
+  fs.writeFileSync(EMAIL_STORE, '[]');
+  console.log(`[teardown] เสร็จสิ้น — ลบไป ${deleted} record`);
+}

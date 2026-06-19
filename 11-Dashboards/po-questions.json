@@ -1,0 +1,12 @@
+[
+  { "id": "Q1", "topic": "Product Dashboard: เวอร์ชัน UI final (v1/v2/v3)", "proposed": "v3 (rich) คือ final · v1/v2 เป็น draft ที่จะถูกถอด", "affects": "PD8,PD_TS02" },
+  { "id": "Q2", "topic": "Export Report: รูปแบบ + ขอบเขต + เวลา", "proposed": "export เป็น Excel (.xlsx) ทั้งหน้า ไม่มี filter generate < 60 วิ", "affects": "PD9,PD_TS03" },
+  { "id": "Q3", "topic": "Product Dashboard ใช้ mock data", "proposed": "ตัวเลขปัจจุบันเป็น mock ยังไม่ wire DB จริง — TC ค่าจริงรอ dev ต่อ data source", "affects": "PD1,PD3,PD4,PD6" },
+  { "id": "Q4", "topic": "Date range / tenant filter", "proposed": "ไม่มี filter ช่วงเวลา/บริษัทในเฟสนี้ (แสดงรวมทั้งหมด ค่า default)", "affects": "PD1,CD1" },
+  { "id": "Q5", "topic": "Low Stock threshold", "proposed": "นับ low stock เมื่อ stock < minimum (เท่ากับ min ไม่ถือว่า low)", "affects": "PD5" },
+  { "id": "Q6", "topic": "Estimated Revenue logic", "proposed": "ตัวเลข ฿920 This Month เป็น placeholder · สูตร/หน่วยจริงรอ PO กำหนด", "affects": "PD6" },
+  { "id": "Q7", "topic": "Real-time refresh", "proposed": "Dashboard อัปเดตเมื่อ reload หน้า (ยังไม่มี websocket auto-refresh)", "affects": "CD6" },
+  { "id": "Q8", "topic": "RBAC dashboard (ใครเห็น Dashboard ได้)", "proposed": "Supervisor / Team Lead / Auditor เห็นได้ · Agent / Customer / Technician ไม่เห็น", "affects": "PD10,CD7" },
+  { "id": "Q9", "topic": "Case Dashboard ประเภทเหตุ (Censor/CCTV/Traffic)", "proposed": "เป็น category ตายตัวจาก BMA · ถ้า dynamic ตาม Case Type ต่อบริษัทต้องปรับ TC", "affects": "CD1,CD4,CD6" },
+  { "id": "Q10", "topic": "นิยาม InSLA / OverSLA / Avg Response Time", "proposed": "InSLA = ปิดงานภายใน SLA deadline (เท่ากับ deadline พอดี = ยังถือ InSLA) · OverSLA = เกิน · Avg Response = เวลาเฉลี่ยจากสร้าง→ตอบรับ", "affects": "CD3" }
+]

@@ -1,0 +1,46 @@
+
+Running 3 tests using 1 worker
+
+
+=== CUSTOMER LIST PAGE ===
+Page Title: 
+URL: https://skyai-cloud-cc-stg.metthier.ai:65000/cc/contacts-list
+Page Heading: เข้าสู่ระบบ
+Add Customer Button Found: true (Text: Not found)
+Search Input Found: true (Placeholder: null)
+  ✘  1 [chromium] › tests/inspect-locators.spec.js:10:3 › Customer Profile — Locator Inspection › Inspect Customer List Page (30.0s)
+
+=== CUSTOMER DETAIL PAGE ===
+View button not available, skipping navigation
+  ✓  2 [chromium] › tests/inspect-locators.spec.js:70:3 › Customer Profile — Locator Inspection › Inspect Customer Detail Page (if navigated) (19ms)
+
+=== FORM ELEMENTS ===
+  ✓  3 [chromium] › tests/inspect-locators.spec.js:107:3 › Customer Profile — Locator Inspection › Inspect Form Elements (2ms)
+
+
+  1) [chromium] › tests/inspect-locators.spec.js:10:3 › Customer Profile — Locator Inspection › Inspect Customer List Page 
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.count: Target page, context or browser has been closed
+
+      34 |
+      35 |     // Filter/Select dropdown
+    > 36 |     const filterElements = await page.locator('select, [role="combobox"], [role="listbox"]').count();
+         |                                                                                              ^
+      37 |     console.log('Filter/Dropdown Elements Found:', filterElements);
+      38 |
+      39 |     // Table structure
+        at /Users/ketwadee.kae/Documents/WorkSpace/CC Super App/01-Customer Profile/tests/inspect-locators.spec.js:36:94
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/inspect-locators-Customer--97800--Inspect-Customer-List-Page-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/inspect-locators-Customer--97800--Inspect-Customer-List-Page-chromium/error-context.md
+
+    Error Context: test-results/inspect-locators-Customer--97800--Inspect-Customer-List-Page-chromium/error-context.md
+
+  1 failed
+    [chromium] › tests/inspect-locators.spec.js:10:3 › Customer Profile — Locator Inspection › Inspect Customer List Page 
+  2 passed (31.3s)

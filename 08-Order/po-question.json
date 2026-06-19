@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ORD-Q1",
+    "feature": "Order Management",
+    "topic": "🔴 Workflow มีกี่ขั้น/ลำดับใด — BRD(8) vs Grooming(7) vs ของจริง(9) ไม่ตรงกัน",
+    "proposed": "✅ ใช้ของจริงบน STG = 9 ขั้น: คำสั่งซื้อ → ส่งคำขอ → ได้รับการอนุมัติ → กำลังหยิบสินค้า → กำลังแพ็คสินค้า → ส่งออกจากคลัง → กำลังจัดส่ง → ส่งถึงแล้ว → เสร็จสิ้น (BRD ไม่มี 'ส่งคำขอ', Grooming ไม่มี Packing/ส่งถึงแล้ว — ถือว่าของจริงถูก)\n❌ ไม่ใช่ → ระบุลำดับ/จำนวน step ที่ถูกต้องสำหรับรอบทดสอบนี้: ___",
+    "affects": "ORD-D1 (TS-01_TC-05..06), workflow ทุก scenario"
+  },
+  {
+    "id": "ORD-Q2",
+    "feature": "Order Management",
+    "topic": "🟠 ขอบจำนวนสินค้าใน Cart (สำหรับ BVA)",
+    "proposed": "✅ ขั้นต่ำ = 1 (ปุ่ม − disabled ที่ 1, ลบออกด้วย trash) · ไม่มีเพดานสูงสุด · ไม่ผูกกับ stock (สั่งเกิน stock ได้ แล้วค่อยขึ้น Out of Stock)\n❌ ไม่ใช่ → min = ___ , max = ___ , ผูกกับ stock = ใช่/ไม่",
+    "affects": "ORD-A2 (TS-01_TC-02, TA-02_TC-01)"
+  },
+  {
+    "id": "ORD-Q3",
+    "feature": "Order Management",
+    "topic": "🔴 PIC/Role ใดเห็นปุ่ม Advance ในแต่ละ step (เพื่อทดสอบ gating)",
+    "proposed": "✅ ปุ่ม Advance ของ step ขึ้นเฉพาะ user ที่อยู่ในรายชื่อ PIC ของ step นั้น (คนนอก PIC ปุ่มไม่ขึ้น) · ขอ PO ระบุ mapping PIC จริงต่อ step อย่างน้อย 1 step ที่ทดสอบได้ (เช่น 'ได้รับการอนุมัติ' = role Approver/Manager): ___\n❌ ไม่ใช่ → อธิบายกฎสิทธิ์จริง",
+    "affects": "ORD-D2 (TA-06_TC-01)"
+  },
+  {
+    "id": "ORD-Q4",
+    "feature": "Order Management",
+    "topic": "🟠 ค่า SLA จริงต่อ step (เพื่อทดสอบ Overdue ที่ขอบเวลา)",
+    "proposed": "✅ แต่ละ step มี SLA กำหนดเป็นนาที/ชม. · เกินเวลา → badge 'Overdue' (แดง) · ขอค่า SLA จริงต่อ step เพื่อทดสอบ ก่อน/เท่ากับ/หลัง เส้น SLA: step ___ = ___ นาที\n❌ ไม่มี SLA / ค่าต่างจากนี้ → ระบุ",
+    "affects": "ORD-D3 (TS-02_TC-05)"
+  },
+  {
+    "id": "ORD-Q5",
+    "feature": "Order Management",
+    "topic": "🟠 Cancel หลัง Approved — อนุญาตหรือบล็อก (ของจริงยังเห็นปุ่ม Cancel ที่ step 'ได้รับการอนุมัติ')",
+    "proposed": "✅ ปุ่ม Cancel ใช้ได้เฉพาะ 'ก่อน Approved' ตาม Grooming → การที่ยังเห็นปุ่มที่ step ได้รับการอนุมัติ = bug (ควรซ่อน/บล็อก) → จะเพิ่ม TC negative\n❌ Cancel ได้จนถึง step ___ (ระบุ step สุดท้ายที่ Cancel ได้) — ถ้างี้ TA-03_TC-02 = positive",
+    "affects": "ORD-E2 (TA-03_TC-02), ORD-E1 (TA-02_TC-02)"
+  },
+  {
+    "id": "ORD-Q6",
+    "feature": "Order Management",
+    "topic": "🟠 Event Notification — ใครได้รับ / ช่องทาง / ข้อความ",
+    "proposed": "✅ เมื่อมีการกด action workflow ระบบ notify ทุก account ที่เกี่ยวข้องกับ order (requester + PIC step ถัดไป) แบบ real-time (in-app bell) · ขอ PO ยืนยันรายชื่อผู้รับ + ช่องทาง (in-app/email) + ข้อความ: ___\n❌ ไม่ใช่ → ระบุพฤติกรรมจริง",
+    "affects": "ORD-D4 (TS-01_TC-07)"
+  },
+  {
+    "id": "ORD-Q7",
+    "feature": "Order Management",
+    "topic": "🔴 Search ไม่กรองผล — ค้น Order ID เป๊ะ + part name แล้วคืนทุก order (สงสัยเป็น Bug)",
+    "proposed": "✅ ถือเป็น Bug — Search ควรกรอง list ด้วย Order ID และชื่อสินค้า (part/title) ตาม placeholder 'Search request ID or part...' (ทดลอง: ค้น 'ORD260609-00001' และ 'iPhone' → คืนทั้งหมด ไม่กรอง) → เปิดบั๊ก, TA-05 เป็น negative ที่คาดจะ fail\n❌ Design ตั้งใจ (search เป็นแค่ highlight / ค้นที่ field อื่น) → ระบุว่า search กรองด้วยอะไร: ___",
+    "affects": "ORD-F3/F4 (TA-05_TC-01, TA-05_TC-02)"
+  },
+  {
+    "id": "ORD-Q8",
+    "feature": "Order Management",
+    "topic": "🟠 มี Filter แยกตามสถานะไหม (ผู้ใช้ระบุ 'Search and Filter' แต่หน้าจอมีแค่ Search box)",
+    "proposed": "✅ รอบนี้ไม่มี Filter แยก — มีแค่ Search box + List/Grid toggle (ถือว่า 'Filter' = ตัว Search) → จะไม่เพิ่ม TC filter ตามสถานะ\n❌ ต้องมี Filter ตามสถานะ/วันที่/requester → ระบุ filter ที่ต้องทดสอบ: ___",
+    "affects": "ORD-F (Table List section)"
+  },
+  {
+    "id": "ORD-Q9",
+    "feature": "Order Management",
+    "topic": "🟠 Cancel มี confirmation dialog + คืน stock ไหม",
+    "proposed": "✅ กด Cancel ต้องมี confirmation dialog ('ยืนยันการยกเลิกคำสั่งซื้อ ___ ?' + Confirm/Cancel) · ยกเลิกแล้ว order → สถานะ 'Cancel' (ปลายทาง แก้ต่อไม่ได้) · ถ้า order ถูก Pick ไปแล้วให้คืน stock\n❌ ไม่มี confirm / ไม่คืน stock → ระบุข้อความ + พฤติกรรม stock จริง: ___",
+    "affects": "ORD-E1 (TA-02_TC-02)"
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "id": "Q1",
+    "feature": "Customer Form Configuration",
+    "topic": "Form Name — required + ห้ามซ้ำ?",
+    "proposed": "✅ Form Name บังคับกรอก ห้ามว่าง และห้ามซ้ำกับ form เดิม (แสดง error ถ้าผิด)\n❌ ต่างออกไป → ระบุ",
+    "affects": "CFC2-TC2, CFC14-TC1, TA-01",
+    "answer": "✅ ยืนยัน — Form Name บังคับกรอก ห้ามว่าง และห้ามซ้ำกับ form เดิม (แสดง error ถ้าผิด)"
+  },
+  {
+    "id": "Q2",
+    "feature": "Customer Form Configuration",
+    "topic": "Desktop Grid Columns — ช่วงค่าที่รับ (min/max)?",
+    "proposed": "✅ รับ 1–5 (min 1, max 5) นอกช่วงแสดง error หรือ clamp\n❌ ต่างออกไป → ระบุช่วงจริง",
+    "affects": "CFC3-TC1, CFC3-TC4, TA-02, TA-03",
+    "answer": "✅ รับ 1–5 (min 1, max 5) นอกช่วง → clamp (ไม่ใช่ error)"
+  },
+  {
+    "id": "Q3",
+    "feature": "Customer Form Configuration",
+    "topic": "Image / DnD Image / Multi-Image — จำกัด format & size?",
+    "proposed": "✅ รับ JPG/PNG/JPEG ขนาดสูงสุด 5MB (ตาม BRD)\n❌ ต่างออกไป → ระบุ format + size",
+    "affects": "CFC4-TC5",
+    "answer": "✅ รับ JPG/PNG/JPEG ขนาดสูงสุด 3MB (in Staging)"
+  },
+  {
+    "id": "Q4",
+    "feature": "Customer Form Configuration",
+    "topic": "Field Label — required ไหม?",
+    "proposed": "✅ Label บังคับกรอกต่อทุก field — ถ้าว่างบล็อก save\n❌ ต่างออกไป → ระบุ",
+    "affects": "CFC5-TC3, TA-04",
+    "answer": "❌ Label ไม่ required — มีค่า default มาให้, ถ้าลบค่าทิ้ง field นั้นจะกลายเป็น not required (ไม่บล็อก save)"
+  },
+  {
+    "id": "Q5",
+    "feature": "Customer Form Configuration",
+    "topic": "Delete field — มี confirmation ก่อนลบไหม?",
+    "proposed": "✅ ลบทันที (ยังกู้ได้ก่อน Save) ไม่มี dialog\n❌ มี dialog ยืนยัน → ระบุ",
+    "affects": "CFC9-TC1, UI-02",
+    "answer": "❌ ต่างออกไป — การลบบาง field = ขึ้น Revision ใหม่ (ไม่มีการลบทิ้งจริง) · และ Delete Form ผ่านหน้าจอ Customer Form Configuration ไม่ได้ ต้องไปจัดการที่ Form Builder"
+  },
+  {
+    "id": "Q6",
+    "feature": "Customer Form Configuration",
+    "topic": "Import — รับเฉพาะ JSON schema ของ builder นี้?",
+    "proposed": "✅ รับเฉพาะ JSON ที่ export จาก builder นี้ · malformed → error 'Invalid form schema'\n❌ ต่างออกไป → ระบุ",
+    "affects": "CFC11-TC1, CFC11-TC2, TA-05",
+    "answer": "✅ ยืนยัน — รับเฉพาะ JSON ที่ export จาก builder นี้ · malformed → error 'Invalid form schema'"
+  },
+  {
+    "id": "Q7",
+    "feature": "Customer Form Configuration",
+    "topic": "ปิด modal (×) ขณะมี unsaved changes — ทำอะไร?",
+    "proposed": "✅ เตือน 'มีการเปลี่ยนแปลงที่ยังไม่บันทึก — ออกหรือไม่?' ก่อนปิด\n❌ ปิดทิ้ง draft เงียบ ๆ → ระบุ",
+    "affects": "CFC1-TC3, TA-06",
+    "answer": "❌ ปิดทิ้งเงียบ ไม่มี action (no warning dialog) · Workflow: Create New Form → Setting Field → Preview → Save form | Edit Form → Setting Field (new revision) → Preview → Save Change"
+  },
+  {
+    "id": "Q8",
+    "feature": "Customer Form Configuration",
+    "topic": "Conditional Logic + RBAC per field (BRD ระบุไว้) — อยู่ใน phase นี้ไหม?",
+    "proposed": "✅ Conditional Logic + RBAC per field = Next Phase (ไม่ทดสอบรอบนี้)\n❌ อยู่ใน phase นี้ → ระบุ scope",
+    "affects": "scope ทั้ง feature",
+    "answer": "✅ ไม่มี Conditional Logic + RBAC per field (out of scope รอบนี้)"
+  },
+  {
+    "id": "Q9",
+    "feature": "Customer Form Configuration",
+    "topic": "ลบ custom field ที่มีข้อมูล customer อยู่แล้ว → data หาย/archive?",
+    "proposed": "✅ เตือนก่อนลบ + archive ข้อมูลเดิม (ไม่ hard-delete)\n❌ ต่างออกไป → ระบุ",
+    "affects": "CFC15 (edit existing)",
+    "answer": "❌ ต่างออกไป — Delete Form ผ่านหน้าจอ Customer Form Configuration ไม่ได้ ต้องไปจัดการที่ Form Builder (การแก้ field = ขึ้น revision ใหม่)"
+  },
+  {
+    "id": "Q10",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — field ไหนบ้างที่ toggle OFF ไม่ได้ (required เสมอ)?",
+    "proposed": "✅ toggle ได้ทุก field ไม่มีข้อยกเว้น\n❌ บาง field (เช่น Display Name / First Name / Last Name) required ปิดไม่ได้ → ระบุ",
+    "affects": "DFC2-TC4, DFC_TS01"
+  },
+  {
+    "id": "Q11",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — toggle OFF field ที่ customer มีข้อมูลแล้ว → data hidden หรือ cleared?",
+    "proposed": "✅ hidden เท่านั้น (data ยังอยู่ server-side, toggle ON กลับมาเห็นได้)\n❌ data ถูก clear ออก → ระบุ",
+    "affects": "DFC2-TC2, DFC_TS02, data-safety"
+  },
+  {
+    "id": "Q12",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — ปุ่ม Save Configuration บันทึกทุก section (Standard + Custom Form) พร้อมกัน 1 ครั้ง?",
+    "proposed": "✅ ปุ่มเดียว save ทุก section ในครั้งเดียว\n❌ save แยกต่อ section → ระบุ",
+    "affects": "DFC5-TC1, DFC_TS01–03"
+  },
+  {
+    "id": "Q13",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — Blood Type แสดง OFF ใน STG ปัจจุบัน — เป็น system default หรือถูก config ก่อนหน้า?",
+    "proposed": "✅ Blood Type = OFF เป็น system default (ไม่บังคับแสดง)\n❌ ถูก manual config ไว้ก่อน → ระบุ default จริง",
+    "affects": "DFC2-TC3 baseline, DFC_TS03"
+  }
+]

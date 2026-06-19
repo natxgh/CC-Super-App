@@ -1,0 +1,20 @@
+{
+  "name": "cc-signin-automation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright E2E for CC Super App — Sign In, generated from the QA test design (cc-signin-testcases.xlsx)",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "list": "playwright test --list",
+    "report": "playwright show-report",
+    "cards": "node scripts/gen-bug-cards.mjs",
+    "evidence": "node scripts/gen-evidence-pack.mjs",
+    "execute": "playwright test; node scripts/gen-bug-cards.mjs",
+    "capture": "playwright test; node scripts/gen-bug-cards.mjs; node scripts/gen-evidence-pack.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1"
+  }
+}

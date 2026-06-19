@@ -1,0 +1,51 @@
+[
+  {
+    "id": "SP-Q1",
+    "feature": "Spare Parts Management",
+    "topic": "🔴 Add Spare Part — ปุ่ม Add ไม่ปรากฏ (RBAC?)",
+    "proposed": "✅ ปุ่ม Add มีอยู่ แต่ต้อง login ด้วย Role ที่มีสิทธิ์ Add (เช่น Admin/Manager) — user 'porntip' org BMA ไม่เห็นปุ่ม เพราะ Role = Agent/Staff (เป็นพฤติกรรมที่ตั้งใจ) · ขอ PO ระบุ role ที่มีสิทธิ์ Add: ___\n❌ ถ้า role porntip ควรเพิ่มได้ = bug → ระบุ",
+    "affects": "TS-03 (TS-03_TC-01..03)"
+  },
+  {
+    "id": "SP-Q2",
+    "feature": "Spare Parts Management",
+    "topic": "🔴 Delete ไม่มี Confirmation Dialog (สงสัยเป็น Bug)",
+    "proposed": "✅ ถือเป็น Bug — ต้องมี Confirmation dialog ก่อน Delete (ควรถาม 'คุณต้องการลบ [ชื่ออะไหล่] ใช่หรือไม่?' พร้อมปุ่ม Confirm/Cancel)\n❌ Design Intent (ลบทันทีไม่ต้อง confirm) → ระบุ แล้วจะปรับ TC ตัด step Cancel ออก",
+    "affects": "TS-05 (TS-05_TC-02), TA-05 (TA-05_TC-02)"
+  },
+  {
+    "id": "SP-Q3",
+    "feature": "Spare Parts Management",
+    "topic": "🟠 Low Stock Threshold — ค่าขอบเขตเท่าไหร่ (สำหรับ BVA)",
+    "proposed": "✅ threshold = 5 → 0 = Out of Stock · 1–5 = Low Stock · >5 = In Stock · ตั้งค่าได้ต่อ product/ต่อ company ไหม?\n❌ ไม่ใช่ → threshold = ___ (ขอค่าจริง เพื่อทดสอบ stock = threshold-1 / threshold / threshold+1)",
+    "affects": "TS-02 (Stock badge), SP10-TC02 (Low Stock — ยังไม่ถูกร้อยเข้า scenario)"
+  },
+  {
+    "id": "SP-Q4",
+    "feature": "Spare Parts Management",
+    "topic": "🟠 Image Upload — ขนาดไฟล์สูงสุดเท่าไหร่ (สำหรับ BVA)",
+    "proposed": "✅ max 5MB ต่อไฟล์ — เกิน 5MB ระบบ reject แสดง error\n❌ ไม่ใช่ → max = ___ MB (ขอค่าจริง เพื่อทดสอบที่ขอบ max size)",
+    "affects": "TS-03 (TS-03_TC-02), TA-06 (TA-06_TC-01)"
+  },
+  {
+    "id": "SP-Q5",
+    "feature": "Spare Parts Management",
+    "topic": "🟠 Delete อะไหล่ที่ผูกกับ Order — ทำได้ หรือ block?",
+    "proposed": "✅ ระบบ block การลบ — แสดง error '' ถ้าอะไหล่ผูกกับ Order ที่ Active (ต้องเพิ่ม TC negative)\n❌ ลบได้ → ระบุพฤติกรรมกับข้อมูล Order ที่เกี่ยวข้อง",
+    "affects": "TS-05 (TS-05_TC-02)"
+  },
+  {
+    "id": "SP-Q6",
+    "feature": "Spare Parts Management",
+    "topic": "🔴 Warranty Input (Days) vs Display (Months) — กฎ convert คืออะไร",
+    "proposed": "✅ ระบบ convert days → months/years อัตโนมัติ (365 days = 12 Months, 180 days = 5 Months 27 Days) · ขอยืนยันสูตร/การปัดเศษ\n❌ ไม่ใช่ → ระบุกฎ convert จริง (Expected ของ Warranty ใน list ขึ้นกับข้อนี้)",
+    "affects": "TS-03 (TS-03_TC-03), TS-04 (TS-04_TC-02)"
+  },
+  {
+    "id": "SP-Q7",
+    "feature": "Spare Parts Management",
+    "topic": "🟠 Sort column ใน Table view — ต้องทดสอบรอบนี้ไหม",
+    "proposed": "✅ ต้องทดสอบ Sort ascending/descending (PART NAME, YEAR, PRICE, WARRANTY) — เพิ่ม TC แยกต่อ column\n❌ ข้าม Sort รอบนี้ → จะไม่เพิ่ม TC",
+    "affects": "TS-02 (Table view), SP-BC1"
+  }
+]

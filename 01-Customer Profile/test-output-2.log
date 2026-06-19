@@ -1,0 +1,53 @@
+
+Running 2 tests using 1 worker
+
+
+========== INITIAL PAGE INFO ==========
+Page Title: 
+URL: https://skyai-cloud-cc-stg.metthier.ai:65000/cc/contacts-list
+Current Page Heading: เข้าสู่ระบบ
+Login Form Visible: false
+
+✓ Successfully at Customer List Page
+
+========== CUSTOMER LIST PAGE INSPECTION ==========
+Page Title: เข้าสู่ระบบ
+
+Buttons: "ภาษา", "เข้าสู่ระบบ"
+
+Search Inputs Found: 2
+Table Columns: 
+
+Total Data Rows: 0
+
+Modals/Dialogs Found: 0
+  ✓  1 [chromium] › tests/inspect-after-login.spec.js:4:3 › Customer Profile — UI Inspection (Post-Login) › Open page and document structure (5.6s)
+
+========== DOM STRUCTURE DUMP ==========
+
+All Buttons:
+  1. "ภาษา"
+  2. "เข้าสู่ระบบ"
+
+All Input Fields:
+  1. [text] #username name="null" placeholder="กรอกชื่อผู้ใช้ของคุณ"
+  2. [password] #password name="null" placeholder="กรอกรหัสผ่านของคุณ"
+  3. [text] #organization name="null" placeholder="กรอกชื่อองค์กรของคุณ"
+  4. [checkbox] #null name="null" placeholder="null"
+
+All Select Fields: 0
+
+Page Headings/Sections:
+  1. เข้าสู่ระบบ
+
+All Labels:
+  1. "ชื่อผู้ใช้ *"
+  2. "รหัสผ่าน *"
+  3. "องค์กร *"
+
+Page Sections Found: 0
+Tables/Grids Found: 0
+Rows Found: 0
+  ✓  2 [chromium] › tests/inspect-after-login.spec.js:44:3 › Customer Profile — UI Inspection (Post-Login) › Document all UI elements for manual inspection (7.6s)
+
+  2 passed (13.8s)

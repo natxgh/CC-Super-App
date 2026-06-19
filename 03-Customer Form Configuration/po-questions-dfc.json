@@ -1,0 +1,30 @@
+[
+  {
+    "id": "Q10",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — field ไหนบ้างที่ toggle OFF ไม่ได้ (required เสมอ)?",
+    "proposed": "✅ toggle ได้ทุก field ไม่มีข้อยกเว้น\n❌ บาง field (เช่น Display Name / First Name / Last Name) required ปิดไม่ได้ → ระบุ",
+    "affects": "DFC2-TC4, DFC_TS01"
+  },
+  {
+    "id": "Q11",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — toggle OFF field ที่ customer มีข้อมูลแล้ว → data hidden หรือ cleared?",
+    "proposed": "✅ hidden เท่านั้น (data ยังอยู่ server-side, toggle ON กลับมาเห็นได้)\n❌ data ถูก clear ออก → ระบุ",
+    "affects": "DFC2-TC2, DFC_TS02, data-safety"
+  },
+  {
+    "id": "Q12",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — ปุ่ม Save Configuration บันทึกทุก section (Standard + Custom Form) พร้อมกัน 1 ครั้ง?",
+    "proposed": "✅ ปุ่มเดียว save ทุก section ในครั้งเดียว\n❌ save แยกต่อ section → ระบุ",
+    "affects": "DFC5-TC1, DFC_TS01–03"
+  },
+  {
+    "id": "Q13",
+    "feature": "Customer Form Configuration",
+    "topic": "Default Field Config — Blood Type แสดง OFF ใน STG ปัจจุบัน — เป็น system default หรือถูก config ก่อนหน้า?",
+    "proposed": "✅ Blood Type = OFF เป็น system default (ไม่บังคับแสดง)\n❌ ถูก manual config ไว้ก่อน → ระบุ default จริง",
+    "affects": "DFC2-TC3 baseline, DFC_TS03"
+  }
+]
