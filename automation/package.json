@@ -10,7 +10,11 @@
     "list": "playwright test --list",
     "report": "playwright show-report",
     "capture": "playwright test || true; echo 'run finished — see playwright-report/ + test-results/steps'",
-    "teardown": "CP_TEARDOWN=1 node tests/customer-profile/teardown/global-teardown.ts"
+    "teardown": "CP_TEARDOWN=1 node tests/customer-profile/teardown/global-teardown.ts",
+    "test:product": "PIM_TEARDOWN=1 playwright test tests/product-inventory",
+    "teardown:product": "PIM_TEARDOWN=1 playwright test tests/product-inventory --grep __never_match__",
+    "test:linkage": "CP_TEARDOWN=1 playwright test tests/linkage-customer-case",
+    "teardown:linkage": "CP_TEARDOWN=1 playwright test tests/linkage-customer-case --grep __never_match__"
   },
   "devDependencies": {
     "@playwright/test": "^1.60.0"

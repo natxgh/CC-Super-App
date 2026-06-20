@@ -239,4 +239,29 @@ export class CustomerFormPage {
   async expectErrorToast(message: string | RegExp) {
     await this.pollForText(message);
   }
+
+  /**
+   * ตรวจว่า datepicker กันวันอนาคต (design ACP5/TA-08: future = ไม่อนุญาต)
+   * พฤติกรรมจริง = ไป future ไม่ได้เลย (ไม่มีปุ่ม "Next Month" + วันอนาคตในเดือนนี้ disabled)
+   * → assert ว่า "เลือกวันอนาคตไม่ได้" แทนการรอ error toast
+   */
+  async expectFutureDobBlocked() {
+    await this.dob.click();
+    const heading = this.page.getByRole('heading', { level: 2 }).filter({ hasText: /\d{4}/ }).first();
+    await heading.waitFor({ timeout: 5000 }).catch(() => {});
+    // 1) ไป future month ไม่ได้ (ไม่มี/disabled ปุ่ม Next Month ในเดือนปัจจุบัน) — หลักฐานหลัก
+    const nextBtn = this.page.getByRole('button', { name: 'Next Month' });
+    const canGoNext = (await nextBtn.isVisible().catch(() => false)) && (await nextBtn.isEnabled().catch(() => false));
+    expect(canGoNext, 'DOB picker ต้องไม่ให้ไปเดือนอนาคต (future DOB ไม่อนุญาต)').toBe(false);
+    // 2) วันอนาคตในเดือนปัจจุบันต้อง disabled (soft — เผื่อรันวันสิ้นเดือนที่ไม่มีวันอนาคตเหลือ)
+    const futureDisabled = await this.page.evaluate(() => {
+      const today = new Date().getDate();
+      return Array.from(document.querySelectorAll('[role=gridcell]')).filter((c: any) => {
+        const n = parseInt((c.textContent || '').trim(), 10);
+        return n > today && (c.getAttribute('aria-disabled') === 'true' || c.querySelector('button[disabled]') || /disabled/i.test(c.className));
+      }).length > 0;
+    });
+    expect.soft(futureDisabled, 'วันอนาคตในเดือนปัจจุบันควร disabled').toBe(true);
+    await this.page.keyboard.press('Escape').catch(() => {});
+  }
 }
