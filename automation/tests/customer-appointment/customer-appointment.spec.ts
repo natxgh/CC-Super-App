@@ -7,23 +7,26 @@ import { CustomerListPage } from '../customer-profile/pages/CustomerListPage';
 import { CustomerDetailPage } from '../customer-profile/pages/CustomerDetailPage';
 import { AppointmentPage } from './pages/AppointmentPage';
 import { seedCustomer } from '../customer-profile/fixtures/seed';
+import { seedAppointment, purgeAppointmentsByEmail } from './fixtures/appointment-seed';
 import * as D from './fixtures/testdata';
 
 /**
  * Customer Appointment — Playwright E2E (generated from 02-Customer Appointment/customer-appointment-testcases.xlsx)
  * Pattern: 1 Scenario = 1 test() (Scenario No.) · 1 Test Case = 1 test.step('<TC No.> — …') + shot()
  * Reuse (verified DOM): shared/LoginPage · customer-profile CustomerListPage / CustomerDetailPage (Appointment sub-view)
- * Feature POM: pages/AppointmentPage.ts  ← ✅ Schedule button/form fields verified (probe 2026-06-17)
+ * Feature POM: pages/AppointmentPage.ts  ← ✅ Schedule button/form fields/datepicker verified (probe 2026-06-17/19)
  *
  * ⚠️ staging ต้อง login จริง — set CP_USERNAME/CP_PASSWORD/CP_ORG เพื่อรัน (ไม่ตั้ง → skip, ไม่แกล้งผ่าน)
  *
- * RUN/FIXME (ตามจริง — ไม่แกล้งเขียว):
- *   ▶ RUN   : TS-01 (view list), TA-03 (empty state)  — verified: tab nav + "Schedule" + "No results found."
- *   ⏸ FIXME : TS-02/TS-03 (Add), TS-04 (Confirm), TS-05 (Delete), TA-01 (validation), TA-02 (past date)
- *             blockers ที่เหลือ: (1) write side-effect บน SIT + ยังไม่มี appointment teardown
- *                               (2) dropdown option-list DOM + appointment row (Confirm/Bin/Status) ยังไม่ verify
- *                                   (ลูกค้าที่ seed ผ่าน API ยังไม่มี appointment row ให้ probe)
- *             → ปลด fixme เมื่อมี appointment-seed/teardown + probe option-list/row DOM
+ * RUN/FIXME (ตามจริง — ไม่แกล้งเขียว) — อัปเดต 2026-06-19:
+ *   ▶ RUN   : TS-01 (view list), TA-02 (past date disabled), TA-03 (empty state)
+ *             — verified: tab nav + "Schedule" + react-datepicker disabled days + "No results found."
+ *   ⏸ FIXME : BLOCKED by 2 FE bugs (Arrange/seed พร้อมหมดแล้ว — appointment-seed.ts ✅ verified):
+ *             (1) TS-02/TS-03 (Add) + TA-01 (validation) — dropdown options CORS fail
+ *                 → BUG-appointment-type-options.md
+ *             (2) TS-04 (Confirm) + TS-05 (Delete) — Appointment tab ส่ง id:"undefined" → list ว่างเสมอ
+ *                 → BUG-appointment-list-undefined-id.md
+ *             → ปลด fixme เมื่อ FE แก้ 2 bugs นี้ + probe row DOM (Confirm/Bin/Status)
  */
 const ORG = process.env.CP_ORG || '';
 const USER = process.env.CP_USERNAME || 'ketwadee';
@@ -84,7 +87,7 @@ test.describe('Customer Appointment — Success', () => {
   // ── TS-02 — Add appointment (fill all fields) ──────────────────────────────
   test('TS-02 — user can successfully adding customer appointment (Fill in all fields)', async ({ page }) => {
     // ⚠️ Schedule form DOM ยังไม่ verify + เป็น write side-effect บน staging → fixme จนกว่าจะ probe
-    test.fixme(true, 'form fields verified; blockers = dropdown option-list DOM + write side-effect (no appointment teardown)');
+    test.fixme(true, 'FE bug: dropdown CORS fail → เลือก type/service ไม่ได้ (ดู BUG-appointment-type-options.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
@@ -110,7 +113,7 @@ test.describe('Customer Appointment — Success', () => {
 
   // ── TS-03 — Add appointment without Note (optional) ────────────────────────
   test('TS-03 — user can successfully adding customer appointment without Note (optional)', async ({ page }) => {
-    test.fixme(true, 'form fields verified; blockers = dropdown option-list DOM + write side-effect (no appointment teardown)');
+    test.fixme(true, 'FE bug: dropdown CORS fail → เลือก type/service ไม่ได้ (ดู BUG-appointment-type-options.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
@@ -132,13 +135,18 @@ test.describe('Customer Appointment — Success', () => {
 
   // ── TS-04 — Confirm appointment (Pending → Confirmed) ──────────────────────
   test('TS-04 — user can successfully confirm appointment (Pending → Confirmed)', async ({ page }) => {
-    test.fixme(true, 'Confirm button / row DOM ยังไม่ probe + write side-effect (เปลี่ยนสถานะจริง)');
+    // ⛔ BLOCKED by FE bug: Appointment tab ส่ง id:"undefined" → list ว่างเสมอ (BUG-appointment-list-undefined-id.md)
+    // Seed + Arrange พร้อมแล้ว (seedAppointment ✅ verified) — ปลด fixme เมื่อ FE แก้ bug + probe row DOM
+    test.fixme(true, 'FE bug: GetAppointmentByCustId ส่ง id:"undefined" → list ว่างเสมอ (ดู BUG-appointment-list-undefined-id.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TS-04_TC-01 — "Confirm" button shown for Pending', async () => {
       await loginAndOpenList(page);
+      await seedCustomer(page, D.CUST_HAS_APPT);                 // Arrange: customer มีอยู่
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email); // clean-slate (idempotent)
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT); // Arrange: Pending row (API-first)
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.expectStatus(D.PENDING_ROW, 'Pending');
       await expect(appt.row(D.PENDING_ROW).getByRole('button', { name: /^Confirm$/i })).toBeVisible();
@@ -155,13 +163,17 @@ test.describe('Customer Appointment — Success', () => {
 
   // ── TS-05 — Delete pending appointment ─────────────────────────────────────
   test('TS-05 — user can successfully delete pending appointment', async ({ page }) => {
-    test.fixme(true, 'Bin icon / row DOM ยังไม่ probe + write side-effect (ลบจริง)');
+    // ⛔ BLOCKED by FE bug: Appointment tab ส่ง id:"undefined" → list ว่างเสมอ (BUG-appointment-list-undefined-id.md)
+    test.fixme(true, 'FE bug: GetAppointmentByCustId ส่ง id:"undefined" → list ว่างเสมอ (ดู BUG-appointment-list-undefined-id.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TS-05_TC-01 — View Appointment and Bin icon shown for Pending', async () => {
       await loginAndOpenList(page);
+      await seedCustomer(page, D.CUST_HAS_APPT);                 // Arrange: customer มีอยู่
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email); // clean-slate (idempotent)
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT); // Arrange: Pending row (API-first)
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.expectStatus(D.PENDING_ROW, 'Pending');
       await shot(page, 'TS-05_TC-01');
@@ -183,7 +195,7 @@ test.describe('Customer Appointment — Alternative', () => {
 
   // ── TA-01 — Error toast on empty required fields ───────────────────────────
   test('TA-01 — verify error toast when adding with empty required fields', async ({ page }) => {
-    test.fixme(true, 'form verified; blockers = dropdown option-list DOM (ต้องเลือก option ก่อนเว้น 1 ช่อง) + error-toast DOM ยังไม่ verify');
+    test.fixme(true, 'FE bug: dropdown CORS fail → เปิด option list ไม่ได้ก่อนถึง validation (ดู BUG-appointment-type-options.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
@@ -216,22 +228,30 @@ test.describe('Customer Appointment — Alternative', () => {
 
   // ── TA-02 — Past date disabled in picker ───────────────────────────────────
   test('TA-02 — verify disabled in date picker when selecting appoint date in the past', async ({ page }) => {
-    test.fixme(true, 'Datepicker DOM (disabled day) ยังไม่ probe');
+    // ✅ VERIFIED DOM 2026-06-19: react-datepicker — past days have aria-disabled="true"
+    //    aria-label = "Not available <weekday>, <Month> <Day><ordinal>, <Year>"
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TA-02_TC-01 — View Appointment → open Schedule form', async () => {
       await loginAndOpenList(page);
+      await seedCustomer(page, D.CUST_HAS_APPT);
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.openScheduleForm();
       await shot(page, 'TA-02_TC-01');
     });
     await test.step('TA-02_TC-02 — Enter past date (yesterday) → Disable', async () => {
+      // click date field → calendar opens
       await appt.appointDate.click();
-      // ทุกวันก่อนวันนี้ควร disabled ใน calendar picker
-      const y = D.yesterdayMMDDYYYY();
-      await expect(page.getByText(y)).toHaveAttribute('aria-disabled', 'true').catch(() => {});
+      await page.waitForSelector('[role="gridcell"][aria-disabled="true"]', { timeout: 5000 });
+      // all past days = aria-disabled="true" + aria-label starts "Not available"
+      const pastCell = page.locator('[role="gridcell"][aria-disabled="true"]').first();
+      await expect(pastCell).toBeVisible();
+      await expect(pastCell).toHaveAttribute('aria-label', /^Not available/i);
+      // today is NOT disabled
+      const todayCell = page.locator('[role="gridcell"][aria-disabled="false"][class*="today"]');
+      await expect(todayCell).not.toHaveAttribute('aria-disabled', 'true');
       await shot(page, 'TA-02_TC-02');
     });
   });

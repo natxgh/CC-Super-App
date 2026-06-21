@@ -6,6 +6,19 @@ import type { CustomerData } from '../pages/CustomerFormPage';
  */
 export const SEED_MARKER = 'qa-automation';
 
+/**
+ * ฐานข้อมูล valid สำหรับ negative tests (TA-02..TA-08, TA-11)
+ * firstName เป็น required field ของ API (Field "firstName" of required type "String!")
+ * → negative test ต้องกรอก required ให้ครบก่อน แล้ว override เฉพาะ field ที่ตั้งใจให้ผิด
+ *   ไม่งั้น Save ตายที่ "missing firstName" → toast "Error" ทั่วไป ก่อนถึง validation ที่ทดสอบ
+ */
+export const VALID_BASE: CustomerData = {
+  email: 'darinee.wbn@gmail.com',
+  phone: '0848851193',
+  firstName: 'Darinee',
+  lastName: 'Wibooncharoen',
+};
+
 /** ลูกค้าหลักที่หลาย scenario ต้องมีอยู่ก่อน (TS-01, TS-05, TA-13) */
 export const SOMCHAI: CustomerData = {
   email: 'somchai.jai@gmail.com',

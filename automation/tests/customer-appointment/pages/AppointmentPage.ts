@@ -4,15 +4,17 @@ import { Page, Locator, expect } from '@playwright/test';
  * Page Object — Customer Appointment tab (CAP)
  * เปิดจาก Customer Detail panel → ปุ่มย่อย "Appointment" (verified ใน CustomerDetailPage.appointmentSubBtn)
  *
- * ✅ VERIFIED LIVE DOM (2026-06-17 probe, UI=EN):
- *     - "Schedule" button · Appointment sub-tab · empty state "No results found." → ตรง design
+ * ✅ VERIFIED LIVE DOM (probe 2026-06-17/19, UI=EN):
+ *     - "Schedule" button · Appointment sub-tab · empty state "No results found." (div.text-center) → ตรง design
  *     - Schedule form: label "Appointment Type *" / "Service Type *" / "Appoint Date *" + Note textarea + Add/Back
  *     - ⚠️ APP BUG (confirmed): placeholder ของ dropdown สลับกัน —
  *         Appointment Type field แสดง "Search Service Type."  · Service Type field แสดง "Search Appointment Type."
  *     - ⚠️ Appoint Date format = **mm/dd/yyyy hh:mm** (US order — ไม่ใช่ dd/mm)
- * ⚠️  ยัง UNVERIFIED: option-list DOM ของ dropdown (ตอนคลิกเปิด), แถว appointment list (Confirm/Bin/Status)
- *     → scenario ที่ "เขียนข้อมูล" (Add/Confirm/Delete) + พึ่ง option-list/row → mark test.fixme ใน spec
- *       (write side-effect บน SIT + DOM ยังไม่ครบ — อย่าเดาให้ flaky / อย่าแกล้งผ่าน)
+ *     - ✅ Datepicker = react-datepicker: past days → [role="gridcell"][aria-disabled="true"]
+ *         aria-label="Not available <weekday>, <Month> <Day><ordinal>, <Year>"
+ * ⚠️  BLOCKED by 2 FE bugs (2026-06-19):
+ *     (1) Dropdown CORS fail → BLOCKED TS-02/03/TA-01 (BUG-appointment-type-options.md)
+ *     (2) Appointment list sends id:"undefined" → list ว่างเสมอ → BLOCKED TS-04/05 (BUG-appointment-list-undefined-id.md)
  *
  * Terminology (sync กับ base export / customer-appointment-test-design.md 16/06/2026):
  *   - เปิดฟอร์ม = ปุ่ม "Schedule"  · submit = "Add" · cancel = "Back"

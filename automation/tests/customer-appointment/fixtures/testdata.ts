@@ -67,6 +67,18 @@ export const NEW_APPT = {
 /** แถวที่ pre-seed เป็น Pending (มีปุ่ม Confirm + Bin) — ใช้ match row ใน Confirm/Delete */
 export const PENDING_ROW = 'Follow Up'; // appointment #2 ใน Arrange = Follow Up / Installation / Pending
 
+/**
+ * Arrange ผ่าน API (TS-04/TS-05) — seed Pending appointment ตรงกับ Arrange #2 ของ TS-01
+ *   Follow Up / Installation / 12/11/2026 02:30 PM / Pending
+ * appointDate = ISO (API format ⚠️ ยืนยันก่อนใช้); new appointment default status = Pending
+ */
+export const SEED_PENDING_APPT = {
+  appointmentType: 'Follow Up',
+  serviceType: 'Installation',
+  appointDate: '2026-11-12T14:30:00Z', // = 12/11/2026 02:30 PM
+  note: undefined as string | undefined,
+};
+
 /** BVA ของ Appoint Date — format mm/dd/yyyy (verified) */
 export function yesterdayMMDDYYYY(): string {
   const d = new Date();
