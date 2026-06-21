@@ -29,6 +29,11 @@ const USER = process.env.CP_USERNAME || 'ketwadee';
 const PASS = process.env.CP_PASSWORD || '';
 const ADMIN_PASS = process.env.CP_ADMIN_PASSWORD || '';
 const AGENT_PASS = process.env.CP_AGENT_PASSWORD || '';
+// ⚠️ Add Product Stock is role-gated (PO Q7): only Spare Parts Warehouse Staff / Admin see it.
+// The default CP_* account (surveyed role) does NOT see the Add button (verified live 2026-06-20).
+// Set CP_WAREHOUSE_USERNAME/PASSWORD to a Warehouse-Staff account to run the Add-flow tests.
+const WH_USER = process.env.CP_WAREHOUSE_USERNAME || USER;
+const WH_PASS = process.env.CP_WAREHOUSE_PASSWORD || PASS;
 
 async function shot(page: Page, label: string) {
   fs.mkdirSync('test-results/steps', { recursive: true });
@@ -38,7 +43,12 @@ async function shot(page: Page, label: string) {
 async function loginAsStaff(page: Page) {
   const login = new LoginPage(page);
   await login.goto();
-  await login.login({ org: ORG, username: USER, password: PASS });
+  await login.login({ org: ORG, username: WH_USER, password: WH_PASS });
+}
+
+/** skip the rest of a test if the logged-in account cannot add stock (role-gated — PO Q7) */
+async function requireAdd(ps: ProductStockPage) {
+  test.skip(!(await ps.canAdd()), 'account has no Add Product Stock permission (PO Q7) — set CP_WAREHOUSE_USERNAME/PASSWORD');
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -59,6 +69,7 @@ test.describe('Product Stock — Success', () => {
       await shot(page, 'TS-01_TC-01');
     });
     await test.step('TS-01_TC-02 — Click "Add Product Stock" → modal opens with required fields', async () => {
+      await requireAdd(ps);
       await ps.openAddModal();
       await expect(ps.serialNo).toBeVisible();
       await expect(ps.createBtn).toBeVisible();
@@ -85,6 +96,7 @@ test.describe('Product Stock — Success', () => {
       await loginAsStaff(page);
       await purgeProductStock(page, D.PRODUCT_NAME, sn);
       await ps.gotoList();
+      await requireAdd(ps);
       await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: sn, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE }); // mfw omitted
       await ps.submitCreate();
@@ -101,6 +113,7 @@ test.describe('Product Stock — Success', () => {
       await loginAsStaff(page);
       await purgeProductStock(page, D.PRODUCT_NAME, D.SN_VALID_FORMAT);
       await ps.gotoList();
+      await requireAdd(ps);
       await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: D.SN_VALID_FORMAT, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE });
       await ps.submitCreate();
@@ -163,6 +176,7 @@ test.describe('Product Stock — Success', () => {
   test('TS-09 — authorized roles (Warehouse Staff / Admin) see Add button', async ({ page }) => {
     const ps = new ProductStockPage(page);
     await test.step('TS-09_TC-01 — Warehouse Staff → "Add Product Stock" visible', async () => {
+      test.skip(!process.env.CP_WAREHOUSE_PASSWORD, 'set CP_WAREHOUSE_USERNAME/PASSWORD (Warehouse Staff) — default account is role-gated (PO Q7)');
       await loginAsStaff(page);
       await ps.gotoList();
       await expect(ps.addBtn).toBeVisible();
@@ -187,6 +201,7 @@ test.describe('Product Stock — Success', () => {
       await loginAsStaff(page);
       await purgeProductStock(page, D.PRODUCT_NAME, sn);
       await ps.gotoList();
+      await requireAdd(ps);
       await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: sn, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE, mfw: D.MW_EQUAL });
       await ps.submitCreate();
@@ -202,6 +217,7 @@ test.describe('Product Stock — Success', () => {
       await loginAsStaff(page);
       await purgeProductStock(page, D.PRODUCT_NAME, D.SN_99);
       await ps.gotoList();
+      await requireAdd(ps);
       await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: D.SN_99, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE });
       await ps.submitCreate();
@@ -211,6 +227,7 @@ test.describe('Product Stock — Success', () => {
     await test.step('TS-11_TC-02 — SN 100 chars → accepted (at max boundary)', async () => {
       await purgeProductStock(page, D.PRODUCT_NAME, D.SN_100);
       await ps.gotoList();
+      await requireAdd(ps);
       await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: D.SN_100, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE });
       await ps.submitCreate();
@@ -230,6 +247,7 @@ test.describe('Product Stock — Alternative', () => {
     const ps = new ProductStockPage(page);
     await loginAsStaff(page);
     await ps.gotoList();
+    await requireAdd(ps);
     await ps.openAddModal();
     return ps;
   }
@@ -256,7 +274,7 @@ test.describe('Product Stock — Alternative', () => {
     });
     await test.step('TA-02_TC-02 — Store empty → field error', async () => {
       const ps = new ProductStockPage(page);
-      await ps.gotoList(); await ps.openAddModal();
+      await ps.gotoList(); await requireAdd(ps); await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: D.SN_NEW, product: D.PRODUCT_NAME, registerDate: D.REGISTERED_DATE });
       await ps.submitCreate();
       await ps.expectFieldError(ps.store);
@@ -264,7 +282,7 @@ test.describe('Product Stock — Alternative', () => {
     });
     await test.step('TA-02_TC-03 — Registered Date empty → field error', async () => {
       const ps = new ProductStockPage(page);
-      await ps.gotoList(); await ps.openAddModal();
+      await ps.gotoList(); await requireAdd(ps); await ps.openAddModal();
       await ps.fillAddForm({ serialNumber: D.SN_NEW, product: D.PRODUCT_NAME, store: D.STORE_NAME });
       await ps.submitCreate();
       await ps.expectFieldError(ps.registeredDate);

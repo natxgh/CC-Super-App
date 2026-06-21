@@ -35,11 +35,20 @@ export class ProductStockPage {
   // ── notification ──
   readonly bell: Locator;
 
+  // ✅ list page DOM verified live 2026-06-20 (/cms/products/stock):
+  //    heading "Products Stock" [h2] · textbox "Search..." · buttons Search/Filters/Reset · rows = text
+  //    blocks ("Serial No.:… Product:… Store:… Status:…") each with a "View" button (NOT a <table>).
+  //    ⚠️ "Add Product Stock" button is NOT rendered for the surveyed account (role gating — PO Q7).
+  //       Add-flow steps require a Spare Parts Warehouse Staff / Admin account.
+  readonly heading: Locator;
+
   constructor(page: Page) {
     this.page = page;
+    this.heading = page.getByRole('heading', { name: /Products?\s*Stock/i });
     this.addBtn = page.getByRole('button', { name: /Add Product Stock/i });
     this.searchBox = page.getByRole('textbox', { name: /search/i }).or(page.getByPlaceholder(/search/i)).first();
-    this.list = page.getByRole('table').first();
+    // rows render as text blocks, not a table — match the row container by its serial text
+    this.list = page.getByText(/Serial No\.:/i).first();
 
     this.modal = page.getByRole('dialog').or(page.locator('[class*="modal" i]')).first();
     this.serialNo = page.getByLabel(/Serial No/i).or(page.getByPlaceholder(/Serial No/i)).first();
@@ -54,14 +63,16 @@ export class ProductStockPage {
   }
 
   // ── navigation ──
+  // ⚠️ cms routes have NO /cc prefix (verified from live nav snapshot 2026-06-20):
+  //    Products List = /cms/products/ · Spare Parts = /cms/inventory/ · Orders = /cms/inventory/request
   async gotoList() {
-    await this.page.goto('/cc/cms/products/stock', { waitUntil: 'domcontentloaded' });
+    await this.page.goto('/cms/products/stock', { waitUntil: 'domcontentloaded' });
   }
   async gotoProducts() {
-    await this.page.goto('/cc/cms/products', { waitUntil: 'domcontentloaded' });
+    await this.page.goto('/cms/products/', { waitUntil: 'domcontentloaded' });
   }
   async gotoInventory() {
-    await this.page.goto('/cc/cms/inventory', { waitUntil: 'domcontentloaded' });
+    await this.page.goto('/cms/inventory/', { waitUntil: 'domcontentloaded' });
   }
 
   // ── Add modal ──
@@ -98,14 +109,13 @@ export class ProductStockPage {
     await expect(this.page.getByRole('option', { name: new RegExp(value, 'i') })).toHaveCount(0);
   }
 
-  // ── list row ──
-  row(textMatch: string): Locator {
-    return this.page.getByRole('row', { name: new RegExp(textMatch, 'i') })
-      .or(this.page.locator('tr', { hasText: textMatch })).first();
+  // ── list row ── rows are text blocks ("Serial No.:<sn> …"), each with its own "View" button
+  row(serialOrText: string): Locator {
+    return this.page.getByText(new RegExp(`Serial No\\.:\\s*${serialOrText}`, 'i')).first();
   }
   async search(term: string) {
     await this.searchBox.fill(term);
-    await this.page.keyboard.press('Enter').catch(() => {});
+    await this.page.getByRole('button', { name: /^Search$/i }).click().catch(() => this.page.keyboard.press('Enter'));
     await this.page.waitForLoadState('domcontentloaded').catch(() => {});
   }
 
@@ -133,8 +143,14 @@ export class ProductStockPage {
   }
 
   // ── assertions ──
+  /** role-independent landing check (heading + search) — Add button is role-gated, asserted separately */
   async expectListReady() {
-    await expect(this.addBtn).toBeVisible();
+    await expect(this.heading).toBeVisible();
+    await expect(this.searchBox).toBeVisible();
+  }
+  /** true if the current account can add stock (Warehouse Staff / Admin) — PO Q7 */
+  async canAdd(): Promise<boolean> {
+    return (await this.addBtn.count()) > 0;
   }
   async expectFieldError(field: Locator) {
     // generic: field marked invalid OR an error message rendered near it ⚠️ refine after DOM probe
