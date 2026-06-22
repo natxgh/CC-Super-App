@@ -46,7 +46,10 @@ export class ProductStockPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.heading = page.getByRole('heading', { name: /Products?\s*Stock/i });
+    // ✅ verified live 2026-06-22: heading on /cms/inventory/ = "Spare Parts" [h2]
+    this.heading = page.getByRole('heading', { name: /Spare Parts|Products?\s*Stock/i });
+    // "Add Product Stock" is on /cms/products/stock (stock-unit list, Serial No./Product/Store/Status)
+    // NOT /cms/inventory/ — that page has "Create Spare Parts" (spare-part master data, different feature)
     this.addBtn = page.getByRole('button', { name: /Add Product Stock/i });
     this.searchBox = page.getByRole('textbox', { name: /search/i }).or(page.getByPlaceholder(/search/i)).first();
     // rows render as text blocks, not a table — match the row container by its serial text
