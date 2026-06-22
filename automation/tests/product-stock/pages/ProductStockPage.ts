@@ -1,5 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /**
  * Page Object — Product Stock Management (PS)
  * Routes (from design): list = /cms/products/stock · badges = /cms/products & /cms/inventory
@@ -59,7 +61,7 @@ export class ProductStockPage {
     this.createBtn = page.getByRole('button', { name: /^Create$/i });
     this.cancelBtn = page.getByRole('button', { name: /^Cancel$/i });
 
-    this.bell = page.getByRole('button', { name: /notification|bell/i }).or(page.locator('[class*="notification" i] button, button[aria-label*="notif" i]')).first();
+    this.bell = page.getByRole('button', { name: /Toggle notifications/i }); // ✅ verified live 2026-06-21
   }
 
   // ── navigation ──
@@ -119,27 +121,49 @@ export class ProductStockPage {
     await this.page.waitForLoadState('domcontentloaded').catch(() => {});
   }
 
-  // ── badges ──
-  /** badge near an item label — e.g. "Low Stock (3)" / "Out of Stock (0)" / "In Stock" */
+  // ── badges ── ✅ verified live 2026-06-21: rendered inline in the row text as
+  //    "<item name> … Stock: <kind> (<qty>)" (e.g. "Mercedes-Benz M112 Stock: Low Stock (1)").
+  //    Products page: "<name> Product Code:<code> Stock: <kind> (<qty>)".
   badge(itemLabel: string, kind: 'In Stock' | 'Low Stock' | 'Out of Stock', qty?: number): Locator {
-    const text = qty === undefined ? kind : `${kind} (${qty})`;
-    return this.page.locator('tr, [class*="card" i], [class*="row" i]', { hasText: itemLabel })
-      .getByText(new RegExp(text.replace(/[()]/g, '\\$&'), 'i')).first();
+    const tail = qty === undefined ? kind : `${kind} \\(${qty}\\)`;
+    return this.page.getByText(new RegExp(`${escapeRe(itemLabel)}[\\s\\S]*?Stock:\\s*${tail}`, 'i')).first();
   }
 
   // ── stock detail modal (PS17) ──
+  // ✅ Row DOM verified live 2026-06-22 (probe 06):
+  //    Each row in main: [unnamed btn] "Part Name:" img "<item> Stock: <kind>(<n>)"
+  //                      [unnamed btn] "Brand:…" [View] [Edit]
+  //    The 2nd unnamed button per item (before "Brand:") appears to be the detail-icon trigger.
+  //    ⚠️ Detail modal contents (heading/Available/Status/table) still NOT probed — probe false-positive.
+  //       openStockDetail will click the best-guess button; assertions on modal fields remain fixme.
   async openStockDetail(itemLabel: string) {
-    const rowEl = this.page.locator('tr, [class*="card" i], [class*="row" i]', { hasText: itemLabel }).first();
-    await rowEl.getByRole('button').last().click(); // detail icon ⚠️ unverified — last icon button on the row
+    // Row DOM (probe 06): [btn] "Part Name:" img "ItemName Stock:…" [btn-detail] "Brand:…" [View] [Edit]
+    // The detail-icon button immediately follows the item's stock-text node in DOM order.
+    const itemText = this.page.locator('main').getByText(
+      new RegExp(`${escapeRe(itemLabel)}[\\s\\S]*?Stock:`, 'i')
+    ).first();
+    await itemText.scrollIntoViewIfNeeded().catch(() => {});
+    await itemText.locator('xpath=following::button[1]').click();
   }
 
   // ── notification bell (PS15) ──
+  // ✅ verified live 2026-06-22 (probe 07-notification-panel.yaml):
+  //    Panel renders inline in banner: heading "Notifications" [level=5] · button "⋯" ·
+  //    combobox { option "All Types" [selected] } · list · button "View all notifications"
+  //    No tabs — type filter is a combobox/select.
   async openBell() {
     await this.bell.click();
+    await this.page.getByRole('heading', { name: /Notifications/i }).waitFor({ state: 'visible' });
   }
+  /** select notification type from the combobox (e.g. "Low Stock") */
   async filterNotification(type: string) {
-    await this.page.getByRole('button', { name: new RegExp(type, 'i') })
-      .or(this.page.getByRole('tab', { name: new RegExp(type, 'i') })).first().click();
+    const cb = this.page.getByRole('combobox').filter({ hasText: /all types/i })
+      .or(this.page.locator('banner').getByRole('combobox')).first();
+    await cb.selectOption({ label: new RegExp(type, 'i') as unknown as string }).catch(async () => {
+      // fallback: click-then-pick-option (some comboboxes are custom)
+      await cb.click();
+      await this.page.getByRole('option', { name: new RegExp(type, 'i') }).first().click();
+    });
   }
 
   // ── assertions ──
