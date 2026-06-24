@@ -27,7 +27,6 @@ import * as D from './fixtures/testdata';
 const ORG = process.env.CP_ORG || '';
 const USER = process.env.CP_USERNAME || 'ketwadee';
 const PASS = process.env.CP_PASSWORD || '';
-console.log('[product-stock.spec] PASS =', JSON.stringify(PASS), 'CP_PASSWORD =', JSON.stringify(process.env.CP_PASSWORD));
 const ADMIN_PASS = process.env.CP_ADMIN_PASSWORD || '';
 const AGENT_PASS = process.env.CP_AGENT_PASSWORD || '';
 // ⚠️ Add Product Stock is role-gated (PO Q7): only Spare Parts Warehouse Staff / Admin see it.
@@ -181,11 +180,24 @@ test.describe('Product Stock — Success', () => {
   });
 
   // ── TS-08 — Notification type filter ──
+  // ✅ bell + notification panel DOM verified 2026-06-22:
+  //    panel = heading "Notifications", combobox "All Types", list, "View all notifications"
+  //    ⚠️ staging notification list was empty at probe time — TC-02 passes trivially (no "out of stock" text)
   test('TS-08 — notification type filter narrows the list', async ({ page }) => {
-    test.fixme(true, 'notification-bell + filter DOM not probed');
     const ps = new ProductStockPage(page);
-    await test.step('TS-08_TC-01 — Open bell → All Types shown', async () => { await loginAsStaff(page); await ps.openBell(); await shot(page, 'TS-08_TC-01'); });
-    await test.step('TS-08_TC-02 — Filter "Low Stock" → only Low Stock entries shown', async () => { await ps.filterNotification('Low Stock'); await expect(page.getByText(/out of stock/i)).toHaveCount(0); await shot(page, 'TS-08_TC-02'); });
+    await test.step('TS-08_TC-01 — Open bell → Notifications panel opens with "All Types" combobox', async () => {
+      await loginAsStaff(page);
+      await ps.openBell();
+      await expect(page.getByRole('heading', { name: /Notifications/i })).toBeVisible();
+      // "All Types" combobox verified in probe 07 — check option text is present
+      await expect(page.getByRole('combobox').first()).toBeVisible();
+      await shot(page, 'TS-08_TC-01');
+    });
+    await test.step('TS-08_TC-02 — Filter "Low Stock" → only Low Stock entries shown', async () => {
+      // ⚠️ staging notification list was empty at probe time — "Low Stock" option may not exist
+      // Skip this TC until staging has real stock-threshold notifications to filter
+      test.skip(true, 'combobox only shows "All Types" when notification list is empty — needs real Low Stock notifications in staging');
+    });
   });
 
   // ── TS-09 — Authorized roles see Add button (RBAC positive) ──

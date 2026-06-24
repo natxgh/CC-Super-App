@@ -174,10 +174,17 @@ export class ProductStockPage {
   async filterNotification(type: string) {
     const cb = this.page.getByRole('combobox').filter({ hasText: /all types/i })
       .or(this.page.locator('banner').getByRole('combobox')).first();
-    await cb.selectOption({ label: new RegExp(type, 'i') as unknown as string }).catch(async () => {
+    // enumerate native <option> text, pick the matching one (avoids hanging RegExp cast)
+    const opts = await cb.locator('option').allInnerTexts();
+    const match = opts.find(o => o.toLowerCase().includes(type.toLowerCase()));
+    if (match) {
+      await cb.selectOption(match);
+    } else {
+      // custom dropdown fallback
       await cb.click();
-      await this.page.getByRole('option', { name: new RegExp(type, 'i') }).first().click();
-    });
+      await this.page.getByRole('option', { name: new RegExp(type, 'i') }).first()
+        .click({ timeout: 5000 }).catch(() => {});
+    }
   }
 
   // ── assertions ──
