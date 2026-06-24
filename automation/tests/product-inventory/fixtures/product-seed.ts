@@ -65,14 +65,20 @@ function recordCode(code: string) {
   fs.writeFileSync(CODE_STORE, JSON.stringify(cur, null, 2));
 }
 
-/** resolve brand/category id ตามชื่อ (case-insensitive) — match field name ได้หลายแบบ (name/th/en/brandName) */
+/** resolve brand/category id ตามชื่อ (case-insensitive) — match field name ได้หลายแบบ (name/th/en/brandName)
+ *  Brand object uses 'brandId' as PK; Category uses 'categoryId' — not generic 'id'
+ */
 async function resolveId(req: APIRequestContext, token: string, query: string, ns: 'Brand' | 'Category', name: string): Promise<string> {
   const body = await gql(req, token, query, { input: { search: name, start: 0, length: 200 } });
   const arr = asArray(body?.data?.[ns]?.[`GetList${ns}`]?.data);
   const norm = (s: any) => String(s ?? '').trim().toLowerCase();
   const hit = arr.find((x) => [x.name, x.th, x.en, x.brandName, x.categoryName].some((v) => norm(v) === norm(name)));
   if (!hit) throw new Error(`product-seed: หา ${ns} "${name}" ไม่เจอ (มี ${arr.length} รายการ) — ตรวจชื่อใน testdata ให้ตรง master data จริง`);
-  return String(hit.id ?? hit._id);
+  // Brand → brandId, Category → categoryId, fallback to id/_id
+  const nsId = ns === 'Brand' ? hit.brandId : hit.categoryId;
+  const resolved = nsId ?? hit.id ?? hit._id;
+  if (!resolved) throw new Error(`product-seed: หา ${ns} "${name}" เจอแล้ว แต่ไม่มี id field — keys: ${Object.keys(hit).join(', ')}`);
+  return String(resolved);
 }
 
 async function toInput(req: APIRequestContext, token: string, d: ProductData) {
@@ -94,15 +100,20 @@ async function toInput(req: APIRequestContext, token: string, d: ProductData) {
   return input;
 }
 
-/** หา id ของ product ตาม productCode (exact) — paginate กัน catalog ใหญ่ */
-export async function findIdsByCode(req: APIRequestContext, token: string, code: string): Promise<string[]> {
+/** หา id ของ product ตาม productCode (exact) — paginate กัน catalog ใหญ่
+ *  GetListProduct searches by product NAME, NOT by code. Pass searchName (en/th) so
+ *  the API returns results; then filter client-side by exact productCode match.
+ */
+export async function findIdsByCode(req: APIRequestContext, token: string, code: string, searchName?: string): Promise<string[]> {
   const ids: string[] = [];
   const PAGE = 500;
+  const term = searchName ?? code; // name-based search works; code-based may return nothing
   for (let start = 0; start < 10000; start += PAGE) {
-    const body = await gql(req, token, LIST, { input: { search: code, start, length: PAGE } });
+    const body = await gql(req, token, LIST, { input: { search: term, start, length: PAGE } });
     const arr = asArray(body?.data?.Product?.GetListProduct?.data);
     if (!arr.length) break;
-    for (const p of arr) if (String(p.productCode || '').toLowerCase() === code.toLowerCase()) ids.push(String(p.id ?? p._id));
+    // productId = UUID (what DeleteProduct accepts); id = numeric sequential (not accepted)
+    for (const p of arr) if (String(p.productCode || '').toLowerCase() === code.toLowerCase()) ids.push(String(p.productId ?? p.id ?? p._id));
     if (arr.length < PAGE) break;
   }
   return ids;
@@ -117,9 +128,10 @@ export async function deleteById(req: APIRequestContext, token: string, id: stri
 export async function seedProduct(page: Page, d: ProductData): Promise<void> {
   const token = await getToken(page);
   const req = page.request;
+  const searchName = d.en ?? d.th; // search by name; API does not index by productCode
   // 1) clear ของเก่า productCode เดียวกันให้เกลี้ยง (กัน duplicate)
   for (let pass = 0; pass < 5; pass++) {
-    const ids = await findIdsByCode(req, token, d.code);
+    const ids = await findIdsByCode(req, token, d.code, searchName);
     if (!ids.length) break;
     for (const id of ids) await deleteById(req, token, id);
   }
@@ -128,19 +140,20 @@ export async function seedProduct(page: Page, d: ProductData): Promise<void> {
   const r = body?.data?.Product?.CreateProduct;
   if (r?.status === '0') { recordCode(d.code); return; }
   const msg = `${r?.msg || ''} ${r?.desc || ''}`;
-  if (/already exist|exist|duplicate|ซ้ำ/i.test(msg)) return; // มีอยู่แล้ว = Arrange สำเร็จ
+  if (/already\s+exist|already exists|duplicate|ซ้ำ/i.test(msg)) return; // มีอยู่แล้ว = Arrange สำเร็จ
   const existing = await findIdsByCode(req, token, d.code);
   if (existing.length) return;
   throw new Error(`seedProduct "${d.code}" failed: status=${r?.status} msg=${r?.msg || r?.desc || JSON.stringify(body).slice(0, 200)}`);
 }
 
 /** ลบ product ทุกตัวที่ใช้ code นี้ (clean slate ก่อน UI add) + record ไว้ให้ teardown */
-export async function purgeByCode(page: Page, code: string): Promise<void> {
+export async function purgeByCode(page: Page, d: ProductData): Promise<void> {
   const token = await getToken(page);
+  const searchName = d.en ?? d.th; // search by name; API does not index by productCode
   for (let p = 0; p < 5; p++) {
-    const ids = await findIdsByCode(page.request, token, code);
+    const ids = await findIdsByCode(page.request, token, d.code, searchName);
     if (!ids.length) break;
     for (const id of ids) await deleteById(page.request, token, id);
   }
-  recordCode(code); // ให้ teardown ลบ product ที่ test สร้างผ่าน UI ด้วย
+  recordCode(d.code); // ให้ teardown ลบ product ที่ test สร้างผ่าน UI ด้วย
 }

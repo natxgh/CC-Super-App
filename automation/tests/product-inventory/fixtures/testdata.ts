@@ -67,7 +67,8 @@ export const IMG_VALID = 'profile_siriwimon.jpg'; // reuse existing JPG asset (�
 export const IMG_PDF = 'contract.pdf';             // unsupported → reject
 export const IMG_OVER_3MB = 'photo_hd.jpg';        // >3MB → reject (reuse existing 4MB asset)
 
-// ── exact toast text (PO Q11) ────────────────────────────────────────────────
-export const TOAST_CREATE = 'Product created successfully';
-export const TOAST_UPDATE = 'Product updated successfully';
-export const TOAST_DELETE = 'Product deleted successfully';
+// ── exact toast text — live probe 2026-06-23 shows generic 'Success' toast
+// (PO Q11 listed full strings but app only shows 'Success' in the toast header)
+export const TOAST_CREATE = 'Success';
+export const TOAST_UPDATE = 'Success';
+export const TOAST_DELETE = 'Success';

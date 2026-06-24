@@ -2,7 +2,10 @@ import { Page, Locator, expect } from '@playwright/test';
 
 /**
  * Page Object — Item Details modal (View Product)
- * ⚠️ best-effort selectors — verify กับ live DOM ก่อน execute
+ * ✅ Selectors VERIFIED via live DOM probe 2026-06-22:
+ *   Modal = div.fixed.inset-0 containing h2 "Item Details"
+ *   Buttons inside modal: "Delete", "Edit", "Close"  (text buttons, no icon-only)
+ *   Fields shown: Product Name, Product Code, Stock, Brand, Category, Year, Price, Warranty
  */
 export class ProductDetailPage {
   readonly page: Page;
@@ -13,14 +16,14 @@ export class ProductDetailPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.modal = page.getByRole('dialog').or(page.getByText(/Item Details/i));
-    this.deleteBtn = page.getByRole('button', { name: 'Delete' });
-    this.editBtn = page.getByRole('button', { name: 'Edit' });
-    this.closeBtn = page.getByRole('button', { name: /Close/i });
+    this.modal = page.locator('div.fixed.inset-0').filter({ hasText: 'Item Details' });
+    this.deleteBtn = this.modal.getByRole('button', { name: 'Delete', exact: true });
+    this.editBtn   = this.modal.getByRole('button', { name: 'Edit', exact: true });
+    this.closeBtn  = this.modal.getByRole('button', { name: 'Close', exact: true });
   }
 
   async waitLoaded() {
-    await expect(this.modal.first()).toBeVisible({ timeout: 15000 });
+    await expect(this.modal).toBeVisible({ timeout: 15000 });
   }
 
   /** ยืนยันฟิลด์ใน Item Details (ส่งเป็น list ของข้อความที่ต้องเห็น) — soft เก็บหลักฐานครบทุกจุด */
