@@ -1,0 +1,2538 @@
+﻿SN,Project Name,Product,Feature,Scenario No.,Scenario Name,Business Conditions,Arrange (สิ่งที่ต้องเตรียมก่อนการทดสอบ),TC No.,Case Title Name,Test category,Test Type,Test Steps,Expected Result,UI Design,Test Result,Result Note,Test Date,Test By,Remark,RelateDefectURL,Testing Round,Defect Types
+TS-01_TS-01_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-01,"Navigate to ""Customer List Page""",POSITIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""","Display Customer List Page
+- Add Customer button
+- Search bar
+- Filter Type - Dropdown 
+- Table List
+Column
+- Customer
+- Contact
+- Product
+- Service
+- Type
+- Active
+- Phone button
+- Email button
+- Chat button
+- View button
+- Edit button 
+- Delete button",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-02-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-02,"Search keyword ""First Name""",POSITIVE,SYSTEMTEST,"Search keyword ""Somchai"" on Search bar","Display ""Somchai Jaidee""
+Email: somchai.jai@gmail.com
+Phone: 0812345678
+Type: Gold",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-03-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-03,"Search keyword ""Last Name""",POSITIVE,SYSTEMTEST,"Clear Search then Search keyword ""Jaidee"" on Search bar","Display ""Somchai Jaidee""
+Email: somchai.jai@gmail.com
+Phone: 0812345678
+Type: Gold",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-04-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-04,"Search keyword ""Phone No.""",POSITIVE,SYSTEMTEST,"Clear Search then Search keyword ""0812345678""","Display ""Somchai Jaidee""
+Email: somchai.jai@gmail.com
+Phone: 0812345678
+Type: Gold",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-05-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-05,"Search keyword ""Email""",POSITIVE,SYSTEMTEST,"Clear Search then Search keyword ""somchai.jai@gmail.com""","Display Customer List ""Somchai Jaidee""
+Email: somchai.jai@gmail.com
+Phone: 0812345678
+Type: Gold",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-06-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-06,"Filter Type ""Gold""",POSITIVE,SYSTEMTEST,"Clear Search then select Filter Type ""Gold""","Display ""Somchai Jaidee""
+Email: somchai.jai@gmail.com
+Phone: 0812345678
+Type: Gold",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-07-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-07,View Customer Detail,POSITIVE,SYSTEMTEST,"Click on ""View"" of ""Somchai Jaidee""","Display Customer Information of ""Somchai Jaidee"" 
+Focus Tab ""Customer""",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-08-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-08,View Personal Details,POSITIVE,SYSTEMTEST,View the Personal Details section,"Type: Gold
+Profile Image
+Name: Somchai Jaidee
+Customer Type: Gold
+Phone button > No Action
+Email button > No Action
+Chat button > No Action
+
+Contact Informantion
+Email: somchai.jai@gmail.com
+Phone: 0812345678
+
+Address
+Current Address: Same As Registered
+Registered Address: No. 55 KM Grammy Place Building, Sukhumvit Road, Khlong Toei Nuea Subdistrict, Watthana District, Bangkok 10110, Thailand",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-09-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-09,View Preferences section,POSITIVE,SYSTEMTEST,Scroll through the Preferences section,"Preferences
+Contact: Mobile Number
+Language: Thai",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-01_TS-01_TC-10-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-01,User can successfully search and filter the customer list to find a profile and view customer detail,"1. Customer List
+2. Search keyword (First Name/Last Name/Phone/Email)
+3. Filter Type
+4. Personal Details
+5. Preferences
+6. Custom Fields","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-01_TC-10,View Custom Fields section,POSITIVE,SYSTEMTEST,Scroll through the Custom Form section,"Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-01,"Navigate to ""Add Customer Page""",POSITIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""",Display Add Customer Page,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-02-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-02,Upload Profile Photo - Preview photo,POSITIVE,SYSTEMTEST,"Click on ""Upload Photo"" area 
+and Select file ""profile_siriwimon.jpg""",Display thumbnail preview of profile_siriwimon.jpg ,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-03-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-03,Fill in all fields in Personal Details,POSITIVE,SYSTEMTEST,"Fill in all fields in Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Mrs.
+- First Name: Siriwimon
+- Middle Name: -
+- Last Name: Somjit
+- Gender: Female
+- Landline: 023456789
+- Type: Platinum
+- Date of Birth: 20/06/2540",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-04-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-04,Fill in all fields in Registered Address,POSITIVE,SYSTEMTEST,"Fill in all fields in Registered Address:
+House No.: 128/45
+Room: 1208
+Floor: 12
+Building: The Landmark Residence
+Street/Road: Rama IX Road
+Province: Bangkok
+District: Huai Khwang
+Sub-district: Bang Kapi
+Postal Code: 10310
+Country: Thailand",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-05-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-05,"Checkbox ""Same As Registered""",POSITIVE,SYSTEMTEST,"Click on Checkbox ""Same As Registered""","Hide ""Current Address"" section",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-06-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-06,Fill in all fields in Preferences,POSITIVE,SYSTEMTEST,"Fill in all fields in Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: VIP prefer to contact us in the morning 09:00–11:00 am.",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-07-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-07,Fill in all fields in Custom Form,POSITIVE,SYSTEMTEST,"Fill in all fields in Custom Form:
+- Company Name: Siam Technology Company Limited
+- Employee ID: EMP00256
+- Line ID: siriwimon_sm
+- Driving License: TH-464087219
+- Position: Marketing Manager",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-08-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-08,Save Add Customer,POSITIVE,SYSTEMTEST,"Click on ""Save""","Redirect to Customer List Page and Display success toast ""Success""",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-09-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-09,"Search keyword ""Email""",POSITIVE,SYSTEMTEST,"Search keyword ""siriwimon@gmail.com"" in Search bar","Display Customer List ""Siriwimon Somjit""
+Email: siriwimon@gmail.com
+Phone: 0873331134
+Type: Platinum",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-10-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-10,Navigate to Edit Page,POSITIVE,SYSTEMTEST,"Click on ""Edit"" of ""siriwimon@gmail.com"" and View Personal Details section","The Edit form displays the values that were added
+Display Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Mrs.
+- First Name: Siriwimon
+- Middle Name: -
+- Last Name: Somjit
+- Gender: Female
+- Landline: 023456789
+- Type: Platinum
+- Date of Birth: 20/06/2540",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-11-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-11,Check that the Registered Address and Current Address match the ones that were added,POSITIVE,SYSTEMTEST,Scroll through the Address section in Edit mode,"Display Registered Address:
+House No.: 128/45
+Room: 1208
+Floor: 12
+Building: The Landmark Residence
+Street/Road: Rama IX Road
+Province: Bangkok
+District: Huai Khwang
+Sub-district: Bang Kapi
+Postal Code: 10310
+Country: Thailand",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-12-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-12,Check that the Preferences match the ones you added,POSITIVE,SYSTEMTEST,Scroll through the Preferences section in Edit mode,"Display Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: VIP prefer to contact us in the morning 09:00–11:00 am.",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-02_TS-02_TC-13-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-02,User can successfully add a customer profile,"1. Email+Phone required
+2. Email unique
+3. Email format
+4. Citizen ID 13 หลัก
+5. DOB อดีต
+6. Photo JPG/PNG/JPEG ≤3MB
+7. Save → Profile Active
+8. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+No Have Customer Email ""siriwimon@gmail.com"" in System",TS-02_TC-13,Check that the Custom Form matches the one that was added,POSITIVE,SYSTEMTEST,Scroll through the Custom Form section in Edit mode.,"Display Custom Form:
+- Company Name: Siam Technology Company Limited
+- Employee ID: EMP00256
+- Line ID: siriwimon_sm
+- Driving License: TH-464087219
+- Position: Marketing Manager",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapa@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-01,"Navigate to ""Edit Customer Page""",POSITIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Search keyword ""Wannapa Suksai""
+and Click on ""Edit"" of ""Wannapa Suksai""","The Edit form displays the values that were added
+Personal Details:
+- Email: wannapa@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-02-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-02,Change new Profile Photo,POSITIVE,SYSTEMTEST,Click Upload in the Profile Photo area and Select the file profile_wannapa1.jpg (replace the original photo).,Display thumbnail preview of profile_wannapa1.jpg ,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-03-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-03,Edit all fields in Personal Details,POSITIVE,SYSTEMTEST,"Edit all fields in Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-04-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-04,Edit all fields in Registered Address,POSITIVE,SYSTEMTEST,"Edit all fields in Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-05-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-05,"Checkbox ""Same As Registered"" is unchecked and Edit all fields in Current Address",POSITIVE,SYSTEMTEST,"Make sure the Checkbox ""Same As Registered"" is unchecked.
+
+Edit all fields in Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-06-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-06,Edit all fields in Preferences,POSITIVE,SYSTEMTEST,"Edit all fields in Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-07-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-07,Edit all fields in Custom Form,POSITIVE,SYSTEMTEST,"Edit all fields in Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",All fields accept input without any errors.,,PASSED,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-08-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-08,Click on Save and Update successful. New information appears on Customer Profile page.,POSITIVE,SYSTEMTEST,"Click on ""Save""","Redirect to Customer List Page and Display success toast ""Success""",,TODO,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-09-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-09,"Search keyword ""Email""",POSITIVE,SYSTEMTEST,"Search keyword ""wannapha12@gmail.com"" in Search bar","Display Customer List ""Wannapha Sooksai""
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Type: Gold
+- View button
+- Edit button 
+- Delete button",,TODO,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-10-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-10,Navigate to Edit Page and Check that the Personal Details match the changes you made.,POSITIVE,SYSTEMTEST,"Click on ""Edit"" of ""wannapha12@gmail.com"" and View Personal Details section","Display Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536",,TODO,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-11-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-11,Check if the address matches the one that was changed (newly registered + current address is different).,POSITIVE,SYSTEMTEST,Scroll through the Address section in Edit mode,"Display Address
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+Make sure the Checkbox ""Same As Registered"" is unchecked.
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand",,TODO,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-12-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-12,Check that the Preferences match the changes made.,POSITIVE,SYSTEMTEST,Scroll through the Preferences section in Edit mode,"Display Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.",,TODO,,,Ketwadee Kaewmanee,,,,
+TS-03_TS-03_TC-13-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-03,User can successfully update a customer profile,"1. แก้ไข Personal Details
+2. Email unique
+3. Save → updated / Cancel → unchanged
+4. (All fields: Personal Details / Address / Preferences / Custom Form)","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: siriwimon@gmail.com
+- Phone: 0873331134
+- Title: Ms.
+- First Name: Wannapa 
+- Middle Name: -
+- Last Name: Suksai
+- Gender: Female
+- Landline: 0899876543
+- Type: Platinum
+- Date of Birth: 23/07/2535
+
+Registered Address:
+House No.: 88
+Room: -
+Floor: -
+Building: Empire Tower
+Street/Road: South Sathorn
+Province: Bangkok
+District: Sathon
+Sub-district: Yan Nawa
+Postal Code: 10120
+Country: Thailand
+
+Current Address:
+House No.: 99
+Room: -
+Floor: -
+Building: -
+Street/Road: Sukhumvit 71
+Province: Bangkok
+District: Watthana
+Sub-district: Phra Khanong Nuea
+Postal Code: 10110
+Country: Thailand
+
+Preferences:
+- Contact Method: Mobile Number
+- Language: Thai
+- Note: ติดต่อได้ช่วง 13:00 น. เป็นต้นไป
+
+Custom Form
+- Company Name: Siam Tech Solutions Co., Ltd.
+- Employee ID: ST000278
+- Line ID: siriwimon_sm
+- Driving License: TH-87546219
+- Position: Sale Manager",TS-03_TC-13,Check that the Custom Form match the changes made.,POSITIVE,SYSTEMTEST,Scroll through the Custom Form section in Edit mode.,"Display Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",,TODO,,,Ketwadee Kaewmanee,,,,
+TS-04_TS-04_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-04,User can successfully delete a customer profile,"1. Delete → Dialog
+2. Confirm → Deleted","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand
+
+Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.
+
+Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",TS-04_TC-01,"Navigate to ""Customer List Page""",POSITIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Search keyword ""wannapha12@gmail.com""","Display Customer List ""Wannapha Sooksai""
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Type: Gold
+- View button
+- Edit button 
+- Delete button",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-04_TS-04_TC-02-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-04,User can successfully delete a customer profile,"1. Delete → Dialog
+2. Confirm → Deleted","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand
+
+Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.
+
+Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",TS-04_TC-02,Click on Delete and Confirmation Dialog will appear.,POSITIVE,SYSTEMTEST,"Click on ""Delete"" on the row of ""Wannapha Sukhsai""","Display Confirmation Dialog 
+- Confirm
+- Cancel",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-04_TS-04_TC-03-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-04,User can successfully delete a customer profile,"1. Delete → Dialog
+2. Confirm → Deleted","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand
+
+Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.
+
+Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",TS-04_TC-03,"Click on ""Cancel""",POSITIVE,SYSTEMTEST,"Click on ""Cancel""","Display Customer List ""Wannapha Sooksai""
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Type: Gold
+- View button
+- Edit button 
+- Delete button",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-04_TS-04_TC-04-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-04,User can successfully delete a customer profile,"1. Delete → Dialog
+2. Confirm → Deleted","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand
+
+Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.
+
+Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",TS-04_TC-04,Click on Delete and Confirmation Dialog will appear.,POSITIVE,SYSTEMTEST,"Click on ""Delete"" on the row of ""Wannapha Sukhsai""","Display Delete Confirmation Dialog
+Title: Delete Wannapha Sukhsai ?
+Desciption: Delete 
+- Delete button
+- Cancel button
+- Close button
+Note for title: If the customer's full name is not available, display the customer's email address.
+Eg. Delete wannapha12@gmail.com ?",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-04_TS-04_TC-05-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-04,User can successfully delete a customer profile,"1. Delete → Dialog
+2. Confirm → Deleted","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand
+
+Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.
+
+Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",TS-04_TC-05,Click on Confirm and Delete Success,POSITIVE,SYSTEMTEST,"Click on ""Delete""","Display success toast ""Success"" and refresh customer list page",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-04_TS-04_TC-06-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-04,User can successfully delete a customer profile,"1. Delete → Dialog
+2. Confirm → Deleted","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+Customer Data in System
+1.
+Personal Details:
+- Email: wannapha12@gmail.com
+- Phone: 0873331135
+- Title: Mrs.
+- First Name: Wannapha
+- Middle Name: -
+- Last Name: Sooksai
+- Gender: Other
+- Landline: 021232384
+- Type: Gold
+- Date of Birth: 23/07/2536
+
+Registered Address:
+House No.: 9/45 
+Room: 1104 
+Floor: 11 
+Building: Rama IX Condominium 
+Street/Road: Rama IX 
+Province: Bangkok 
+District: Huai Khwang 
+Sub-district: Huai Khwang 
+Postal Code: 10310 
+Country: Thailand
+
+Current Address:
+House No.: 55/2 
+Room: B21 
+Floor: 2 Building: Nimman Suites 
+Street/Road: Nimmanhaemin 
+Province: Chiang Mai 
+District: Mueang Chiang Mai 
+Sub-district: Suthep 
+Postal Code: 50200 
+Country: Thailand
+
+Preferences:
+- Contact Method: Email
+- Language: English
+- Note: ลูกค้าติดต่อเฉพาะช่วงบ่าย 13:00–17:00 น.
+
+Custom Form:
+- Company Name: Thai Innovation Public Company Limited
+- Employee ID: EMP00999
+- Line ID: namwan12n
+- Driving License: 697823405
+- Position: Lead Operation Digital Platform",TS-04_TC-06,"Search keyword ""Email"" and Display messege ""No results found.""",POSITIVE,SYSTEMTEST,"Search keyword ""wannapha12@gmail.com""","Display messege ""No results found.""",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-05_TS-05_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-05,"View Customer Product, Service and Case and Navigate to Case Detail Page","1. Display Product, Service and Case List
+2. Clickthrough to Case detail","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer ""Somchai Jaidee"" 
+Services: 
+1. Installation
+- Service Date: Mar 19, 2026
+- Labor Price: 120 Baht
+2. General Maintenance
+- Service Date: Apr 4, 2026
+- Labor Price: 140 Baht
+
+Cases:
+1. 
+- Type:
+- Contact Method: 
+- Case Details: 
+2.
+- Type:
+- Contact Method: 
+- Case Details: 
+
+Product: 
+1.
+Serial Number: 
+Purchase Date: 
+End of warranty:
+
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-05_TC-01,Navigate to Customer Product and Service List,POSITIVE,SYSTEMTEST,"Click on ""View"" of ""Somchai Jaidee""","Display Product, Service and Case List 
+
+""Product (1)""
+1.
+Serial Number: 
+Purchase Date: 
+End of warranty:
+
+""Service (2)""
+1. Installation
+- Service Date: Mar 19, 2026
+- Labor Price: 120 Baht
+2. General Maintenance
+- Service Date: Apr 4, 2026
+- Labor Price: 140 Baht
+
+""Cases (2)"" Each row is clickable (cursor pointer).
+1. CS-20250101-001
+- Type:
+- Contact Method: 
+- Case Details: 
+2. CS-20250101-002
+- Type:
+- Contact Method: 
+- Case Details: ",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-05_TS-05_TC-02-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-05,"View Customer Product, Service and Case and Navigate to Case Detail Page","1. Display Product, Service and Case List
+2. Clickthrough to Case detail","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer ""Somchai Jaidee"" 
+Services: 
+1. Installation
+- Service Date: Mar 19, 2026
+- Labor Price: 120 Baht
+2. General Maintenance
+- Service Date: Apr 4, 2026
+- Labor Price: 140 Baht
+
+Cases:
+1. 
+- Type:
+- Contact Method: 
+- Case Details: 
+2.
+- Type:
+- Contact Method: 
+- Case Details: 
+
+Product: 
+1.
+Serial Number: 
+Purchase Date: 
+End of warranty:
+
+Personal Details:
+- Email: somchai.jai@gmail.com
+- Phone: 0812345678
+- Title: Ms.
+- First Name: Somchai
+- Middle Name: -
+- Last Name: Jaidee
+- Gender: Female
+- Landline: 0899876543
+- Type: Gold
+- Date of Birth: 23/07/2535
+
+Registered Address
+ House No.: 55 
+ Room: - 
+ Floor: - 
+ Building: KM Place Building 
+ Street/Road: Sukhumvit 
+ Province: Bangkok 
+ District: Watthana 
+ Sub-district: Khlong Toei Nuea 
+ Postal Code: 10110 
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences
+Contact: Mobile Number
+Language: Thai
+
+Custom Form
+Company Name: Thai Digital Marketor
+Employee ID: EA000001
+Line ID: somchai.jai
+Driving License: -
+Position: Sale Manager",TS-05_TC-02,Click on Cases No.,POSITIVE,SYSTEMTEST,"Click row ""CS-20250101-001""","Navigate to Case Detail Page
+Case No.: CS-20250101-001 ",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-06_TS-08_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-06,User can successfully add product and service (QA Phase Only),1. Add Product and Service → Listed,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TS-08_TC-01,Fill in all required fields and Add Product successfully.,POSITIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Search keyword ""natthawat.ntw@company.co.th""
+and Click on ""View""
+and Click on ""Add Product"" Tab
+and
+Fill in all fields
+- Category
+- Product
+- Product List
+- Purchase Date
+and Click on ""Add""","Display success toast ""Success""",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-06_TS-09_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-06,User can successfully add product and service (QA Phase Only),1. Add Product and Service → Listed,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TS-09_TC-01,Fill in all required fields and Add Service successfully.,POSITIVE,SYSTEMTEST,"Click on ""Add Service"" Tab
+and
+Fill in all fields
+- Select Service Type
+- Select Service Date
+and Click on ""Add""","Display success toast ""Success""",,FAILED,,26/06/2026,Ketwadee Kaewmanee,,,,
+TS-06_TS-09_TC-03-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-06,User can successfully add product and service (QA Phase Only),1. Add Product and Service → Listed,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TS-09_TC-03,Verify Product and Service List,POSITIVE,SYSTEMTEST,"Click on ""Customer"" Tab","Display Product and Service List on Customer
+1. Product
+- Category
+- Product
+- Product List
+- Purchase Date
+
+2. Service
+- Select Service Type
+- Select Service Date",,FAILED,,26/06/2026,Ketwadee Kaewmanee,,,,
+TS-07_TA-10_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-07,User can successfully add a customer profile when using today's date as the Date of Birth.,1. Date of Birth equal to the current date,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-10_TC-01,Date of Birth equal to the current date,POSITIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: karaked123@gmail.com
+- Phone: 0642229901
+- Date of Birth: Current date
+and Click on Save","Redirect to Customer List Page and Display success toast ""Success""",,PASSED,Screen Recording 2569-06-23 at 15.16.36.mov,25/06/2026,Ketwadee Kaewmanee,,,,
+TS-09_TS-09_TC-02-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-09,User can navigate between pages and change the number of rows displayed per page,"1. Pagination controls (Next/Previous/Rows per page)
+2. Next page navigation
+3. Previous page navigation
+4. Rows per page selector","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+≥ 11 Customer records in system
+Currently on Page 1 (rows per page = 10)",TS-09_TC-02,"Click ""Next Page"" button — navigate to page 2",POSITIVE,SYSTEMTEST,"Click ""Next"" (>) button on pagination","Display page 2 records (different from page 1)
+Page indicator updates (e.g., ""11-20 of N"" or ""Page 2 of M"")",,PASSED,,,,,,,
+TS-09_TS-09_TC-04-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-09,User can navigate between pages and change the number of rows displayed per page,"1. Pagination controls (Next/Previous/Rows per page)
+2. Next page navigation
+3. Previous page navigation
+4. Rows per page selector","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+≥ 26 Customer records in system
+Currently showing rows per page = 10 (default)",TS-09_TC-04,Select rows per page = 25 — table shows up to 25 rows,POSITIVE,SYSTEMTEST,"Select ""25"" from rows-per-page dropdown","Table displays ≤ 25 rows per page
+Page indicator updates (e.g., ""1-25 of N"")",,PASSED,,,,,,,
+TS-09_TS-09_TC-05-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TS-09,User can navigate between pages and change the number of rows displayed per page,"1. Pagination controls (Next/Previous/Rows per page)
+2. Next page navigation
+3. Previous page navigation
+4. Rows per page selector","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+≥ 26 Customer records in system
+Currently showing rows per page = 25",TS-09_TC-05,Select rows per page = 10 — table shows up to 10 rows,POSITIVE,SYSTEMTEST,"Select ""10"" from rows-per-page dropdown","Table displays ≤ 10 rows per page
+Page indicator updates (e.g., ""1-10 of N"")",,PASSED,,,,,,,
+TA-01_TA-02_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-01,"Verify the ""No results found"" message when searching for a keyword with no results.",1. Search for keywords with no results,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+No have Customer Name ""Wilawann""",TA-02_TC-01,Search for keywords with no results,NEGATIVE,SYSTEMTEST,"Search keyword ""Wilawann"" in Search bar","Display message ""No results found.""",,PASSED,image.png,25/06/2026,Ketwadee Kaewmanee,,,,
+TA-02_TA-03_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-02,"Verify error toast ""Please enter an email address"" when adding a customer with an empty email",1. Empty email,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-03_TC-01,Adding a customer with an empty email,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+and Click on Save","Display error toast ""Please enter an email address"" 
+and Inline error ""Please enter an email address""",,PASSED,,,Ketwadee Kaewmanee,,,,
+TA-03_TA-04_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-03,"Verify error toast ""Please enter a mobile number"" when adding a customer with an empty phone number.",1. Empty phone number,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-04_TC-01,Adding a customer with an empty phone number.,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: karaked123@gmail.com
+- Phone:
+and Click on Save","Display error toast ""Please enter a mobile number""
+and Inline error ""Please enter a mobile number""",,FAILED,,,Ketwadee Kaewmanee,,,,
+TA-04_TA-05_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-04,Verify error toast when adding a customer with a duplicate email address.,1. Duplicate email address,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Have customer email ""somchai.jai@gmail.com"" in System",TA-05_TC-01,Fill in duplicate email address,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: somchai.jai@gmail.com
+- Phone: 0848851193
+and Click on Save","Display error toast ""Email already exists""",,PASSED,,,Ketwadee Kaewmanee,,,,
+TA-05_TA-06_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-05,Verify error toast when adding a customer with a Invalid email address format,1. Invalid email address format,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-06_TC-01,Fill in invalid email address format,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: darinee.com
+- Phone: 0848851193
+and Click on Save","Display error toast ""Invalid email format""",,FAILED,,26/06/2026,Ketwadee Kaewmanee,,https://project.larksuite.com/technology-and-innovation/issue/detail/13127492,,
+TA-06_TA-07_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-06,Verify error toast when adding a customer with less than 13 digits in the Citizen ID.,1. Less than 13 digits in the Citizen ID,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-07_TC-01,Fill in less than 13 digits in the Citizen ID.,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: darinee@gmail.com
+- Phone: 0848851193
+- Citizen ID: 123456789012
+and Click on Save","Display error toast ""Invalid CitizenID format""",,PASSED,,,Ketwadee Kaewmanee,,,,
+TA-07_TA-08_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-07,Verify that the system restricts the Citizen ID input field to exactly 13 digits.,1. More than 13 digits in the Citizen ID,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-08_TC-01,Fill in more than 13 digits in the Citizen ID.,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Citizen ID: 12345678901234","The system must not allow the user to enter more than 13 digits in the Citizen ID field. Any attempt to type or paste a 14th character should be blocked by the UI and the field will display exactly ""1234567890123""",,PASSED,,26/06/2026,Ketwadee Kaewmanee,,,,
+TA-08_TA-09_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-08,Verify error toast when adding a customer with a Date of Birth in the future,1. Date of Birth in the future,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-09_TC-01,Fill in date of birth - Future date,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: darinee@gmail.com
+- Phone: 0848851193
+- Date of Birth: Future date
+and Click on Save",Disable future date on date picker,,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TA-09_TA-11_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-09,Verify error toast when adding a customer with a wrong photo format (PDF),1. The photo file format is not supported.,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-11_TC-01,Upload PDF to Photo,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Upload file contract.pdf
+- Email: darinee@gmail.com
+- Phone: 0848851193
+and Click on Save","Display error toast ""Error"" and The file was not uploaded.",,BLOCKED,,26/06/2026,Ketwadee Kaewmanee,รอ FE แก้ ยิง api graphql upload photo ตอนนี้ยิง api rest อยู่,https://project.larksuite.com/technology-and-innovation/issue/detail/13126881,,
+TA-10_TA-12_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-10,Verify error toast when adding a customer with a photo size larger than 3MB,1. Photo size more than 3MB,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-12_TC-01,Upload file more than 3MB,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Upload file photo_hd.jpg (4MB)
+- Email: darinee@gmail.com
+- Phone: 0848851193
+and Click on Save","Display error toast ""Error"" and The file was not uploaded.",,BLOCKED,,26/06/2026,Ketwadee Kaewmanee,รอ FE แก้ ยิง api graphql upload photo ตอนนี้ยิง api rest อยู่,https://project.larksuite.com/technology-and-innovation/issue/detail/13126881,,
+TA-11_TA-13_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-11,Verify error toast when adding a customer with a  duplicate email,1. Duplicate email,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer Data in System
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TA-13_TC-01,Update email to duplicate email,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: natthawat.ntw@company.co.th
+- Phone: 0848854444
+and Click on Save","Display error toast ""Email already exists""",,PASSED,,26/06/2026,Ketwadee Kaewmanee,,,,
+TA-12_TA-14_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-12,No update customer when click edit then click cancel,1. Cancel then unchanged,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-14_TC-01,Change data then click on cancel,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Search keyword ""natthawat.ntw@company.co.th""
+and Click on ""Edit""
+Change Phone to ""0698847777""
+and Click on ""Back""","No changes phone number of ""natthawat.ntw@company.co.th""",,PASSED,,26/06/2026,Ketwadee Kaewmanee,,,,
+TA-13_TA-16_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-13,Verify error toast when delete a customer with a have 'Active Case',1. Block delete if has active case,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+---------------------------------------------------
+Customer ""Somchai Jaidee"" have Active Case",TA-16_TC-01,Click on Delete Customer with active Case — Block.,NEGATIVE,SYSTEMTEST,"Click on ""Delete"" of ""Somchai Jaidee""","Display error toast ""Customer has active warranty products""",,BLOCKED,,25/06/2026,Ketwadee Kaewmanee,Create Cases ยังไม่ได้ เลยยังลองลบไม่ได้,https://project.larksuite.com/technology-and-innovation/issue/detail/13102082,,
+TA-14_TA-17_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-14,"Verify message ""No results found."" when view customer without Product, Service and Case","1. No results in ""Product""","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+""Natthawat Jetbordin"" No result product
+
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TA-17_TC-01,View Product - No results,NEGATIVE,SYSTEMTEST,View Customer Product Section,"Display message ""No results found.""",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TA-15_TA-18_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-15,View Customer  then No results found.,"1. No results in ""Service""","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+""Natthawat Jetbordin"" No result service
+
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TA-18_TC-01,View Service - No results,NEGATIVE,SYSTEMTEST,View Customer Service Section,"Display message ""No results found.""",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TA-16_TA-19_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-16,View Customer  then No results found.,"1. No results in ""Cases""","Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+""Natthawat Jetbordin"" No result case
+
+Personal Details:
+- Email: natthawat.ntw@company.co.th
+- Phone: 0643321213
+- Title: Mr.
+- First Name: Natthawat
+- Middle Name: -
+- Last Name: Jetbordin
+- Gender: Male
+- Landline: -
+- Type: Silver
+- Date of Birth: 12/03/2538
+
+Registered Address:
+House No.: 88/12 
+ Room: 502 
+ Floor: 5 
+ Building: Andaman Sea View 
+ Street/Road: Patong Beach 
+ Province: Phuket 
+ District: Kathu 
+ Sub-district: Patong 
+ Postal Code: 83150
+ Country: Thailand
+
+Current Address: Same As Registered
+
+Preferences:
+- Contact Method: Email
+- Language: Thai
+- Note: -
+
+Custom Form
+- Company Name: Bangkok Creative Agency
+- Employee ID: BCA-992
+- Line ID: nn_cat
+- Driving License: -
+- Position: Graphic Designer",TA-19_TC-01,View Case - No results,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Search keyword ""Natthawat Jetbordin""
+and Click on View ""Natthawat Jetbordin""","Display message ""No results found."" in Cases Section",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TA-17_TA-06_TC-01--Customer Profile,,,Customer Profile,TA-17,Verify error toast when adding a customer with a Invalid phone number format,1. Invalid phone number format,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management",TA-06_TC-01,Fill in invalid email address format,NEGATIVE,SYSTEMTEST,"Login User: ketwadee 
+and Navigate to ""Customer List Page""
+and Click on ""Add Customer""
+Fill in data
+- Email: darinee@gmail.co.th
+- Phone: darinee
+and Click on Save","Display error toast ""Invalid mobile number""",,PASSED,,,Ketwadee Kaewmanee,,,,
+TA-18_TA-20_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-18,Verify Previous Page button is disabled when on the first page,1. Previous page button disabled on first page,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+≥ 11 Customer records in system
+Currently on Page 1 (first page)",TA-20_TC-01,Previous button is disabled on page 1,NEGATIVE,SYSTEMTEST,"Login User: ketwadee
+and Navigate to ""Customer List Page""
+and Verify state of ""Previous"" (<) button on page 1","Previous button is disabled (not clickable)
+Clicking Previous does not change the page
+Page indicator remains on page 1",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,
+TA-19_TA-21_TC-01-CC Super App-Customer Profile,AICC,CC Super App,Customer Profile,TA-19,Verify Next Page button is disabled when on the last page,1. Next page button disabled on last page,"Login User: ketwadee
+Role & Permission: All Permission - Contact Management
+----------------------------
+≥ 11 Customer records in system
+Navigated to last page",TA-21_TC-01,Next button is disabled on the last page,NEGATIVE,SYSTEMTEST,"Login User: ketwadee
+and Navigate to ""Customer List Page""
+and Click ""Next"" repeatedly until reaching the last page
+and Verify state of ""Next"" (>) button on last page","Next button is disabled (not clickable)
+Clicking Next does not change the page
+Page indicator shows last page (e.g., ""N-N of N"")",,PASSED,,25/06/2026,Ketwadee Kaewmanee,,,,

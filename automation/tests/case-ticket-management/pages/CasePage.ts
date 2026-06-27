@@ -18,10 +18,27 @@ import { Page, Locator, expect } from '@playwright/test';
  *   Assignment board (/cms/case/assignment):
  *     - Kanban columns ✅: "New", "Assigned", "In-progress", "Done" · toggles "kanban"/"List" · "Add New Case" · search "Search Cases..."
  *
+ * ✅ VERIFIED LIVE DOM (probe 2026-06-22):
+ *   Dropdown options — all 3 dropdowns (CaseType/ContactMethod/ServiceCenter) render as `<li>` elements
+ *   inside `<ul class="max-h-60 overflow-auto custom-scrollbar">`, NOT `[role="option"]`.
+ *   Use: page.locator('li', { hasText: /text/i }).first().click()
+ *   ContactMethod options confirmed: CALL, METTLINK, METTRIQ, IOT-Alert, Other
+ *   CaseType options confirmed (prefix = sTypeCode-TypeName-SubTypeName):
+ *     1001-Camera Malfunction -Investigation, 1002-Camera Malfunction -Repair, etc.
+ *   CaseType button opens input[placeholder="Select CaseType"] (type-ahead search)
+ *   Creation form extra fields: IoT Device ID, Work Order (datetime-local), Enter Location (textarea)
+ *   Tabs on creation: Information | Device Info | Copilot | KB | More
+ *   "View Details Panel" button (toggles right panel)
+ *
  * ⚠️ NOT yet verified (marked best-effort below → tests using them are test.fixme until probed):
- *   - dropdown OPTION lists (Contact Method 5 opts / CaseType options) — render in a portal; generic probe hit the nav menu
- *   - Confirm modal after Submit · lifecycle action buttons on Case Detail (Assign/Acknowledge/En Route/On Site)
- *   - close approval flow (Request close approval / Approve) · row-level controls · attachment list rows
+ *   - ServiceCenter options (shows "No Option." due to BE issue — empty dropdown)
+ *   - Confirm modal after Submit (Submit silently blocked when ServiceCenter not set)
+ *   - Lifecycle action buttons on Case Detail (Assign/Acknowledge/En Route/On Site)
+ *   - Close approval flow (Request close approval / Approve) · attachment list rows
+ *
+ * 🐛 KNOWN BUG (probed 2026-06-22):
+ *   CreateCase API broken: BFF crashes (500) when `versions` field included in CaseInsertInput;
+ *   without `versions`, DB NOT NULL constraint fires. UI also fails. Case creation broken on QA env.
  */
 export class CasePage {
   readonly page: Page;
@@ -107,12 +124,15 @@ export class CasePage {
   /** char counter "<n> / 4000" (verified live) */
   counter(): Locator { return this.page.getByText(/\d{1,4}\s*\/\s*4000/); }
 
-  /** ⚠️ option list DOM unverified — best-effort: click trigger → click matching option in portal */
+  /**
+   * Dropdown options render as plain `<li>` elements (NOT [role="option"]) — verified 2026-06-22.
+   * Click the trigger button → wait for LI list → click matching item.
+   */
   private async pickOption(trigger: Locator, value: string) {
     await trigger.click();
-    await this.page.getByRole('option', { name: new RegExp(value, 'i') })
-      .or(this.page.getByRole('menuitem', { name: new RegExp(value, 'i') }))
-      .or(this.page.getByText(value, { exact: true })).first().click();
+    await this.page.waitForTimeout(1000);
+    const li = this.page.locator('li', { hasText: new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i') }).first();
+    await li.click();
   }
   async selectCaseType(name: string) { await this.pickOption(this.caseTypeTrigger, name); }
   async selectContactMethod(name: string) { await this.pickOption(this.contactMethodTrigger, name); }

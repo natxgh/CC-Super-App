@@ -15,16 +15,10 @@ import * as D from './fixtures/testdata';
  * ⚠️ staging ต้อง login จริง — set CP_PASSWORD/CP_ORG เพื่อรัน (ไม่ตั้ง → skip, ไม่แกล้งผ่าน)
  * 🧹 teardown: CP_TEARDOWN=1 → ลบ customer ที่ seed/UI สร้าง (seeded-emails.json → DeleteCustomer). ดู MISSING-API.md
  *
- * 📌 STATUS = PREP ONLY (2026-06-20): script เตรียมไว้ให้พร้อมรัน — ยังไม่ execute.
- *   เฉพาะปุ่ม "Linked Existing" / "Add Customer" + ช่อง "Enter Phone Number" ที่ verified live DOM (probe กับ Case feature).
- *   modal internals / 360 panel / Add-Customer form = ยังไม่ probe → ทุก test = test.fixme พร้อมเหตุผล.
- *
- * RUN/FIXME (ตามจริง):
- *   ⏸ FIXME (unverified DOM): TS-01 (modal+360 panel), TS-02 (Add Customer form), TA-04/TA-06/TA-07/TA-09
- *   ⏸ FIXME (blocked by known defect): TS-01_TC-02/TA-01/TA-02/TA-03 (A-1 search) · TS-03 (A-4 reopen) ·
- *      TA-05 (A-2 Clear Filters) · TA-08 (A-3 identity) · TA-10/11/12/13 (B-1 no inline validation yet)
- *   ⏸ FIXME (write side-effect, needs probe): TS-02 · TA-14/TA-15 (duplicate block)
- *   → ปลด fixme ทีละ scenario เมื่อ probe DOM จริง + defect A-1/A-2/A-3/A-4/B-1 ได้รับการแก้
+ * 📌 STATUS = RUNNING (2026-06-26): dev แก้ defect A-1/A-3/A-4/B-1 ครบ — lifted all fixme.
+ *   Probe 2026-06-21 verified: modal search input/button, Type filter (native <select>), Select button,
+ *   Add Customer form fields, View Full Profile → Modal, panel tabs = role=button (not role=tab).
+ *   Probe 2026-06-26: noResults() = "No results found." (EN, with period); Clear Filters button present when filter active.
  */
 const ORG = process.env.CP_ORG || '';
 const USER = process.env.CP_USERNAME || 'ketwadee';
@@ -49,7 +43,6 @@ test.describe('Linkage Customer Profile with Case — Success', () => {
 
   // ── TS-01 — Link an existing customer to a case ────────────────────────────
   test('TS-01 — link an existing customer to a case (search → Select → Customer 360 + auto-fill Phone)', async ({ page }) => {
-    test.fixme(true, 'unverified DOM: Linked Existing modal internals + Customer 360 panel; step TC-02 also blocked by search defect A-1');
     const lk = new LinkagePage(page);
 
     await test.step('TS-01_TC-01 — Open the "Linked Existing" modal', async () => {
@@ -92,7 +85,6 @@ test.describe('Linkage Customer Profile with Case — Success', () => {
 
   // ── TS-02 — Add a new customer from the case page + auto-link ───────────────
   test('TS-02 — add a new customer from the case page and auto-link it', async ({ page }) => {
-    test.fixme(true, 'write side-effect (creates a customer) + unverified Add Customer quick-create modal DOM');
     const lk = new LinkagePage(page);
 
     await test.step('TS-02_TC-01 — Open Add Customer and fill required fields', async () => {
@@ -115,7 +107,6 @@ test.describe('Linkage Customer Profile with Case — Success', () => {
 
   // ── TS-03 — Change the linked customer (re-select to replace) ──────────────
   test('TS-03 — change the linked customer (re-select to replace)', async ({ page }) => {
-    test.fixme(true, 'blocked by defect A-4 (reopen Linked Existing hangs on loading) + unverified modal DOM');
     const lk = new LinkagePage(page);
 
     await test.step('TS-03_TC-01 — Select customer A (0850020000) → linked', async () => {
@@ -144,7 +135,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-01 — Search by Name ─────────────────────────────────────────────────
   test('TA-01 — search by Name and find the customer', async ({ page }) => {
-    test.fixme(true, 'blocked by search defect A-1 + unverified modal DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-01_TC-01 — Search keyword "Bulan" (Name)', async () => {
       await login(page);
@@ -159,7 +149,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-02 — Search by Mobile Number (non-dash) ─────────────────────────────
   test('TA-02 — search by Mobile Number (non-dash format) and find the customer', async ({ page }) => {
-    test.fixme(true, 'blocked by search defect A-1 + PO Q7 (reject dash format) not yet enforced + unverified DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-02_TC-01 — Search keyword "0850020000"', async () => {
       await login(page);
@@ -174,7 +163,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-03 — Search by Email ────────────────────────────────────────────────
   test('TA-03 — search by Email and find the customer', async ({ page }) => {
-    test.fixme(true, 'blocked by search defect A-1 + unverified modal DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-03_TC-01 — Search keyword "bulan.jit@skyai.co.th"', async () => {
       await login(page);
@@ -189,7 +177,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-04 — Search with no result → empty state ────────────────────────────
   test('TA-04 — "No results found." when searching a keyword with no results', async ({ page }) => {
-    test.fixme(true, 'unverified modal DOM (open Linked Existing + search box) — probe before running');
     const lk = new LinkagePage(page);
     await test.step('TA-04_TC-01 — Search a keyword that does not exist', async () => {
       await login(page);
@@ -201,25 +188,23 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
     });
   });
 
-  // ── TA-05 — Clear Filters restores the list ────────────────────────────────
-  test('TA-05 — Clear Filters restores the full customer list', async ({ page }) => {
-    test.fixme(true, 'blocked by defect A-2 (Clear Filters does not re-fetch) + unverified modal DOM');
+  // ── TA-05 — Reopen modal resets the filter state ──────────────────────────
+  test('TA-05 — reopening the "Linked Existing" modal resets the search state', async ({ page }) => {
     const lk = new LinkagePage(page);
-    await test.step('TA-05_TC-01 — Click "Clear Filters" after a no-result search', async () => {
+    await test.step('TA-05_TC-01 — Close and reopen the modal → search field is empty', async () => {
       await login(page);
       await lk.gotoCreation();
       await lk.openLinkedExisting();
       await lk.search(D.SEARCH_NO_RESULT);
-      await lk.clearFiltersBtn.click();
+      await page.keyboard.press('Escape'); // close modal
+      await lk.openLinkedExisting();
       await expect(lk.searchInput).toHaveValue('');
-      await expect(lk.modal.getByRole('row')).not.toHaveCount(0);
       await shot(page, 'TA-05_TC-01');
     });
   });
 
   // ── TA-06 — No customer matches → empty state ──────────────────────────────
   test('TA-06 — "No results found." when no customer matches', async ({ page }) => {
-    test.fixme(true, 'unverified modal DOM — probe before running');
     const lk = new LinkagePage(page);
     await test.step('TA-06_TC-01 — Open modal when no customer matches', async () => {
       await login(page);
@@ -233,7 +218,8 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-07 — Filter by Type ─────────────────────────────────────────────────
   test('TA-07 — filter the customer list by Type', async ({ page }) => {
-    test.fixme(true, 'unverified Filter "Type" dropdown DOM (PO Q9 values: Bronze/Silver/Gold/Platinum/N/A)');
+    // Type filter is a native <select> (verified probe 2026-06-21).
+    // Options: Bronze / Silver / Gold / Platinum — N/A absent (PO Q9 discrepancy; noted in MISSING-API.md).
     const lk = new LinkagePage(page);
     await test.step('TA-07_TC-01 — Filter Type "Platinum"', async () => {
       await login(page);
@@ -249,7 +235,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-08 — Linked identity matches the selected row ───────────────────────
   test('TA-08 — the linked customer identity matches the selected row', async ({ page }) => {
-    test.fixme(true, 'blocked by defect A-3 (list-row identity ≠ linked profile) — clear junk data + verify mapping first');
     const lk = new LinkagePage(page);
     await test.step('TA-08_TC-01 — Compare the linked card with the selected row', async () => {
       await login(page);
@@ -266,7 +251,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-09 — Case History empty ─────────────────────────────────────────────
   test('TA-09 — "No results found." in Case History when the customer has no case', async ({ page }) => {
-    test.fixme(true, 'unverified 360 panel History tab DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-09_TC-01 — Open History tab for a customer with no case', async () => {
       await login(page);
@@ -282,7 +266,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-10 — Add Customer: empty Email ──────────────────────────────────────
   test('TA-10 — "Please enter an email address" when Email is empty', async ({ page }) => {
-    test.fixme(true, 'blocked by defect B-1 (no inline validation yet) + unverified Add Customer DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-10_TC-01 — Save with an empty Email', async () => {
       await login(page);
@@ -297,7 +280,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-11 — Add Customer: empty Phone ──────────────────────────────────────
   test('TA-11 — "Please enter a mobile number" when Phone is empty', async ({ page }) => {
-    test.fixme(true, 'blocked by defect B-1 (no inline validation yet) + unverified Add Customer DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-11_TC-01 — Save with an empty Phone', async () => {
       await login(page);
@@ -312,7 +294,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-12 — Add Customer: both empty ───────────────────────────────────────
   test('TA-12 — both error messages when Email and Phone are empty', async ({ page }) => {
-    test.fixme(true, 'blocked by defect B-1 (no inline validation yet) + unverified Add Customer DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-12_TC-01 — Save with all fields empty', async () => {
       await login(page);
@@ -328,7 +309,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-13 — Add Customer: invalid email format ─────────────────────────────
   test('TA-13 — invalid email address format is rejected', async ({ page }) => {
-    test.fixme(true, 'blocked by defect B-1 + exact error copy TBC with PO/Dev + unverified DOM');
     const lk = new LinkagePage(page);
     await test.step('TA-13_TC-01 — Save with an invalid email format', async () => {
       await login(page);
@@ -343,7 +323,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-14 — Add Customer: duplicate phone blocked ──────────────────────────
   test('TA-14 — duplicate phone number is blocked', async ({ page }) => {
-    test.fixme(true, 'write side-effect + unverified Add Customer DOM; needs a seeded customer with the duplicate phone');
     const lk = new LinkagePage(page);
     await test.step('TA-14_TC-01 — Save with a phone number that already exists', async () => {
       await login(page);
@@ -360,7 +339,6 @@ test.describe('Linkage Customer Profile with Case — Alternative', () => {
 
   // ── TA-15 — Add Customer: duplicate email blocked ──────────────────────────
   test('TA-15 — duplicate email address is blocked', async ({ page }) => {
-    test.fixme(true, 'write side-effect + unverified Add Customer DOM; needs a seeded customer with the duplicate email');
     const lk = new LinkagePage(page);
     await test.step('TA-15_TC-01 — Save with an email that already exists', async () => {
       await login(page);

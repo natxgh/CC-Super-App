@@ -71,16 +71,16 @@
 ### PIM3 — Search (EP)
 - `PIM3-TC1` | Keyword `Chery` (match) | Type + click Search | Narrows to `Chery V27` + `Chery V23` (2 items)
 - `PIM3-TC2` | Keyword `BMW` (multiple matches) | Search | Narrows to 3 BMW models (`BMW7G70`/`BMW5G60`/`BMW3G20`)
-- `PIM3-TC3` | Keyword `Zznotexist` (no match) | Search | Shows empty state `""` (no items) 🔸HA11 (empty-state text still pending PO)
+- `PIM3-TC3` | Keyword `Zznotexist` (no match) | Search | Shows empty state **"No entries to show"** ✅HA11
 - `PIM3-TC4` | Keyword `Cher` (partial) | Search | Narrows to Chery products (partial match) ✅HA9
 
 ### PIM4 — Filter Brand (EP)
 - `PIM4-TC1` | Filter Brand = `BMW` | Select + Search | Shows only BMW-brand products (3 items)
-- `PIM4-TC2` | Filter Brand = a brand with no products | Select + Search | Empty state `""` 🔸HA11
+- `PIM4-TC2` | Filter Brand = a brand with no products | Select + Search | Empty state **"No entries to show"** ✅HA11
 
 ### PIM5 — Filter Category (EP)
 - `PIM5-TC1` | Filter Category = `Vehicles` | Select + Search | Shows only Vehicles products (Chery/BMW/Mercedes/Jaecoo)
-- `PIM5-TC2` | Filter Category = `Game` (no products) | Select + Search | Empty state `""` 🔸HA11
+- `PIM5-TC2` | Filter Category = `Game` (no products) | Select + Search | Empty state **"No entries to show"** ✅HA11
 
 ### PIM6 — Filter Status (EP)
 - `PIM6-TC1` | Filter Status = `Active` | Select + Search | Shows only active products ✅HA8 (status = soft filter, separate from delete)
@@ -101,14 +101,14 @@
 ### PIM10 — Add required fields (Use Case) — iterate empty field
 | TC | What is entered (field left empty) | Expected |
 |----|--------------------------|----------|
-| `PIM10-TC1` | Leave Product Name (TH) empty | Inline error on TH `""` + submit fails 🔸HA11 |
-| `PIM10-TC2` | Leave Product Name (EN) empty | Error on EN `""` 🔸HA11 |
-| `PIM10-TC3` | Leave Product Code empty | Error on Code `""` 🔸HA11 |
-| `PIM10-TC4` | Leave Category empty | Error on Category `""` 🔸HA11 |
-| `PIM10-TC5` | Leave Brand empty | Error on Brand `""` 🔸HA11 |
-| `PIM10-TC6` | Leave Year empty | Error on Year `""` 🔸HA11 |
-| `PIM10-TC7` | Leave Warranty empty | Error on Warranty `""` 🔸HA11 |
-| `PIM10-TC8` | Leave Price empty | Error on Price `""` 🔸HA11 |
+| `PIM10-TC1` | Leave Product Name (TH) empty | Inline error: **"Please fill in: Product Name (TH)"** (TH: กรุณากรอกข้อมูล: ชื่อสินค้า (TH)) + submit fails ✅HA11 |
+| `PIM10-TC2` | Leave Product Name (EN) empty | Inline error: **"Please fill in: Product Name (EN)"** (TH: กรุณากรอกข้อมูล: ชื่อสินค้า (EN)) + submit fails ✅HA11 |
+| `PIM10-TC3` | Leave Product Code empty | Inline error: **"Please fill in: Product Code"** (TH: กรุณากรอกข้อมูล: รหัสสินค้า) + submit fails ✅HA11 |
+| `PIM10-TC4` | Leave Category empty | Inline error: **"Please fill in: Category"** (TH: กรุณากรอกข้อมูล: หมวดหมู่) + submit fails ✅HA11 |
+| `PIM10-TC5` | Leave Brand empty | Inline error: **"Please fill in: Brand"** (TH: กรุณากรอกข้อมูล: แบรนด์) + submit fails ✅HA11 |
+| `PIM10-TC6` | Leave Year empty | Inline error: **"Please fill in: Year"** (TH: กรุณากรอกข้อมูล: ปี) + submit fails ✅HA11 |
+| `PIM10-TC7` | Leave Warranty empty | Inline error: **"Please fill in: Warranty (Days)"** (TH: กรุณากรอกข้อมูล: การรับประกัน (วัน)) + submit fails ✅HA11 |
+| `PIM10-TC8` | Leave Price empty | Inline error: **"Please fill in: Price"** (TH: กรุณากรอกข้อมูล: ราคา) + submit fails ✅HA11 |
 | `PIM10-TC9` | Fill all required (no Image) | Passes required check → can create (Image optional ✅HA3) |
 
 ### PIM11 — Product Code unique (EP)
@@ -154,7 +154,7 @@
 - `PIM18-TC2` | Change Warranty `365` → `730` + Update | New Warranty reflected in detail (`24 Months`/`730 Days`) — PO Q12: stored in **days**, shown as pill
 
 ### PIM19 — Update validation (reuse)
-- `PIM19-TC1` | On Edit, clear Product Code to empty + Update | Required error on Code `""` + not saved (✅HA3 · error text pending PO 🔸HA11)
+- `PIM19-TC1` | On Edit, clear Product Code to empty + Update | Inline error: **"Please fill in: Product Code"** (TH: กรุณากรอกข้อมูล: รหัสสินค้า) + not saved ✅HA11
 
 ### PIM20 — Delete confirm dialog (State Transition)
 - `PIM20-TC1` | Click Delete (trash) button on a product | Opens **Delete Confirmation**: "Are you sure you want to delete ? This action cannot be undone." + Cancel / Delete buttons
@@ -187,10 +187,10 @@
 | HA8 | Delete = **conditional** — deletable only when **no Product Stock (Serial) and no Order relation** · otherwise blocked | PIM21, PIM23 | ⚠️ **Changed** (not always-permanent delete) |
 | HA9 | Search = **Product Name (TH+EN) + Product Code** · partial + case-insensitive | PIM3 | ✅ Confirmed |
 | HA10 | **Stock / badge = read-only** from Product Stock Management | PIM9 | ✅ Confirmed |
-| HA11 | toast: create=**"Product created successfully"** · update=**"Product updated successfully"** · delete=**"Product deleted successfully"** | PIM16/18/21 | 🟡 **Partial** — per-field error text + empty-search text will be asked separately (PO to confirm); Expected kept as `""` until then |
+| HA11 | toast: create=**"Product created successfully"** · update=**"Product updated successfully"** · delete=**"Product deleted successfully"** · per-field required: **"Please fill in: \<field\>"** · empty-state: **"No entries to show"** | PIM3/4/5/10/16/18/19/21 | ✅ **Confirmed** — all text finalised (Error & Success Handling Matrix 2026-06-24 + PO confirmed empty-state) |
 | HA12 | sort = Name/Code/Year/Price/Warranty · **default sort = Name** · Warranty stored in **days**, shown as pill | PIM8, PIM18-TC2 | ✅ Confirmed + got default |
 
-> 🟡 **Still pending (from HA11) — to be asked separately:** **exact text of per-field validation errors** (PIM10-TC1..8, PIM19) and the **empty-state on no search results** (PIM3-TC3, PIM4-TC2, PIM5-TC2). These will be raised as separate follow-up questions later; until answered, the Expected of these TCs stays `""` (PO to confirm or QA to capture from UI). All other HAs — including Year range (HA6/Q15) — are closed.
+> ✅ **HA11 fully closed (2026-06-24):** per-field required error text `"Please fill in: <field>"` (EN) / `"กรุณากรอกข้อมูล: <field>"` (TH) confirmed via Error & Success Handling Matrix · empty-state `"No entries to show"` confirmed by PO.
 
 > **🐞 Env observation (not a test condition):** While surveying STG, `GetListProduct` (GraphQL BFF `cc-bff-stg`) intermittently **hangs/does not respond**, leaving the list stuck on "Loading…" — the dev/infra team should check list-endpoint stability before the execution round.
 
@@ -230,7 +230,7 @@
 
 | Scenario | Flow (TC sequence) | Outcome | Note |
 |----------|-----------------|---------|----------|
-| `PIM_TA01` | `PIM10-TC3` (leave Code empty) | submit fails + error on Code | error text pending PO (`""`) |
+| `PIM_TA01` | `PIM10-TC3` (leave Code empty) | submit fails + **"Please fill in: Product Code"** | ✅HA11 |
 | `PIM_TA02` | `PIM10-TC9` → `PIM11-TC2` (Code `CheryV27` duplicate) | duplicate-code error, not created | ✅HA2 |
 | `PIM_TA03` | `PIM10-TC9` → `PIM13-TC4` (Price `-500`) | invalid, not created | ✅HA5 |
 | `PIM_TA04` | `PIM10-TC9` → `PIM13-TC3` (Price `12990.50` decimal) | reject decimal (int only) | ✅HA5 (replaced Warranty 0, now valid) |
@@ -257,8 +257,8 @@
 - [x] Scenarios are E2E flows + no contradictory conditions
 - [x] Test Data = Real Example (Xiaomi/Chery/BMW…) with no "Test/ทดสอบ" placeholders
 - [x] **Hidden Assumptions HA1–HA12 — PO answered all 12/12** (pulled from Lark Base) → logic updated to actual answers
-- [🟡] Remaining: **exact text at 2 spots** (from HA11) — per-field validation errors + empty-state search — to be asked separately later; TCs with `""` cannot be signed off until text is provided (by PO or QA screen capture)
+- [x] HA11 fully closed — per-field required error text + empty-state **"No entries to show"** all confirmed (2026-06-24)
 - [x] BRD ↔ Grooming ↔ UI compared (Step 0)
 
-**Sign-off blockers (remaining):** 🟡 only exact text of per-field validation errors (PIM10-TC1..8, PIM19) + empty-state search (PIM3-TC3, PIM4-TC2, PIM5-TC2) — to be asked separately
-**Closed by PO answers:** view mode · code unique · required/Image · Warranty/Price range · **Year range 2017–2027 (current year + 1)** · image max 3MB · conditional delete · search scope · stock read-only · default sort · toast text (create/update/delete)
+**Sign-off blockers (remaining):** ✅ **None — all HAs closed**
+**Closed by PO answers:** view mode · code unique · required/Image · Warranty/Price range · **Year range 2017–2027 (current year + 1)** · image max 3MB · conditional delete · search scope · stock read-only · default sort · toast text (create/update/delete) · per-field required error text · empty-state **"No entries to show"**

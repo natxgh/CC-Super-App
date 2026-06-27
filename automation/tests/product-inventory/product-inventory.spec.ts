@@ -26,8 +26,8 @@ const PASS = process.env.CP_PASSWORD || '';
 const ASSETS = process.env.CP_ASSETS_DIR || path.join(__dirname, '..', '..', 'assets');
 
 async function shot(page: Page, label: string) {
-  fs.mkdirSync('test-results/steps', { recursive: true });
-  await page.screenshot({ path: `test-results/steps/${label}.png`, fullPage: true }).catch(() => {});
+  fs.mkdirSync('test-results/steps/product-inventory', { recursive: true });
+  await page.screenshot({ path: `test-results/steps/product-inventory/${label}.png`, fullPage: true }).catch(() => {});
 }
 
 async function loginAndOpenList(page: Page) {

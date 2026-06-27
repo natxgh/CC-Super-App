@@ -1,0 +1,100 @@
+﻿ID,Feature,Action / Trigger Point,Status Code (API),Message (API),Description (API),UI Expected Message (EN),UI Expected Message (TH),Display Time (s),Remarks,Modified By
+mHBWy7B0eI,Customer Profile,Add customer success,0,Success,Create successfully,Success,สำเร็จ,,,Ketwadee Kaewmanee
+mHBWy70zqg,Customer Profile,Update customer success,0,Success,Update successfully,Success,สำเร็จ,,,Ketwadee Kaewmanee
+mHBWy7oe73,Customer Profile,Delete customer success,0,Success,Delete successfully,Success,สำเร็จ,,,Ketwadee Kaewmanee
+mHBWy7pt9v,Customer Profile,Add service/product success,0,Success,Create successfully,Success,สำเร็จ,,,Ketwadee Kaewmanee
+mHBWy7smv7,Customer Profile,Add/Update customer - Required Email,No API call,No API call,No API call,Please enter an email address,กรุณากรอกอีเมล,,,Ketwadee Kaewmanee
+mHHs1ULOJe,Customer Profile,Add/Update customer - Required phone number,No API call,No API call,No API call,Please enter a mobile number,กรุณากรอกเบอร์มือถือ,,,Ketwadee Kaewmanee
+mHHs1UCaVm,Customer Profile,Add customer - Duplicate email,-1,Failure,Email already exists,Email already exists,อีเมลนี้มีอยู่แล้ว,,,Watee Thaiprasonk
+nm9T3kQTcz,Customer Profile,Add customer - Duplicate Mobile No.,,,Mobile number already exists,Mobile number already exists,หมายเลขโทรศัพท์มือถือนี้มีอยู่แล้ว,,,Watee Thaiprasonk
+mHHs1U5VmM,Customer Profile,Update - Duplicate email,,,Email already exists,Email already exists,อีเมลนี้มีอยู่แล้ว,,,Watee Thaiprasonk
+mHHs1UnxY2,Customer Profile,Add customer - Invalid email format,No API call,No API call,No API call,Invalid email format,อีเมลไม่ถูกต้อง,,,Watee Thaiprasonk
+mHHs1U6auW,Customer Profile,Add customer - Invalid phone number format,No API call,No API call,No API call,Invalid mobile number format,เบอร์โทรศัพท์ไม่ถูกต้อง,,,Watee Thaiprasonk
+mHHs1UBOqI,Customer Profile,Add customer - Invalid citizen id format,No API call,No API call,No API call,Invalid CitizenID format,บัตรประจำตัวประชาชนไม่ถูกต้อง,,,Watee Thaiprasonk
+mHHs1UihCJ,Customer Profile,Upload photo - Upload file more than 3MB,-1,❌ File too large (4026 KB \u003e 3000 KB allowed for image),"""""",Error,เกิดข้อผิดพลาด,,,Ketwadee Kaewmanee
+mHHs1UPo9e,Customer Profile,Delete customer - With active case,,,,Customer has active warranty products ,ลูกค้ามีสินค้าที่อยู่ภายใต้การรับประกัน,,,Watee Thaiprasonk
+mHHs1U8KYJ,Customer Profile,Add/Update/Delete/View Customer - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,เคส API Fail นี้ระบบเป็น Global/Common ไหมคะ หรือแยกเคสกัน,,,,Watee Thaiprasonk
+mHHs1UjN9w,Customer Appointment,Add appointment success,0,Success,"""""",Success,สำเร็จ,,,Ketwadee Kaewmanee
+mHHs1U78oQ,Customer Appointment,Add appointment - Required Appointment Type ,No API call,No API call,No API call,Error,เกิดข้อผิดพลาด,,,Ketwadee Kaewmanee
+mHHs1UXfoV,Customer Appointment,Add appointment - Required Service Type,No API call,No API call,No API call,Error,เกิดข้อผิดพลาด,,,Ketwadee Kaewmanee
+mHHs1UUO1c,Customer Appointment,Add appointment - Required Appoint Date,No API call,No API call,No API call,Error,เกิดข้อผิดพลาด,,,Ketwadee Kaewmanee
+mXwGi09j8x,Customer Appointment,Add/Update/Delete/View Appointment - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mHHs1ULbMo,Customer Form Configuration,Update form config success,,,ตอนนี้ STG FE ไม่ยิง API แต่ขึ้น Toast Success,Configuration saved successfully,บันทึกการตั้งค่าสำเร็จ,,,Ketwadee Kaewmanee
+mHHs1Uz5N0,Customer Form Configuration,Add custom form success,,,,Success,สำเร็จ,,,Watee Thaiprasonk
+mHHs1U2Pca,Customer Form Configuration,Update custom form success,,,,Success,สำเร็จ,,,Watee Thaiprasonk
+mXwGrhfKvN,Customer Form Configuration,Add/Update/Delete/View Form Config - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mHHs1UgSwh,Product & Inventory Management,Add product success,,,ตอนนี้ STG FE ไม่ยิง API แต่ขึ้น Toast Success,Product created successfully,สร้าง สินค้า เรียบร้อยแล้ว,,,Ketwadee Kaewmanee
+mHHs1Uv6SQ,Product & Inventory Management,Update product success,0,Update Success,"""""",Product updated successfully,อัปเดต สินค้า เรียบร้อยแล้ว,,,Ketwadee Kaewmanee
+mHHs1UwJFt,Product & Inventory Management,Delete product success,,,,Product deleted successfully,ลบ สินค้า เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mHHs1UA2aH,Product & Inventory Management,Add/Update - Required all fields,No API call,No API call,No API call,"Please fill in: Product Name (TH), Product Name (EN), Product Code, Category, Brand, Year, Warranty (Days), Price","กรุณากรอกข้อมูล: ชื่อสินค้า (TH), ชื่อสินค้า (EN), รหัสสินค้า, หมวดหมู่, แบรนด์, ปี, การรับประกัน (วัน), ราคา",,,Ketwadee Kaewmanee
+mHHs1UcN0M,Product & Inventory Management,Add/Update - Required 'Product Name (TH)',No API call,No API call,No API call,Please fill in: Product Name (TH),กรุณากรอกข้อมูล: ชื่อสินค้า (TH),,,Ketwadee Kaewmanee
+mHHs1UUPmT,Product & Inventory Management,Add/Update - Required 'Product Name (EN)',No API call,No API call,No API call,Please fill in: Product Name (EN),กรุณากรอกข้อมูล: ชื่อสินค้า (EN),,,Ketwadee Kaewmanee
+mXq8BovKgD,Product & Inventory Management,Add/Update - Required 'Product Code',No API call,No API call,No API call,Please fill in: Product Code,กรุณากรอกข้อมูล: รหัสสินค้า,,,Ketwadee Kaewmanee
+mHHs1U2z8C,Product & Inventory Management,Add/Update - Required 'Category',No API call,No API call,No API call,Please fill in: Category,กรุณากรอกข้อมูล: หมวดหมู่,,,Ketwadee Kaewmanee
+mHHs1Ub2vp,Product & Inventory Management,Add/Update - Required 'Brand',No API call,No API call,No API call,Please fill in: Brand,กรุณากรอกข้อมูล: แบรนด์,,,Ketwadee Kaewmanee
+mHHs1UV1Db,Product & Inventory Management,Add/Update - Required 'Year',No API call,No API call,No API call,Please fill in: Year,กรุณากรอกข้อมูล: ปี,,,Ketwadee Kaewmanee
+mHHs1UGIaL,Product & Inventory Management,Add/Update - Required 'Warranty (Days)',No API call,No API call,No API call,Please fill in: Warranty (Days),กรุณากรอกข้อมูล: การรับประกัน (วัน),,,Ketwadee Kaewmanee
+mXmc0ImUIQ,Product & Inventory Management,Add/Update - Required 'Price',No API call,No API call,No API call,Please fill in: Price,กรุณากรอกข้อมูล: ราคา,,,Ketwadee Kaewmanee
+mXwGS0obtj,Product & Inventory Management,Add/Update/Delete/View Product - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mXwH7ozXn8,Product Stock Management,Add product stock success,0,,,Product Stock created successfully,สร้าง สต็อกสินค้า เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXx2v01hQ7,Product Stock Management,Update product stock success,0,Success,"""""",Product Stock updated successfully,อัปเดต สต็อกสินค้า เรียบร้อยแล้ว,,,Ketwadee Kaewmanee
+mXxIiEqGca,Product Stock Management,Delete product stock success,0,,,Product Stock deleted successfully,ลบ สต็อกสินค้า เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXxIsUXArI,Product Stock Management,Add/Update - Required all fields,No API call,No API call,No API call,Please fill in: Category,กรุณากรอกข้อมูล: หมวดหมู่,,,Watee Thaiprasonk
+mXxIKqKV60,Product Stock Management,Add/Update - Required 'Serial No.',No API call,No API call,No API call,Please fill in: Serial No.,กรุณากรอกข้อมูล: รหัสสินค้า,,,Watee Thaiprasonk
+mXxJTo4b6w,Product Stock Management,Add/Update - Required 'Product',No API call,No API call,No API call,Please fill in: Product,กรุณากรอกข้อมูล: ชื่อสินค้า,,,Watee Thaiprasonk
+mXxJTorkVB,Product Stock Management,Add/Update - Required 'Store',No API call,No API call,No API call,Please fill in: Store,กรุณากรอกข้อมูล: คลังสินค้า,,,Watee Thaiprasonk
+mXxJToZgB6,Product Stock Management,Add/Update - Required Registered Date',No API call,No API call,No API call,Please fill in: Registered Date,กรุณากรอกข้อมูล: วันที่ลงทะเบียน,,,Watee Thaiprasonk
+mXxJTo3iOu,Product Stock Management,Add/Update - Required 'Manufacturing Warranty',No API call,No API call,No API call,Please fill in: Manufacturing Warranty,กรุณากรอกข้อมูล: การรับประกันจากผู้ผลิต,,,Watee Thaiprasonk
+mXxJToNsKX,Product Stock Management,Add/Update/Delete/View Product stock - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mXxJToXtiC,Spare Parts & Inventory Management,Add sapre parts success,No API call,No API call,No API call,Spare parts created successfully,สร้าง อะไหล่ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXxJToMpRZ,Spare Parts & Inventory Management,Update sapre parts success,,,,Spare parts updated successfully,อัปเดต อะไหล่ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXxJToRDvo,Spare Parts & Inventory Management,Delete sapre parts success,,,,Spare Parts deleted successfully,ลบ อะไหล่ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXxJTo9fa8,Spare Parts & Inventory Management,Add/Update - Required all fields,No API call,No API call,No API call,"Please fill in: Spare Part Name (TH), Spare Part Name (EN), Category, Brand, Year, Warranty (Days), Price","กรุณากรอกข้อมูล: ชื่ออะไหล่ (TH), ชื่ออะไหล่ (EN), หมวดหมู่, แบรนด์, ปี, การรับประกัน (วัน), ราคา",,,Ketwadee Kaewmanee
+mXxJTo85Qg,Spare Parts & Inventory Management,Add/Update - Required 'Spare Part Name (TH)',No API call,No API call,No API call,Please fill in: Spare Part Name (TH),กรุณากรอกข้อมูล: ชื่ออะไหล่ (TH),,,Ketwadee Kaewmanee
+mXzVcZmy4g,Spare Parts & Inventory Management,Add/Update - Required 'Spare Part Name (EN)',No API call,No API call,No API call,Please fill in: Spare Part Name (EN),กรุณากรอกข้อมูล: ชื่ออะไหล่ (EN),,,Ketwadee Kaewmanee
+mXzVyqF3Wi,Spare Parts & Inventory Management,Add/Update - Required 'Category',No API call,No API call,No API call,Please fill in: Category,กรุณากรอกข้อมูล: หมวดหมู่,,,Ketwadee Kaewmanee
+mXzX34ZK7F,Spare Parts & Inventory Management,Add/Update - Required 'Brand',No API call,No API call,No API call,Please fill in: Brand,กรุณากรอกข้อมูล: แบรนด์,,,Ketwadee Kaewmanee
+mXzX34MnWm,Spare Parts & Inventory Management,Add/Update - Required 'Year',No API call,No API call,No API call,Please fill in: Year,กรุณากรอกข้อมูล: ปี,,,Ketwadee Kaewmanee
+mXzX34XnEH,Spare Parts & Inventory Management,Add/Update - Required 'Warranty (Days)',No API call,No API call,No API call,Please fill in: Warranty (Days),กรุณากรอกข้อมูล: การรับประกัน (วัน),,,Ketwadee Kaewmanee
+mXzX34EgIX,Spare Parts & Inventory Management,Add/Update - Required 'Price',No API call,No API call,No API call,Please fill in: Price,กรุณากรอกข้อมูล: ราคา,,,Ketwadee Kaewmanee
+mXzX34B9eS,Spare Parts & Inventory Management,Add/Update/Delete/View  Spare parst - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mXzX34x8zK,Spare Parts Stock Management,Add sapre parts stock success,0,,,Spare Parts Stock created successfully,สร้าง สต็อกอะไหล่ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXzX34MO2z,Spare Parts Stock Management,Update sapre parts stock success,0,Update Success,"""""",Spare Parts Stock updated successfully,อัปเดต สต็อกอะไหล่ เรียบร้อยแล้ว,,,Ketwadee Kaewmanee
+mXzX34TcX9,Spare Parts Stock Management,Delete sapre parts stock success,0,,,Spare Parts Stock deleted successfully,ลบ สต็อกอะไหล่ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXzX34hXrq,Spare Parts Stock Management,Add/Update - Required all fields,No API call,No API call,No API call,"Please fill in: Serial No., Spare part, Store","กรุณากรอกข้อมูล: รหัสอะไหล่, ชื่ออะไหล่, คลังสินค้า",,,Watee Thaiprasonk
+mXzX34VCQQ,Spare Parts Stock Management,Add/Update - Required 'Serial No.',No API call,No API call,No API call,Please fill in: Serial No.,กรุณากรอกข้อมูล: รหัสอะไหล่,,,Watee Thaiprasonk
+mXzX34IAiy,Spare Parts Stock Management,Add/Update - Required 'Spare Part',No API call,No API call,No API call,Please fill in: Spare Part,กรุณากรอกข้อมูล: ชื่ออะไหล่,,,Watee Thaiprasonk
+mXzX34Iy4z,Spare Parts Stock Management,Add/Update - Required 'Store',No API call,No API call,No API call,Please fill in: Store,กรุณากรอกข้อมูล: คลังสินค้า,,,Watee Thaiprasonk
+mXzX34Ypee,Spare Parts Stock Management,Add/Update/Delete/View Spare parst stock - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mXzX345BS0,Order Management,Add order success,0,,,Order created successfully,สร้าง คำสั่งซื้อ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXzX34ylyv,Order Management,Update order detail success,0,,,Order updated successfully,อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXzX34XChd,Order Management,Delete order success,0,,,Order deleted successfully,ลบ คำสั่งซื้อ เรียบร้อยแล้ว,,,Watee Thaiprasonk
+mXzX34zVlK,Order Management,Confirm order state transition/ all state,,,,ตอนนี้ STG ไม่แสดง Toast,,,,Ketwadee Kaewmanee
+mXzX34BroR,Order Management,Confirm order step - Fail (User not assign),-1,Forbidden,user not assign,Forbidden,,,,Ketwadee Kaewmanee
+mXzX34hsVo,Order Management,Add/Update/Delete/View Order - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mXzX34RxuB,Case and Ticket Management,Add case success,0,,,Create successfully,สร้างข้อมูลสำเร็จ,,,Watee Thaiprasonk
+mXzX34VkNJ,Case and Ticket Management,Update case detail success,0,,,Update successfully,อัปเดตข้อมูลสำเร็จ,,,Watee Thaiprasonk
+mXzX34nneg,Case and Ticket Management,Delete case success,0,,,Delete successfully,ลบข้อมูลสำเร็จ,,,Watee Thaiprasonk
+mXzX34RUVR,Case and Ticket Management,Confirm case state transition/ Dispatch state,0,,DispatchReponseAndUpdateCaseStatus-{caseId},Dispatch Success.,มอบหมายงานสำเร็จ,,,Watee Thaiprasonk
+nmvrdIXJkc,Case and Ticket Management,Confirm case state transition/ Acknowledge state,0,,,Acknowledge Success,ตอบรับงาน สำเร็จ,,,Watee Thaiprasonk
+nmvGd22eCg,Case and Ticket Management,Confirm case state transition/ In progress state,0,,,In Progress Success,กำลังดำเนินงาน สำเร็จ,,,Watee Thaiprasonk
+nmvFlwO0Fo,Case and Ticket Management,Confirm case state transition/ Done state,0,,,Done Success,,,,Watee Thaiprasonk
+nmzRHeOXio,Case and Ticket Management,Confirm case state transition/ Close state,0,,,Close Case Success.,ปิดงานสำเร็จ,,,Watee Thaiprasonk
+nmrdRvAook,Case and Ticket Management,Create case failure.,-1,,,Add Case fail.,สร้างเหตุไม่สำเร็จ,,,Watee Thaiprasonk
+nmzOUlAh1o,Case and Ticket Management,Cancel Case ,,,,Cancel Case Success.,ยกเลิกงานสำเร็จ,,,Watee Thaiprasonk
+mXzX344qVQ,Case and Ticket Management,Add/Update/Delete/View Case - API Failed (Connection lost/Service down/Timeout),500/504/404/XXX,,ECONNREFUSED,,,,,Watee Thaiprasonk
+mXzX34KUvi,Sign In,Sign In success,0,Success,"""""",Loading Case Successfully.,โหลดใบงานสำเร็จ,,,Ketwadee Kaewmanee
+mXzX3431I1,Sign In,Sign In - Incorrect Username or Password,-1,,,Failed to load case result data,โหลดข้อมูลประเภทปิดงานไม่สำเร็จ,,,Watee Thaiprasonk
+mXzX34f3sN,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34yfi8,,,,,,,,,,Ketwadee Kaewmanee
+mXzX347gA9,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34M8hU,,,,,,,,,,Ketwadee Kaewmanee
+mXzX3470cT,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34BwkQ,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34C6tT,,,,,,,,,,Ketwadee Kaewmanee
+mXzX347Wjc,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34Sk5K,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34i5jg,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34ritt,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34NoPp,,,,,,,,,,Ketwadee Kaewmanee
+mXzX34l7V9,,,,,,,,,,Ketwadee Kaewmanee

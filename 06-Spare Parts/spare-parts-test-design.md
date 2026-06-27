@@ -85,9 +85,9 @@
 
 | TC ID | Arrange | Act | Tested Condition | Expected Result | Type |
 |---|---|---|---|---|---|
-| **SP6-TC01** | Logged in as **Warehouse Staff or Admin**, Product "2026 Mercedes-Benz GLE 350de Plug-in Hybrid" exists | Fill the Add Spare Part form completely: Name(TH)="กรองอากาศ Denso", Name(EN)="Denso Air Filter DL-1101", Category="Vehicle Accessories", Brand="Denso", Year="2026", Warranty(Days)="365", Price="2500" → Click Save | SP-BC6 | Saved successfully; success toast shown — "Denso Air Filter DL-1101" appears in the list with Price: ฿2,500.00 and Warranty: 12 Months (365 days → 12 Months per SP-Q6) | POSITIVE |
-| **SP6-TC02** | Logged in as Warehouse Staff / Admin | Fill the form completely except "Spare Part Name (EN)" (leave empty) → Click Save | SP-BC6 | Not saved; validation error on field "Spare Part Name (EN)" — error state (red border / message under field) | NEGATIVE |
-| **SP6-TC03** | Logged in as Warehouse Staff / Admin | Fill the form completely except "Price" (leave empty) → Click Save | SP-BC6 | Not saved; validation error on field "Price" — error state | NEGATIVE |
+| **SP6-TC01** | Logged in as **Warehouse Staff or Admin**, Product "2026 Mercedes-Benz GLE 350de Plug-in Hybrid" exists | Fill the Add Spare Part form completely: Name(TH)="กรองอากาศ Denso", Name(EN)="Denso Air Filter DL-1101", Category="Vehicle Accessories", Brand="Denso", Year="2026", Warranty(Days)="365", Price="2500" → Click Save | SP-BC6 | Success toast: **"Spare parts created successfully"** — "Denso Air Filter DL-1101" appears in the list with Price: ฿2,500.00 and Warranty: 12 Months (365 days → 12 Months per SP-Q6) | POSITIVE |
+| **SP6-TC02** | Logged in as Warehouse Staff / Admin | Fill the form completely except "Spare Part Name (EN)" (leave empty) → Click Save | SP-BC6 | Not saved; validation error: **"Please fill in: Spare Part Name (EN)"** — error state on field (red border / message under field) | NEGATIVE |
+| **SP6-TC03** | Logged in as Warehouse Staff / Admin | Fill the form completely except "Price" (leave empty) → Click Save | SP-BC6 | Not saved; validation error: **"Please fill in: Price"** — error state on Price field | NEGATIVE |
 | **SP6-TC04** | Logged in as **porntip (Agent/Staff)**, org BMA | Open the Spare Parts page | SP-BC6, SP-Q1 | The "Add" button is **not visible** (intended RBAC behavior — Agent/Staff has no Add permission) | NEGATIVE |
 
 ### SP-BC7: Image Upload (JPG/PNG/GIF, max 3MB — SP-Q4)
@@ -102,8 +102,8 @@
 
 | TC ID | Arrange | Act | Tested Condition | Expected Result | Type |
 |---|---|---|---|---|---|
-| **SP8-TC01** | Logged in with Edit permission, "Mercedes-Benz M112" in the list | Click "Edit" on "Mercedes-Benz M112" → change Price from "100000" to "95000" → Click "Update Spare Parts" | SP-BC8 | Saved successfully; success toast — "Mercedes-Benz M112" shows Price: ฿95,000.00 in the list | POSITIVE |
-| **SP8-TC02** | Logged in with Edit permission, "Mercedes-Benz M112" in the list | Click "Edit" → clear "Spare Part Name (TH)" → Click "Update Spare Parts" | SP-BC8 | Not saved; validation error on "Spare Part Name (TH)" — error state; original data unchanged | NEGATIVE |
+| **SP8-TC01** | Logged in with Edit permission, "Mercedes-Benz M112" in the list | Click "Edit" on "Mercedes-Benz M112" → change Price from "100000" to "95000" → Click "Update Spare Parts" | SP-BC8 | Success toast: **"Spare parts updated successfully"** — "Mercedes-Benz M112" shows Price: ฿95,000.00 in the list | POSITIVE |
+| **SP8-TC02** | Logged in with Edit permission, "Mercedes-Benz M112" in the list | Click "Edit" → clear "Spare Part Name (TH)" → Click "Update Spare Parts" | SP-BC8 | Not saved; validation error: **"Please fill in: Spare Part Name (TH)"** — error state on field; original data unchanged | NEGATIVE |
 
 ### SP-BC9 / SP-BC12: Delete (State Transition)
 
@@ -124,7 +124,7 @@
 
 | TC ID | Arrange | Act | Tested Condition | Expected Result | Type |
 |---|---|---|---|---|---|
-| **SP9-TC01** | Logged in with Delete permission, "Synthetic Engine Oil 5W-30" in list (no Serial stock, no Active Order) | Click View → scroll down → Click "Delete" → Click "Confirm" in the dialog | SP-BC9 | **Before Confirm:** dialog shows "Delete [part name]?" with Confirm/Cancel — **After Confirm:** success message; "Synthetic Engine Oil 5W-30" is **removed** from the list | POSITIVE |
+| **SP9-TC01** | Logged in with Delete permission, "Synthetic Engine Oil 5W-30" in list (no Serial stock, no Active Order) | Click View → scroll down → Click "Delete" → Click "Confirm" in the dialog | SP-BC9 | **Before Confirm:** dialog shows "Delete [part name]?" with Confirm/Cancel — **After Confirm:** success toast: **"Spare Parts deleted successfully"**; "Synthetic Engine Oil 5W-30" is **removed** from the list | POSITIVE |
 | **SP9-TC02** | Logged in with Delete permission, "Brake Pads Set" in list | Click View → scroll down → Click "Delete" → Click "Cancel" in the dialog | SP-BC9 | Dialog closes, "Item Details" popup returns (or all close) — "Brake Pads Set" **remains** in the list | NEGATIVE |
 | **SP9-TC03** | Logged in with Delete permission, "Mercedes-Benz OM654.920" is linked to an **Active Order** (and/or has Serial stock) | Click View → Click "Delete" | SP-BC12, SP-Q5 | **Blocked** — system shows a warning that the part **cannot be deleted** (linked to an Active Order); the item **remains** in the list | NEGATIVE |
 

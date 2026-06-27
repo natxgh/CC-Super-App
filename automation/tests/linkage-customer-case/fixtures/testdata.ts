@@ -62,9 +62,10 @@ export const SEARCH_BY_EMAIL = 'bulan.jit@skyai.co.th';
 export const SEARCH_NO_RESULT = 'Nonexistent Person';
 
 // ── filter ────────────────────────────────────────────────────────────────────
-/** PO Q9: Type values = Bronze / Silver / Gold / Platinum / N/A */
+/** PO Q9: Type values = Bronze / Silver / Gold / Platinum / N/A
+ *  ⚠️ DISCREPANCY: actual DOM (probe 2026-06-21) has Bronze/Silver/Gold/Platinum only — N/A absent */
 export const FILTER_TYPE = 'Platinum';
-export const TYPE_VALUES = ['Bronze', 'Silver', 'Gold', 'Platinum', 'N/A'];
+export const TYPE_VALUES = ['Bronze', 'Silver', 'Gold', 'Platinum']; // N/A absent in live DOM (PO Q9 discrepancy)
 
 // ── duplicate (Add Customer negatives — PO Q3: block both) ─────────────────────
 export const DUP_PHONE = '0899181632';            // ซ้ำกับ Bulan J

@@ -169,9 +169,10 @@ export class CustomerFormPage {
     await this.fill(this.page.getByPlaceholder(/Position/), c.position);
   }
 
-  async uploadPhoto(filePath: string) {
-    await this.startCapture(); // arm ดัก error เผื่อ format/size ผิด (TA-09/10)
-    await this.photoInput.setInputFiles(filePath);
+  /** คืน false ถ้า Profile Photo section ไม่มีใน DOM (Bug #13034270 — section หายไป) */
+  async uploadPhoto(filePath: string): Promise<boolean> {
+    await this.startCapture();
+    return this.photoInput.setInputFiles(filePath, { timeout: 5000 }).then(() => true).catch(() => false);
   }
 
   /** รอฟอร์มพร้อม (email field โผล่) ก่อนทำงาน — กัน race หลังเปิด Add */

@@ -4,22 +4,29 @@ import { Page, Locator, expect } from '@playwright/test';
  * Page Object — Linkage Customer Profile with Case (LCP)
  * Lives on the Case Creation page: /cms/case/creation (right panel "Customer Information").
  *
- * ✅ VERIFIED LIVE DOM (probe 2026-06-20, UI=EN — shared with Case feature):
- *   - right-panel buttons (case creation): "Linked Existing", "Add Customer"
+ * ✅ VERIFIED LIVE DOM (probe 2026-06-21, UI=EN):
+ *   - right-panel buttons: "Linked Existing", "Add Customer"
  *   - case form input: placeholder "Enter Phone Number"
+ *   - Linked Existing modal: search input placeholder "Search Name,Mobile Number,Email..."
+ *   - Linked Existing modal: Search button (role=button, name "Search")
+ *   - Linked Existing modal: Filter Type = native <select> (options: Bronze / Silver / Gold / Platinum — no N/A)
+ *   - Linked Existing modal: per-row "Select" button (role=button, name "Select")
+ *   - Linked Existing modal: footer text "Showing 1-0 of 0 entries" (hyphen, not en-dash)
+ *   - Linked Existing modal: "Clear Filters" button present when filter/search active (probe 2026-06-26)
+ *   - Linked Existing modal: empty-state text = "No results found." (exact, with period — probe 2026-06-26)
+ *   - Add Customer modal: inputs name="email", name="mobileNo", name="firstName", name="lastName"
+ *   - Add Customer modal: Save button (role=button, name "Save")
+ *   - Customer 360 panel tabs: buttons (role=button, NOT role=tab)
+ *   - "View Full Profile" button → opens role=dialog modal
  *
- * ⚠️ NOT yet verified (best-effort selectors below, built from the design's documented UI strings →
- *    every test using them is test.fixme until the DOM is probed):
- *   - "Linked Existing" modal internals: search input (placeholder "Search Name,Mobile Number,Email."),
- *     Search button, Filter "Type", table columns (CUSTOMER/CONTACT/PRODUCT/SERVICE/TYPE/ACTIVE),
- *     per-row "Select" button, footer "Showing 1–N of N entries", "Clear Filters"
- *   - Customer 360 panel after link: tabs Profile/History/Note/Appointment/Product/Service, "Contact Channels",
- *     "View Full Profile" → Modal (PO Q10)
- *   - "Add Customer" quick-create modal: Email/Phone/First/Last inputs + Save + inline validation copy (PO Q4)
+ * ⚠️ STILL UNVERIFIED (tests using these remain test.fixme):
+ *   - Add Customer inline validation copy (exact strings) — defect B-1: no inline validation yet
+ *   - Customer 360 panel tab contents (History/Note/Appointment/Product/Service)
  *
- * 🐞 Known defects on this feature (gate execution — see MISSING-API.md / design Step 5):
- *   A-1 Search returns "No results found." for every keyword · A-2 Clear Filters does not re-fetch ·
- *   A-3 list-row identity ≠ linked profile · A-4 reopen modal hangs on loading · B-1 no inline validation yet
+ * 🐞 Known defects (gate execution — see MISSING-API.md / design Step 5):
+ *   A-1 Search returns "No results found." for every keyword · A-3 list-row identity ≠ linked profile ·
+ *   A-4 reopen modal hangs on loading · B-1 no inline validation yet
+ *   (A-2 "Clear Filters absent" — CLOSED: button confirmed present probe 2026-06-26; behavior unverified)
  */
 export class LinkagePage {
   readonly page: Page;
@@ -29,21 +36,21 @@ export class LinkagePage {
   readonly linkedExistingBtn: Locator;
   readonly addCustomerBtn: Locator;
 
-  // ── Linked Existing modal (best-effort / unverified) ──
+  // ── Linked Existing modal (verified 2026-06-21) ──
   readonly modal: Locator;
   readonly searchInput: Locator;
   readonly searchBtn: Locator;
-  readonly filterTypeTrigger: Locator;
-  readonly clearFiltersBtn: Locator;
+  readonly filterTypeTrigger: Locator; // native <select> — use selectOption()
+  readonly clearFiltersBtn: Locator;   // visible only when search/filter is active (probe 2026-06-26)
 
-  // ── Add Customer quick-create modal (best-effort / unverified) ──
+  // ── Add Customer quick-create modal (verified 2026-06-21) ──
   readonly addEmail: Locator;
   readonly addPhone: Locator;
   readonly addFirstName: Locator;
   readonly addLastName: Locator;
   readonly addSaveBtn: Locator;
 
-  // ── Customer 360 panel (best-effort / unverified) ──
+  // ── Customer 360 panel (verified 2026-06-21) ──
   readonly viewFullProfileBtn: Locator;
 
   constructor(page: Page) {
@@ -54,21 +61,21 @@ export class LinkagePage {
     this.linkedExistingBtn = page.getByRole('button', { name: /Linked Existing/i });
     this.addCustomerBtn = page.getByRole('button', { name: /Add Customer/i });
 
-    // unverified — Linked Existing modal
+    // verified — Linked Existing modal
     this.modal = page.getByRole('dialog');
     this.searchInput = page.getByPlaceholder(/Search Name,\s*Mobile Number,\s*Email/i);
     this.searchBtn = page.getByRole('button', { name: /^Search$/i });
-    this.filterTypeTrigger = this.modal.getByRole('button', { name: /Type/i });
+    this.filterTypeTrigger = page.locator('[role=dialog] select').first();
     this.clearFiltersBtn = page.getByRole('button', { name: /Clear Filters/i });
 
-    // unverified — Add Customer modal (minimal fields). name attrs reused from full Customer form best-effort
+    // verified — Add Customer modal (minimal fields)
     this.addEmail = page.locator('input[name="email"]');
     this.addPhone = page.locator('input[name="mobileNo"]');
     this.addFirstName = page.locator('input[name="firstName"]');
     this.addLastName = page.locator('input[name="lastName"]');
     this.addSaveBtn = page.getByRole('button', { name: /^Save$/i });
 
-    // unverified — 360 panel
+    // verified — 360 panel
     this.viewFullProfileBtn = page.getByRole('button', { name: /View Full Profile/i });
   }
 
@@ -95,18 +102,18 @@ export class LinkagePage {
   async selectByText(text: string) {
     await this.rowByText(text).getByRole('button', { name: /^Select$/i }).click();
   }
+  /** verified probe 2026-06-26: exact text = "No results found." (English, with period) */
   noResults(): Locator { return this.page.getByText(/No results found/i); }
+  /** Type filter is a native <select> — verified probe 2026-06-21 (Bronze/Silver/Gold/Platinum; no N/A) */
   async filterType(value: string) {
-    await this.filterTypeTrigger.click();
-    await this.page.getByRole('option', { name: new RegExp(value, 'i') })
-      .or(this.page.getByText(value, { exact: true })).first().click();
+    await this.filterTypeTrigger.selectOption(value);
   }
 
   // ── Customer Information card / case form (best-effort) ──
   /** the linked Customer Information card on the right panel */
   infoCard(): Locator { return this.page.getByText(/Customer Information/i).locator('xpath=ancestor::*[1]'); }
-  panelTab(name: string): Locator { return this.page.getByRole('tab', { name: new RegExp(`^${name}$`, 'i') })
-    .or(this.page.getByRole('button', { name: new RegExp(`^${name}$`, 'i') })); }
+  /** Panel tabs are role=button, not role=tab — verified probe 2026-06-21 */
+  panelTab(name: string): Locator { return this.page.getByRole('button', { name: new RegExp(`^${name}$`, 'i') }); }
   contactChannels(): Locator { return this.page.getByText(/Contact Channels/i); }
 
   // ── Add Customer quick-create (unverified) ──

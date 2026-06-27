@@ -38,6 +38,38 @@
 ## 2. Test Cases (condensed — full detail in the xlsx)
 
 > Real Example Data: Case Type `1002-Camera Malfunction -Repair` · Service Center `Thailand-Thonburi South Zone-phasicharoen` · customer `Somying Rakdee` phone `081-234-5678` · Detail `The CCTV camera at the front entrance is not working, the image is dark; checked and the power LED is off`
+>
+> Case Type Matrix (verified from Case Configuration 2026-06-22 — 11 device types, 27 sub-types):
+>
+> | SubType Code | Type EN | SubType EN | Priority | Workflow | SLA | DeviceType | WorkorderType |
+> |---|---|---|---|---|---|---|---|
+> | 1001 | Camera Malfunction | Investigation | 4 | BMA-Camera Flow | 97 | cctv | investigation |
+> | 1002 | Camera Malfunction | Repair | 3 | BMA-Camera Flow | 97 | cctv | repair |
+> | 1003 | Camera Malfunction | Service | 6 | BMA-Camera Flow | 97 | cctv | service |
+> | 1004 | Camera Malfunction | Maintenance | 6 | BMA-Camera Flow | 97 | cctv | maintenance |
+> | 1005 | Camera Malfunction | Outsourced | 6 | BMA-Camera Flow | 97 | cctv | outsource |
+> | 1101 | Road Flood Level Sensor | Investigation | 3 | BMA-Road Flood Level Sensor Flow | 97 | road-flood-level-sensor | investigation |
+> | 1201 | Water Level Station | Investigation | 3 | BMA-Water Level Station Flow | 97 | water-level-station | investigation |
+> | 2001 | Water Monitoring Devices | Investigation | 7 | BMA-Water Monitoring Devices Flow | 100 | water-monitoring-devices | investigation |
+> | 2002 | Water Monitoring Devices | Repair | 3 | BMA-Water Monitoring Devices Flow | 100 | water-monitoring-devices | repair |
+> | 2003 | Water Monitoring Devices | Service | 6 | BMA-Water Monitoring Devices Flow | 100 | water-monitoring-devices | service |
+> | 2004 | Water Monitoring Devices | Maintenance | 8 | BMA-Water Monitoring Devices Flow | 100 | water-monitoring-devices | maintenance |
+> | 2005 | Water Monitoring Devices | Outsourced | 9 | BMA-Water Monitoring Devices Flow | 100 | water-monitoring-devices | outsource |
+> | 3001 | NVR | Investigation | 3 | BMA-NVR Flow | 97 | nvr | investigation |
+> | 3002 | NVR | Repair | 3 | BMA-NVR Flow | 97 | nvr | repair |
+> | 3003 | NVR | Service | 3 | BMA-NVR Flow | 97 | nvr | service |
+> | 3004 | NVR | Maintenance | 3 | BMA-NVR Flow | 97 | nvr | maintenance |
+> | 3005 | NVR | Outsourced | 3 | BMA-NVR Flow | 97 | nvr | outsource |
+> | 4001 | DVR | Investigation | 3 | BMA-DVR Flow | 97 | dvr | investigation |
+> | 4002 | DVR | Repair | 3 | BMA-DVR Flow | 97 | dvr | repair |
+> | 4003 | DVR | Service | 3 | BMA-DVR Flow | 97 | dvr | service |
+> | 4004 | DVR | Maintenance | 3 | BMA-DVR Flow | 97 | dvr | maintenance |
+> | 4005 | DVR | Outsourced | 3 | BMA-DVR Flow | 97 | dvr | outsource |
+> | 5001 | Lighting Control | Investigation | 3 | BMA-Lighting Control Flow | 97 | lighting-control | investigation |
+> | 6001 | Weather Sensor | Investigation | 3 | BMA-Weather Sensor Flow | 97 | weather-sensor | investigation |
+> | 7001 | Rain Sensor | Investigation | 3 | BMA-Rain Sensor Flow | 97 | rain-sensor | investigation |
+> | 8001 | Traffic Lights | Investigation | 3 | BMA-Traffic Lights Flow | 97 | traffic-lights | investigation |
+> | 9001 | Water Flow Rate Sensor | Investigation | 3 | BMA-Water Flow Rate Sensor Flow | 97 | water-flow-rate | investigation |
 
 ### AC1 — Required fields (EP)
 | TC | Arrange | Act | Tested | Expected | Type |
@@ -52,8 +84,17 @@
 | AC2-TC3 | Add New Case page | Try to type the 4001st character | AC2 | System accepts only 4000, counter stays `4000 / 4000`, the extra char is not entered | NEGATIVE |
 
 ### AC3 — Priority auto-set (Use Case)
-| AC3-TC1 | Add New Case page | Select Case Type `1002-Camera Malfunction -Repair` | AC3 | Priority badge = **High Priority** (orange) | POSITIVE |
-| AC3-TC2 | Add New Case page | Select a Service Request Case Type (e.g. `101-1. Service Request-New Service`) | AC3 | Priority badge = level per **Case Configuration** (refer to CC Super App Configuration → Case Configuration, Q8) | POSITIVE |
+> ✅ Matrix verified 2026-06-22 (11 device types / 27 sub-types). Distinct priority values: 3, 4, 6, 7, 8, 9 — one TC per distinct value.
+> ✅ Q15 resolved (2026-06-25): Priority badge label mapping — 0=Critical Priority (Red) · 1–3=High Priority (Red) · 4–6=Medium Priority (Yellow) · 7–9=Low Priority (Blue)
+
+| TC | Arrange | Act (Data Test) | Tested | Expected | Type |
+|---|---|---|---|---|---|
+| AC3-TC1 | Add New Case page | Select `1002-Camera Malfunction -Repair` (Priority 3) | AC3 | Priority badge = `High Priority` (Red) | POSITIVE |
+| AC3-TC2 | Add New Case page | Select `1001-Camera Malfunction -Investigation` (Priority 4) | AC3 | Priority badge = `Medium Priority` (Yellow) | POSITIVE |
+| AC3-TC3 | Add New Case page | Select `1003-Camera Malfunction -Service` (Priority 6) | AC3 | Priority badge = `Medium Priority` (Yellow) | POSITIVE |
+| AC3-TC4 | Add New Case page | Select `2001-Water Monitoring Devices -Investigation` (Priority 7) | AC3 | Priority badge = `Low Priority` (Blue) | POSITIVE |
+| AC3-TC5 | Add New Case page | Select `2004-Water Monitoring Devices -Maintenance` (Priority 8) | AC3 | Priority badge = `Low Priority` (Blue) | POSITIVE |
+| AC3-TC6 | Add New Case page | Select `2005-Water Monitoring Devices -Outsourced` (Priority 9) | AC3 | Priority badge = `Low Priority` (Blue) | POSITIVE |
 
 ### AC4 — Phone auto-link (EP)
 | AC4-TC1 | A Customer Profile with phone `081-234-5678` exists; Add New Case page | Fill Phone Number `081-234-5678` | AC4 | Right panel shows the `Somying Rakdee` profile + Contact Channels (Phone=Primary) | POSITIVE |
@@ -166,6 +207,16 @@ CTM_TS03  Update a case while in progress
   2. UC2-TC1   Add a Comment
   3. UC2-TC2   Attach an on-site file
   → Expected: data + activity log fully updated
+
+CTM_TS05  Priority auto-set — verify all 6 distinct priority levels (matrix 2026-06-22)
+  1. AC3-TC1   1002-Camera Malfunction -Repair → Priority 3 → badge "High Priority" (Red)
+  2. AC3-TC2   1001-Camera Malfunction -Investigation → Priority 4 → badge "Medium Priority" (Yellow)
+  3. AC3-TC3   1003-Camera Malfunction -Service → Priority 6 → badge "Medium Priority" (Yellow)
+  4. AC3-TC4   2001-Water Monitoring Devices -Investigation → Priority 7 → badge "Low Priority" (Blue)
+  5. AC3-TC5   2004-Water Monitoring Devices -Maintenance → Priority 8 → badge "Low Priority" (Blue)
+  6. AC3-TC6   2005-Water Monitoring Devices -Outsourced → Priority 9 → badge "Low Priority" (Blue)
+  → Expected: each case type shows the corresponding priority badge; all 6 distinct values display correctly
+  → ✅ Q15 resolved (2026-06-25)
 ```
 
 ### Alternative (Unsuccess)
@@ -206,7 +257,7 @@ CTM_TA10  Cannot delete a case (permission/status)
 
 ---
 
-## 4. Hidden Assumptions — ✅ ALL RESOLVED by PO (2026-06-19)
+## 4. Hidden Assumptions — Q1–Q14 ✅ ALL RESOLVED by PO (2026-06-19) · Q15 OPEN (2026-06-22)
 
 | ID | Topic | ✅ PO answer (final) | Affects |
 |---|---|---|---|
@@ -224,6 +275,7 @@ CTM_TA10  Cannot delete a case (permission/status)
 | Q12 | Standard term Case vs Work Order | Use **"Case"** as the primary UI term; "Work Order" is legacy to be corrected | (whole feature) |
 | Q13 | Advanced Filter Start>End | System enforces **Start Date ≤ End Date** | HS3, TA08 |
 | Q14 | junk data on STG | Noted — bad test data to be cleaned before SIT | (data prep) |
+| **Q15** ✅ | **Priority number → UI badge label mapping** (matrix 2026-06-22 has 6 distinct values: 3, 4, 6, 7, 8, 9) — confirmed by PO 2026-06-25: **0=Critical Priority (Red) · 1–3=High Priority (Red) · 4–6=Medium Priority (Yellow) · 7–9=Low Priority (Blue)** | **RESOLVED** — Expected updated in AC3-TC1–TC6 and TS-05 | AC3, TS-05 |
 
 ---
 
@@ -239,6 +291,6 @@ CTM_TA10  Cannot delete a case (permission/status)
 | Has Success + Alternative | ✅ 4 Success (TS-01 full create→close E2E + 3) + 11 Alternative |
 | No contradictory conditions combined | ✅ |
 | Real Example Data, no Test/placeholder | ✅ |
-| Hidden Assumptions identified + asked PO | ✅ 14 items — **all 14 answered by PO (2026-06-19)** |
+| Hidden Assumptions identified + asked PO | ✅ 15 items all answered (Q1–Q14: 2026-06-19, Q15: 2026-06-25) |
 | IDs tagged + symbols marked | ✅ |
-| **Blocked** | ✅ **None** — Q1 creation bug Fixed (unblocks TS01/TS02/TS04); Q2–Q4 + Q9/Q13 answered and applied to TCs. Ready to execute |
+| **Blocked** | ✅ All 16 scenarios ready to execute (TS-05 + AC3-TC1–TC6 unblocked after Q15 resolved 2026-06-25) |

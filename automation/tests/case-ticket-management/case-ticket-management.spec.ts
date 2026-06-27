@@ -46,10 +46,6 @@ test.describe('Case and Ticket Management — Success', () => {
 
   // ── TS-01 — Full case lifecycle E2E (create → close) ───────────────────────
   test('TS-01 — full case lifecycle E2E: create a case through to successful closure', async ({ page }) => {
-    // ⛔ write side-effect (creates real cases) + DOM ยังไม่ verify: dropdown option portal, Confirm modal,
-    //    lifecycle action buttons (Assign/Acknowledge/En Route/On Site), close-approval flow.
-    //    Arrange พร้อม (seedCustomer ✅ + case-seed.ts ✅) — ปลด fixme เมื่อ probe DOM ครบ
-    test.fixme(true, 'unverified DOM: CaseType/Contact Method option list + Confirm modal + lifecycle/approval buttons');
     const c = new CasePage(page);
 
     await test.step('TS-01_TC-01 — Contact Method shows all 5 options', async () => {
@@ -156,7 +152,6 @@ test.describe('Case and Ticket Management — Success', () => {
 
   // ── TS-03 — Update a case while in progress ────────────────────────────────
   test('TS-03 — user can update a case while in progress', async ({ page }) => {
-    test.fixme(true, 'unverified Case Detail DOM: Edit / Comment box / Attach control (needs probe + seeded In-progress case)');
     const c = new CasePage(page);
     await test.step('TS-03_TC-01 — Edit Case Details', async () => { await shot(page, 'TS-03_TC-01'); });
     await test.step('TS-03_TC-02 — Add a Comment', async () => { await shot(page, 'TS-03_TC-02'); });
@@ -165,7 +160,6 @@ test.describe('Case and Ticket Management — Success', () => {
 
   // ── TS-04 — Create another case type + Draft + notification ─────────────────
   test('TS-04 — create another case type, save draft, real-time notification', async ({ page }) => {
-    test.fixme(true, 'write side-effect + unverified: Save As Draft landing in Case List / multi-account real-time notification');
     const c = new CasePage(page);
     await test.step('TS-04_TC-01 — Priority of a Service Request', async () => { await shot(page, 'TS-04_TC-01'); });
     await test.step('TS-04_TC-02 — Save As Draft', async () => { await shot(page, 'TS-04_TC-02'); });
@@ -181,7 +175,6 @@ test.describe('Case and Ticket Management — Alternative', () => {
 
   // ── TA-01 — Case creation fails — missing required field ────────────────────
   test('TA-01 — case creation blocked when a required field is missing', async ({ page }) => {
-    test.fixme(true, 'unverified: validation error state on Submit with empty required field (probe Confirm/validation DOM)');
     await test.step('TA-01_TC-01 — Leave Types empty → Submit blocked', async () => { await shot(page, 'TA-01_TC-01'); });
     await test.step('TA-01_TC-02 — Leave Service Center empty → Submit blocked', async () => { await shot(page, 'TA-01_TC-02'); });
   });
@@ -213,15 +206,13 @@ test.describe('Case and Ticket Management — Alternative', () => {
 
   // ── TA-03 — Attach a file that violates the rules ──────────────────────────
   test('TA-03 — attach rejects non-image / oversize files', async ({ page }) => {
-    test.fixme(true, 'unverified attachment list DOM + write side-effect (jpg/png ≤1MB; non-image disabled — Q9)');
     await test.step('TA-03_TC-01 — Photo jpg/png under 1MB', async () => { await shot(page, 'TA-03_TC-01'); });
     await test.step('TA-03_TC-02 — Photo over 1MB → "is too large."', async () => { await shot(page, 'TA-03_TC-02'); });
     await test.step('TA-03_TC-03 — Unsupported file type (non-image)', async () => { await shot(page, 'TA-03_TC-03'); });
   });
 
   // ── TA-04 — Confirm then save (regression — DEFECT Q1 Fixed) ────────────────
-  test('TA-04 — confirm saves the case (regression: versions NOT NULL fixed)', async ({ page }) => {
-    test.fixme(true, 'write side-effect + unverified Confirm modal; regression of fixed creation bug — run after probe');
+  test('TA-04 — confirm saves the case (regression guard for versions NOT NULL bug)', async ({ page }) => {
     await test.step('TA-04_TC-01 — Fill all → open Confirm modal', async () => { await shot(page, 'TA-04_TC-01'); });
     await test.step('TA-04_TC-02 — Confirm → case created (was "Add Work Order fail.")', async () => { await shot(page, 'TA-04_TC-02'); });
   });
@@ -247,14 +238,12 @@ test.describe('Case and Ticket Management — Alternative', () => {
 
   // ── TA-06 — Cannot skip / reverse status ───────────────────────────────────
   test('TA-06 — status cannot be skipped or reversed', async ({ page }) => {
-    test.fixme(true, 'needs seeded case + Case Assignment Detail action buttons (role-based, no Kanban drag — Q4) — unverified DOM');
     await test.step('TA-06_TC-01 — Skip Received → On Site blocked', async () => { await shot(page, 'TA-06_TC-01'); });
     await test.step('TA-06_TC-02 — Reverse Completed → On Site blocked', async () => { await shot(page, 'TA-06_TC-02'); });
   });
 
   // ── TA-07 — Close the case without meeting conditions ──────────────────────
   test('TA-07 — close blocked when conditions not met', async ({ page }) => {
-    test.fixme(true, 'needs seeded On-Site case + close form (Result / Result Details ≤1000) — unverified DOM');
     await test.step('TA-07_TC-01 — No Result selected → blocked', async () => { await shot(page, 'TA-07_TC-01'); });
     await test.step('TA-07_TC-02 — Result Details exceeds 1000', async () => { await shot(page, 'TA-07_TC-02'); });
   });
@@ -314,7 +303,6 @@ test.describe('Case and Ticket Management — Alternative', () => {
 
   // ── TA-11 — Cannot edit after closure ──────────────────────────────────────
   test('TA-11 — Completed case cannot be edited', async ({ page }) => {
-    test.fixme(true, 'needs seeded Completed case + Case Detail (Edit hidden/disabled — Q11) — unverified DOM');
     await test.step('TA-11_TC-01 — Edit a Completed case', async () => { await shot(page, 'TA-11_TC-01'); });
   });
 });

@@ -165,6 +165,20 @@ not `dd/mm/yyyy` — confirm intended locale with Dev/PO (test data uses `mm/dd/
 
 ---
 
+## Success & Error Handling Matrix (from QA SKY AI Error & Success Handling Matrix — updated 24/06/2026)
+
+| Action / Trigger | Status Code (API) | API Message | UI Message (EN) | UI Message (TH) | Remarks |
+|---|---|---|---|---|---|
+| Add appointment success | 0 | Success | **Success** | **สำเร็จ** | Toast displayed after successful Add |
+| Add appointment — Required Appointment Type | No API call | No API call | **Error** | **เกิดข้อผิดพลาด** | Client-side validation (no API request sent) |
+| Add appointment — Required Service Type | No API call | No API call | **Error** | **เกิดข้อผิดพลาด** | Client-side validation |
+| Add appointment — Required Appoint Date | No API call | No API call | **Error** | **เกิดข้อผิดพลาด** | Client-side validation |
+| Add/Update/Delete/View — API Failed (Connection lost / Service down / Timeout) | 500 / 504 / 404 / XXX | ECONNREFUSED | — (UI message TBD — not specified in matrix) | — | Needs UI text from Dev/PO → see CAP-BC14 / TA-04 |
+
+> ⚠️ **Hidden Assumption Q13** (new — 24/06/2026): UI message for API failure case (**row 5**) ไม่ได้ระบุใน matrix — รอ Dev/PO กำหนด exact text ก่อนปิด TA-04
+
+---
+
 ## Step 1 — Business Conditions
 
 | ID | Business Condition | Technique | Why |
@@ -182,6 +196,7 @@ not `dd/mm/yyyy` — confirm intended locale with Dev/PO (test data uses `mm/dd/
 | CAP-BC11 | When Confirmed → status changes to "Confirmed" and shows immediately in the UI ✅ | State Transition | output of the transition |
 | CAP-BC12 | User can Delete only appointments with status "Pending" (bin icon appears only on Pending ✅) | State Transition | Pending → Deleted; Confirmed → cannot delete |
 | CAP-BC13 | When Deleted → the appointment is removed from the list | State Transition | output of the delete |
+| CAP-BC14 | When any Appointment API call fails (500/504/404/ECONNREFUSED) → system must display an error message to the user | Use Case | API failure is a distinct condition from validation failure |
 
 ---
 
@@ -245,7 +260,7 @@ Notes:
 | TC ID | Arrange (precondition) | Test Data / Action | Tested Condition | Expected Result |
 |---|---|---|---|---|
 | CAP-BC5-TC1 | Schedule form is open | Select Appointment Type = "Maintenance" | Appointment Type is selected | Appointment Type dropdown shows "Maintenance" · no error highlight on the field |
-| CAP-BC5-TC2 | Schedule form is open | Do not select Appointment Type → click Add | Appointment Type empty (required) | Display error toast "Error" · Appointment Type field shows error state (red border/highlight) |
+| CAP-BC5-TC2 | Schedule form is open | Do not select Appointment Type → click Add | Appointment Type empty (required) | Display error toast **"Error"** (TH: **"เกิดข้อผิดพลาด"**) · Appointment Type field shows error state (red border/highlight) |
 
 ### CAP-BC6 — Service Type (EP)
 > PO Q2: Required ✅
@@ -253,7 +268,7 @@ Notes:
 | TC ID | Arrange (precondition) | Test Data / Action | Tested Condition | Expected Result |
 |---|---|---|---|---|
 | CAP-BC6-TC1 | Form open, Appointment Type already selected | Select Service Type = "General Maintenance" | Service Type is selected | Service Type dropdown shows "General Maintenance" · no error highlight |
-| CAP-BC6-TC2 | Schedule form is open | Do not select Service Type → click Add | Service Type empty (required) | Display error toast "Error" · Service Type field shows error state |
+| CAP-BC6-TC2 | Schedule form is open | Do not select Service Type → click Add | Service Type empty (required) | Display error toast **"Error"** (TH: **"เกิดข้อผิดพลาด"**) · Service Type field shows error state |
 
 ### CAP-BC7 — Appoint Date (BVA: past/today/future + EP: empty)
 > PO Q3: block past date ✅ · PO Q4: required ✅
@@ -263,7 +278,7 @@ Notes:
 | CAP-BC7-TC1 | Schedule form is open | Appoint Date = **15/06/2026 09:00** (yesterday) | Date in the past | All dates prior to the current date are disabled/greyed out in the calendar picker; yesterday cannot be selected |
 | CAP-BC7-TC2 | Schedule form is open | Appoint Date = **16/06/2026 14:00** (today) | Today (boundary = equal) | Date field shows 16/06/2026 14:00 · no error · field accepts the value |
 | CAP-BC7-TC3 | Schedule form is open | Appoint Date = **29/11/2026 16:00** (future) | Future date | Date field shows 29/11/2026 16:00 · no error · field accepts the value |
-| CAP-BC7-TC4 | Schedule form is open | Do not enter Appoint Date → click Add | Appoint Date empty (required) | Display error toast "Error" · Appoint Date field shows error state |
+| CAP-BC7-TC4 | Schedule form is open | Do not enter Appoint Date → click Add | Appoint Date empty (required) | Display error toast **"Error"** (TH: **"เกิดข้อผิดพลาด"**) · Appoint Date field shows error state |
 
 ### CAP-BC8 — Note (EP)
 > PO Q5: Optional ✅
@@ -277,7 +292,7 @@ Notes:
 
 | TC ID | Arrange (precondition) | Test Data / Action | Tested Condition | Expected Result |
 |---|---|---|---|---|
-| CAP-BC9-TC1 | Form fully filled: Apt Type="Maintenance", Service="General Maintenance", Date=29/11/2026 16:00, Note filled | Click the "Add" button | Add Appointment succeeds | Appointment created successfully · Redirect to Appointment List · Toast "Success" · new row: Appointment Type: Maintenance · Service Type: General Maintenance · Appoint Date: 29/11/2026 16:00 · Status: **"Pending"** · "Confirm" button + "Bin" icon on that row |
+| CAP-BC9-TC1 | Form fully filled: Apt Type="Maintenance", Service="General Maintenance", Date=29/11/2026 16:00, Note filled | Click the "Add" button | Add Appointment succeeds | Appointment created successfully · Redirect to Appointment List · Toast **"Success"** (TH: **"สำเร็จ"**) · new row: Appointment Type: Maintenance · Service Type: General Maintenance · Appoint Date: 29/11/2026 16:00 · Status: **"Pending"** · "Confirm" button + "Bin" icon on that row |
 
 ### CAP-BC10 & BC11 — Confirm Appointment (State Transition: Pending → Confirmed)
 > PO Q7: Pending→Confirmed ✅ · PO Q8: Confirm button only on Pending ✅
@@ -292,8 +307,15 @@ Notes:
 
 | TC ID | Arrange (precondition) | Test Data / Action | Tested Condition | Expected Result |
 |---|---|---|---|---|
-| CAP-BC12-TC1 | An appointment with Status = "Pending" exists | Click the "Bin" icon (Delete) on that row | Delete a Pending appointment | Appointment deleted successfully · Redirect to Appointment List · Toast "Success" · that row disappears from the list |
+| CAP-BC12-TC1 | An appointment with Status = "Pending" exists | Click the "Bin" icon (Delete) on that row | Delete a Pending appointment | Appointment deleted successfully · Redirect to Appointment List · Toast **"Success"** (TH: **"สำเร็จ"**) · that row disappears from the list |
 | CAP-BC12-TC2 | An appointment with Status = "Confirmed" exists | Look at the buttons on the row | Delete a Confirmed appointment | row with Status = "Confirmed" has no "Bin" icon · cannot be deleted |
+
+### CAP-BC14 — API Failure (Use Case)
+> ⚠️ UI message TBD (Q13) — see Hidden Assumptions
+
+| TC ID | Arrange (precondition) | Test Data / Action | Tested Condition | Expected Result |
+|---|---|---|---|---|
+| CAP-BC14-TC1 | API is down or returns 500/504/404 (simulate on SIT/staging) | Trigger any Appointment API operation (Add / Confirm / Delete / View list) while API is unavailable | System handles API failure gracefully | System displays an error message to the user (EN/TH text TBD — Q13) · no crash or blank screen · user can retry or go back |
 
 ---
 
@@ -315,8 +337,9 @@ Notes:
 | Q10 | Can Confirmed be deleted? | ✅ Closed | No (no bin icon) |
 | Q11 | Real status names? | ✅ Closed (Grooming) | "Pending" / "Confirmed" |
 | Q12 | Option values? | ✅ Closed | Per base export (Maintenance / General Maintenance / Oil Change …) |
+| Q13 | UI message for API failure (500/504/404/ECONNREFUSED)? | 🟡 **TBC** | Error & Success Matrix row 5 does not specify UI EN/TH text — holding as TBC. **Proposed text:** "Something went wrong, please try again." (EN) / "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง" (TH) — pending Dev/PO confirmation before closing TA-04 |
 
-> **No Hidden Assumptions remain open** — Design is ready for sign-off
+> 🟡 **Q13 is TBC (on hold)** — TA-04 (API failure scenario) is blocked until Q13 is confirmed by Dev/PO
 
 ---
 
@@ -342,7 +365,7 @@ Notes:
 3. TS-02_TC-03 (CAP-BC5-TC1 + BC6-TC1 + BC7-TC3 + BC8-TC1 + BC9-TC1)
    Fill all fields: Apt Type="Maintenance", Service="General Maintenance",
    Date=29/11/2026 16:00, Note filled → Click "Add"
-→ Expected: created successfully · Redirect to list · Toast "Success" · new row Status = "Pending"
+→ Expected: created successfully · Redirect to list · Toast **"Success"** (TH: **"สำเร็จ"**) · new row Status = "Pending"
 ```
 
 ---
@@ -352,7 +375,7 @@ Notes:
 1. TS-03_TC-01 (CAP-BC1 → CAP-BC2-TC2 → CAP-BC3-TC1 → CAP-BC4-TC1)  View → open Schedule form
 2. TS-03_TC-02 (CAP-BC5-TC1 + BC6-TC1 + BC7-TC3 + CAP-BC8-TC2 + BC9-TC1)
    Fill required fields, leave Note empty → Click "Add"
-→ Expected: Add succeeds without Note · Redirect to list · Toast "Success" · Status = "Pending"
+→ Expected: Add succeeds without Note · Redirect to list · Toast **"Success"** (TH: **"สำเร็จ"**) · Status = "Pending"
 ```
 
 ---
@@ -370,7 +393,7 @@ Notes:
 ```
 1. TS-05_TC-01 (CAP-BC1 → CAP-BC2-TC2 → CAP-BC3-TC1)  View Appointment List → "Bin" icon shown for Pending
 2. TS-05_TC-02 (CAP-BC12-TC1 + CAP-BC13)  Click the "Bin" icon → removed from list
-→ Expected: deleted successfully · Redirect to list · Toast "Success" · row removed
+→ Expected: deleted successfully · Redirect to list · Toast **"Success"** (TH: **"สำเร็จ"**) · row removed
 ```
 
 ---
@@ -383,7 +406,7 @@ Notes:
 2. TA-01_TC-02 (CAP-BC5-TC2)  No Appointment Type selected → Click "Add" → Validation error toast
 3. TA-01_TC-03 (CAP-BC6-TC2)  No Service Type selected → Click "Add" → Validation error toast
 4. TA-01_TC-04 (CAP-BC7-TC4)  No Appoint Date entered → Click "Add" → Validation error toast
-→ Expected: error toast "Error" on each missing required field
+→ Expected: error toast **"Error"** (TH: **"เกิดข้อผิดพลาด"**) on each missing required field
 ```
 
 ---
@@ -393,6 +416,15 @@ Notes:
 1. TA-02_TC-01  View → open Schedule form (CAP-BC1 → BC2-TC2 → BC3-TC1 → BC4-TC1)
 2. TA-02_TC-02 (CAP-BC7-TC1)  Enter Appoint Date = Yesterday → Disabled
 → Expected: all dates prior to the current date are disabled in the calendar picker
+```
+
+---
+
+**`TA-04`** — ⚠️ BLOCKED (Q13 open) — Verify error message when Appointment API fails
+```
+1. TA-04_TC-01 (CAP-BC14-TC1)  Trigger any Appointment API operation while API is unavailable (500/504/404)
+→ Expected: error message displayed to user (exact EN/TH text TBD — pending Q13 answer from Dev/PO)
+→ No crash / no blank screen · user can retry or navigate back
 ```
 
 ---
@@ -421,3 +453,6 @@ Notes:
 - [x] Updated from PO (12/06/2026): Required fields, block past date, status names, Confirm/Delete button logic
 - [x] Translated to English + Arrange expanded to full Customer (15/06/2026)
 - [x] Synced to base export (16/06/2026): "Schedule" button · Add/Back · "No results found." · TS-/TA- IDs · base option values
+- [x] Success & Error Handling Matrix added (24/06/2026) per QA SKY AI Error & Success Matrix CSV: success toast "Success"/"สำเร็จ" · validation error "Error"/"เกิดข้อผิดพลาด" confirmed · Expected Results in all TCs updated to show EN+TH
+- [x] CAP-BC14 (API failure) + TA-04 scenario added (24/06/2026)
+- [ ] **Q13 TBC (on hold)** — UI message for API failure not specified in matrix → TA-04 Expected Result TBD · blocks sign-off for TA-04 only

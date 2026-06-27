@@ -26,7 +26,7 @@
 | Q8 | Low threshold | ✅ 0 = Out of Stock · 1–5 = Low Stock · >5 = In Stock · configurable per company |
 | Q9 | Badge scope | ✅ Badge on Product and Spare Parts (/cms/inventory) pages; Product Stock page (unit registry) has **no** qty badge |
 | Q10 | Order Pick scope | ✅ Test Out of Stock via creating Product Stock / Spare Parts items per same threshold |
-| Q11 | Exact text | ✅ "Product serial created/updated/deleted successfully" |
+| Q11 | Exact text | ✅ "Product Stock created/updated/deleted successfully" (EN) / "สร้าง/อัปเดต/ลบ สต็อกสินค้า เรียบร้อยแล้ว" (TH) — from Error & Success Handling Matrix |
 | Q12 | Notification | ✅ Realtime; **self-loop Low→Low does NOT create a duplicate notification** |
 
 ---
@@ -80,16 +80,16 @@
 ### PS3 — Required Field Validation (Use Case)
 | TC | Arrange | Act | Expected |
 |----|---------|-----|----------|
-| `PS3-TC1` ✔ | Modal open; Product = "2026 Mercedes GLC SUV", Store = "Store2", Registered Date = "2026-06-13", MW = "2027-06-13" | Leave Serial No. empty → click Create | Serial No. field shows error state; form not submitted |
-| `PS3-TC2` ✔ | Modal; SN = "MB2026GLC-0001", Store = "Store2", Registered = "2026-06-13" | Leave Product empty → click Create | Product field shows error state; form not submitted |
-| `PS3-TC3` ✔ | Modal; SN = "MB2026GLC-0001", Product = "2026 Mercedes GLC SUV", Registered = "2026-06-13" | Leave Store empty → click Create | Store field shows error state; form not submitted |
-| `PS3-TC4` ✔ | Modal; SN = "MB2026GLC-0001", Product = "2026 Mercedes GLC SUV", Store = "Store2" | Leave Registered Date empty → click Create | Registered Date field shows error state; form not submitted |
-| `PS3-TC5` ✔ | Modal; all required fields filled, MW left empty | Click Create | Toast "Product serial created successfully"; modal closes; unit created (confirms MW is optional) |
+| `PS3-TC1` ✔ | Modal open; Product = "2026 Mercedes GLC SUV", Store = "Store2", Registered Date = "2026-06-13", MW = "2027-06-13" | Leave Serial No. empty → click Create | Serial No. field shows error state with message **"Please fill in: Serial No."**; form not submitted |
+| `PS3-TC2` ✔ | Modal; SN = "MB2026GLC-0001", Store = "Store2", Registered = "2026-06-13" | Leave Product empty → click Create | Product field shows error state with message **"Please fill in: Product"**; form not submitted |
+| `PS3-TC3` ✔ | Modal; SN = "MB2026GLC-0001", Product = "2026 Mercedes GLC SUV", Registered = "2026-06-13" | Leave Store empty → click Create | Store field shows error state with message **"Please fill in: Store"**; form not submitted |
+| `PS3-TC4` ✔ | Modal; SN = "MB2026GLC-0001", Product = "2026 Mercedes GLC SUV", Store = "Store2" | Leave Registered Date empty → click Create | Registered Date field shows error state with message **"Please fill in: Registered Date"**; form not submitted |
+| `PS3-TC5` ✔ | Modal; all required fields filled, MW left empty | Click Create | Toast **"Product Stock created successfully"**; modal closes; unit created (confirms MW is optional) |
 
 ### PS4 — Serial No. Uniqueness (EP)
 | TC | Arrange | Act | Expected |
 |----|---------|-----|----------|
-| `PS4-TC1` ✔ | SN "MB2026GLC-0007" does NOT exist in system | Create with SN "MB2026GLC-0007" + required fields | Toast "Product serial created successfully"; unit added to list |
+| `PS4-TC1` ✔ | SN "MB2026GLC-0007" does NOT exist in system | Create with SN "MB2026GLC-0007" + required fields | Toast **"Product Stock created successfully"**; unit added to list |
 | `PS4-TC2` ✔ | SN "100003-002" already exists in system | Create with SN "100003-002" + required fields | Error shown (duplicate Serial No.); unit not created |
 
 ### PS5 — Serial No. Format & Length (EP + BVA)
@@ -123,7 +123,7 @@
 ### PS9 — Add Success Happy Path (Use Case)
 | TC | Arrange | Act | Expected |
 |----|---------|-----|----------|
-| `PS9-TC1` ✔ | SN "MB2026GLC-0007" does not exist; "2026 Mercedes GLC SUV" and "Store2" in master | Fill: SN "MB2026GLC-0007" / Product "2026 Mercedes GLC SUV" / Store "Store2" / Registered "2026-06-13" / MW "2027-06-13" → click Create | Toast "Product serial created successfully"; modal closes; row "MB2026GLC-0007 / 2026 Mercedes GLC SUV / Store2" visible in list; Status = "R001 / New" |
+| `PS9-TC1` ✔ | SN "MB2026GLC-0007" does not exist; "2026 Mercedes GLC SUV" and "Store2" in master | Fill: SN "MB2026GLC-0007" / Product "2026 Mercedes GLC SUV" / Store "Store2" / Registered "2026-06-13" / MW "2027-06-13" → click Create | Toast **"Product Stock created successfully"**; modal closes; row "MB2026GLC-0007 / 2026 Mercedes GLC SUV / Store2" visible in list; Status = "R001 / New" |
 
 ### PS10 — RBAC (EP)
 | TC | Arrange | Act | Expected |
@@ -199,17 +199,17 @@ All other hidden assumptions (HA1–HA5, HA7–HA12) resolved by PO answers Q1�
 1. `PS1-TC1` — Open list page; Add button visible
 2. `PS2-TC1` — Click Add; modal opens with correct fields
 3. `PS9-TC1` — Fill all fields including MW; click Create
-→ **Toast "Product serial created successfully"; new unit visible in list**
+→ **Toast "Product Stock created successfully"; new unit visible in list**
 
 `PS_TS02` — Add Product Stock without Manufacturing Warranty (optional field)
 1. `PS2-TC1` — Open Add modal
 2. `PS3-TC5` — Fill required fields only; leave MW empty; click Create
-→ **"Product serial created successfully" (MW confirmed optional)**
+→ **Toast "Product Stock created successfully" (MW confirmed optional)**
 
 `PS_TS03` — Valid Serial No. format + no duplicate → Create success
 1. `PS5-TC1` — Enter alphanumeric+dash SN "BMWG20-0007" (valid format)
 2. `PS4-TC1` — SN not a duplicate → Create
-→ **Unit created successfully**
+→ **Toast "Product Stock created successfully"**
 
 `PS_TS04` — Stock status badge at all threshold boundaries (BVA)
 1. `PS11-TC5` — qty = 6 → In Stock

@@ -327,7 +327,7 @@ Note: delete field = new revision (not a real delete) · cannot delete Form from
 - [x] **Hidden Assumptions Q1–Q9 answered in full (PO confirmed 13/06/2026)** — applied to design completely
 - [x] **Sign-off unblocked** — no pending questions
 - [x] IDs assigned + marked the cases used in each Scenario
-- [ ] **HA-DFC1–4 pending PO confirmation** (see DFC Step 4)
+- [x] **HA-DFC1–4 PO confirmed (22/06/2026)** — applied to design · added DFC2-TC5 (all-OFF) + DFC2-TC6 (data-safety)
 
 ---
 
@@ -336,7 +336,7 @@ Note: delete field = new revision (not a real delete) · cannot delete Form from
 
 > **Updated 17/06/2026:** Scope extended after inspecting STG — the Customer Form Configuration page has 4 additional sections
 > (Profile Photo · Personal Details · Address · Preferences) that control which fields appear on Add/Edit Customer.
-> This scope was just identified — **HA-DFC1–4 pending PO confirmation** before finalising.
+> **Updated 22/06/2026:** PO confirmed HA-DFC1–4 — finalized.
 
 ---
 
@@ -411,6 +411,8 @@ Note: delete field = new revision (not a real delete) · cannot delete Form from
 | DFC2-TC2 | Date of Birth = OFF → Save Configuration | Go to Add Customer | Date of Birth OFF | Date of Birth NOT shown in Personal Details on Add Customer |
 | DFC2-TC3 | Blood Type = OFF (STG default) → toggle ON → Save Configuration | Go to Add Customer | Blood Type ON | Blood Type appears in Personal Details on Add Customer |
 | DFC2-TC4 | Set all 9 Personal Details fields = ON → Save Configuration | Go to Add Customer | All fields ON | All 9 fields shown (Display Name, Title, First Name, Middle Name, Last Name, Citizen ID, Date of Birth, Blood Type, Gender) |
+| DFC2-TC5 *(HA-DFC1)* | Set every Personal Details field = OFF → Save Configuration | Go to Add Customer | All-OFF — any field can be toggled (PO confirmed) | No Personal Details fields appear (no exceptions) |
+| DFC2-TC6 *(HA-DFC2)* | Customer has existing Date of Birth data → toggle Date of Birth = OFF → Save Configuration | Go to Edit Customer | Data hidden, not cleared (PO confirmed) | DOB field hidden on Edit Customer · toggle ON → field + original data return intact |
 
 #### DFC3 — Address field toggle (EP)
 | TC ID | Arrange | Act | Tested Condition | Expected |
@@ -443,16 +445,14 @@ Note: delete field = new revision (not a real delete) · cannot delete Form from
 
 ---
 
-### Step 4 (DFC) — Hidden Assumptions (⏳ Pending PO)
+### Step 4 (DFC) — Hidden Assumptions (✅ PO Confirmed 22/06/2026)
 
-| Q | Topic | Proposed | Affects |
+| Q | Topic | PO Answer | Affects |
 |---|---|---|---|
-| HA-DFC1 | Required fields — can Display Name / First Name / Last Name be toggled OFF, or must they always stay ON? | ✅ any field can be toggled · ❌ some are required and cannot be turned OFF | DFC2-TC4 · all-OFF edge case |
-| HA-DFC2 | Toggle OFF a field that already has data in existing customers → data hidden (kept server-side) or cleared? | ✅ hidden only · ❌ data cleared | data-safety TCs |
-| HA-DFC3 | Does Save Configuration save all sections (standard + Custom Form) together in one click? | ✅ one save for all · ❌ separate save per section | DFC5-TC1 |
-| HA-DFC4 | Blood Type showing OFF in STG — is that the system default or was it manually configured? | ✅ default = OFF · ❌ manually set | DFC2-TC3 baseline |
-
-> ⏳ **HA-DFC1–4 pending PO confirmation** — apply to design once answered
+| HA-DFC1 | Required fields — can Display Name / First Name / Last Name be toggled OFF, or must they always stay ON? | ✅ **Any field can be toggled OFF — no exceptions** | DFC2-TC4, **DFC2-TC5** (all-OFF edge case) |
+| HA-DFC2 | Toggle OFF a field that already has data in existing customers → data hidden (kept server-side) or cleared? | ✅ **Data is NOT cleared — hidden only** (toggle ON restores original data) | **DFC2-TC6** (data-safety) |
+| HA-DFC3 | Does Save Configuration save all sections (standard + Custom Form) together in one click? | ✅ **One button saves all sections at once** | DFC5-TC1 ✓ confirmed |
+| HA-DFC4 | Blood Type showing OFF in STG — is that the system default or was it manually configured? | ✅ **Blood Type = OFF is the system default** (not mandatory to show) | DFC2-TC3 baseline ✓ confirmed |
 
 ---
 
@@ -484,6 +484,8 @@ Note: delete field = new revision (not a real delete) · cannot delete Form from
 | Scenario | Flow (TC order) | Result |
 |---|---|---|
 | **DFC_TA01** | Toggle Profile Photo=OFF + Date of Birth=OFF + Note=OFF → DFC5-TC1 Save → Add Customer | All 3 fields absent from the Add Customer form |
+| **DFC_TA02** *(HA-DFC1)* | `DFC2-TC5` Set all Personal Details fields = OFF → Save → Add Customer | No Personal Details fields shown at all (all-OFF is valid) |
+| **DFC_TA03** *(HA-DFC2)* | `DFC2-TC6` Toggle Date of Birth = OFF (customer has existing DOB data) → Save → Edit Customer → toggle ON → Edit again | Data not cleared — field + original data return after toggling ON |
 
 #### 🔁 UI behavior
 `DFC_UI01` — Section accordion: `DFC7-TC1 → DFC7-TC2` (collapse → expand)

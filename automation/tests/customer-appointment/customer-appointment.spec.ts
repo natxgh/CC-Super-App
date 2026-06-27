@@ -18,13 +18,11 @@ import * as D from './fixtures/testdata';
  *
  * ⚠️ staging ต้อง login จริง — set CP_USERNAME/CP_PASSWORD/CP_ORG เพื่อรัน (ไม่ตั้ง → skip, ไม่แกล้งผ่าน)
  *
- * RUN/FIXME (ตามจริง — ไม่แกล้งเขียว) — อัปเดต 2026-06-19:
- *   ▶ RUN   : TS-01 (view list), TA-02 (past date disabled), TA-03 (empty state)
- *             — verified: tab nav + "Schedule" + react-datepicker disabled days + "No results found."
- *   ⏸ FIXME : BLOCKED by 2 FE bugs (Arrange/seed พร้อมหมดแล้ว — appointment-seed.ts ✅ verified):
- *             (1) TS-02/TS-03 (Add) + TA-01 (validation) — dropdown options CORS fail
- *                 → BUG-appointment-type-options.md
- *             (2) TS-04 (Confirm) + TS-05 (Delete) — Appointment tab ส่ง id:"undefined" → list ว่างเสมอ
+ * RUN/FIXME (ตามจริง — ไม่แกล้งเขียว) — อัปเดต 2026-06-24:
+ *   ▶ RUN   : TS-01 (view list), TA-01 (validation), TA-02 (past date disabled), TA-03 (empty state)
+ *             TS-03 (add without note) — probe 2026-06-24: CORS ✅ fixed (dropdown เลือกได้), date=click+pressSequentially
+ *   ⏸ FIXME : BLOCKED by FE bug (id:undefined ยังอยู่ — ยืนยันจากรัน 2026-06-24):
+ *             TS-02/TS-04/TS-05 — GetAppointmentByCustId ส่ง id:"undefined" → list ว่างเสมอ
  *                 → BUG-appointment-list-undefined-id.md
  *             → ปลด fixme เมื่อ FE แก้ 2 bugs นี้ + probe row DOM (Confirm/Bin/Status)
  */
@@ -68,7 +66,10 @@ test.describe('Customer Appointment — Success', () => {
 
     await test.step('TS-01_TC-01 — Navigate to Contact list → display Customer List → View "Siriwimon Somjit"', async () => {
       await loginAndOpenList(page);
-      await seedCustomer(page, D.CUST_HAS_APPT); // Arrange: ต้องมีลูกค้าก่อน (API-first)
+      await seedCustomer(page, D.CUST_HAS_APPT);
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email);          // clean-slate
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_CONFIRMED_APPT); // Arrange #1
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT);   // Arrange #2
       await expect(page).toHaveURL(/contacts-list/);
       await list.search(D.CUST_HAS_APPT.email);
       await list.clickView(D.NAME_HAS_APPT);
@@ -78,22 +79,23 @@ test.describe('Customer Appointment — Success', () => {
     await test.step('TS-01_TC-02 — Click the "Appointment" tab → display Appointment List', async () => {
       await detail.appointmentSubBtn.click();
       await page.waitForLoadState('domcontentloaded').catch(() => {});
-      // best-effort: appointment area + "Schedule" ปุ่ม ควรปรากฏ (เนื้อหา list = unverified selector)
-      await expect(appt.scheduleBtn.or(appt.list)).toBeVisible();
+      await expect(appt.scheduleBtn).toBeVisible();
       await shot(page, 'TS-01_TC-02');
     });
   });
 
   // ── TS-02 — Add appointment (fill all fields) ──────────────────────────────
   test('TS-02 — user can successfully adding customer appointment (Fill in all fields)', async ({ page }) => {
-    // ⚠️ Schedule form DOM ยังไม่ verify + เป็น write side-effect บน staging → fixme จนกว่าจะ probe
-    test.fixme(true, 'FE bug: dropdown CORS fail → เลือก type/service ไม่ได้ (ดู BUG-appointment-type-options.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TS-02_TC-01 — View Appointment', async () => {
       await loginAndOpenList(page);
+      await seedCustomer(page, D.CUST_HAS_APPT);
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email);
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_CONFIRMED_APPT); // Arrange #1
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT);   // Arrange #2
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.expectListVisible();
       await shot(page, 'TS-02_TC-01');
@@ -113,13 +115,16 @@ test.describe('Customer Appointment — Success', () => {
 
   // ── TS-03 — Add appointment without Note (optional) ────────────────────────
   test('TS-03 — user can successfully adding customer appointment without Note (optional)', async ({ page }) => {
-    test.fixme(true, 'FE bug: dropdown CORS fail → เลือก type/service ไม่ได้ (ดู BUG-appointment-type-options.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TS-03_TC-01 — View Appointment', async () => {
       await loginAndOpenList(page);
+      await seedCustomer(page, D.CUST_HAS_APPT);
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email);
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_CONFIRMED_APPT); // Arrange #1
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT);   // Arrange #2
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.openScheduleForm();
       await shot(page, 'TS-03_TC-01');
@@ -135,18 +140,16 @@ test.describe('Customer Appointment — Success', () => {
 
   // ── TS-04 — Confirm appointment (Pending → Confirmed) ──────────────────────
   test('TS-04 — user can successfully confirm appointment (Pending → Confirmed)', async ({ page }) => {
-    // ⛔ BLOCKED by FE bug: Appointment tab ส่ง id:"undefined" → list ว่างเสมอ (BUG-appointment-list-undefined-id.md)
-    // Seed + Arrange พร้อมแล้ว (seedAppointment ✅ verified) — ปลด fixme เมื่อ FE แก้ bug + probe row DOM
-    test.fixme(true, 'FE bug: GetAppointmentByCustId ส่ง id:"undefined" → list ว่างเสมอ (ดู BUG-appointment-list-undefined-id.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TS-04_TC-01 — "Confirm" button shown for Pending', async () => {
       await loginAndOpenList(page);
-      await seedCustomer(page, D.CUST_HAS_APPT);                 // Arrange: customer มีอยู่
-      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email); // clean-slate (idempotent)
-      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT); // Arrange: Pending row (API-first)
+      await seedCustomer(page, D.CUST_HAS_APPT);
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email);
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_CONFIRMED_APPT); // Arrange #1
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT);   // Arrange #2 — row ที่ Confirm
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.expectStatus(D.PENDING_ROW, 'Pending');
       await expect(appt.row(D.PENDING_ROW).getByRole('button', { name: /^Confirm$/i })).toBeVisible();
@@ -163,17 +166,17 @@ test.describe('Customer Appointment — Success', () => {
 
   // ── TS-05 — Delete pending appointment ─────────────────────────────────────
   test('TS-05 — user can successfully delete pending appointment', async ({ page }) => {
-    // ⛔ BLOCKED by FE bug: Appointment tab ส่ง id:"undefined" → list ว่างเสมอ (BUG-appointment-list-undefined-id.md)
-    test.fixme(true, 'FE bug: GetAppointmentByCustId ส่ง id:"undefined" → list ว่างเสมอ (ดู BUG-appointment-list-undefined-id.md)');
+    // ✅ FE fix confirmed (Lark #12975959, 2026-06-25) — unblocked
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);
 
     await test.step('TS-05_TC-01 — View Appointment and Bin icon shown for Pending', async () => {
       await loginAndOpenList(page);
-      await seedCustomer(page, D.CUST_HAS_APPT);                 // Arrange: customer มีอยู่
-      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email); // clean-slate (idempotent)
-      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT); // Arrange: Pending row (API-first)
+      await seedCustomer(page, D.CUST_HAS_APPT);
+      await purgeAppointmentsByEmail(page, D.CUST_HAS_APPT.email);
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_CONFIRMED_APPT); // Arrange #1
+      await seedAppointment(page, D.CUST_HAS_APPT.email, D.SEED_PENDING_APPT);   // Arrange #2 — row ที่ Delete
       await openAppointmentTab(page, list, detail, D.CUST_HAS_APPT.email, D.NAME_HAS_APPT);
       await appt.expectStatus(D.PENDING_ROW, 'Pending');
       await shot(page, 'TS-05_TC-01');
@@ -195,7 +198,6 @@ test.describe('Customer Appointment — Alternative', () => {
 
   // ── TA-01 — Error toast on empty required fields ───────────────────────────
   test('TA-01 — verify error toast when adding with empty required fields', async ({ page }) => {
-    test.fixme(true, 'FE bug: dropdown CORS fail → เปิด option list ไม่ได้ก่อนถึง validation (ดู BUG-appointment-type-options.md)');
     const list = new CustomerListPage(page);
     const detail = new CustomerDetailPage(page);
     const appt = new AppointmentPage(page);

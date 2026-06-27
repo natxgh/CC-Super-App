@@ -5,34 +5,31 @@ import { GQL, getToken, findIdsByEmail } from '../../customer-profile/fixtures/s
 
 /**
  * API-First Arrange + Teardown สำหรับ Appointment (CAP)
- * ✅ VERIFIED (probe 2026-06-19) — endpoint เดียวกับ Customer (cc-bff-qa/graphql), JWT เดิม
+ * ✅ VERIFIED (probe 2026-06-19/23) — endpoint เดียวกับ Customer (cc-bff-qa/graphql), JWT เดิม
  *
  * GraphQL ops:
  *   CreateAppointment(AppointmentInsertInput!) → data = UUID string (appointment UUID, ไม่ใช่ numeric id)
  *   DeleteAppointment(GetIdInput!{id}) → id = numeric string จาก GetAppointmentByCustId[].id
  *   GetAppointmentByCustId(ListDataInput2{id,start,length}) → data = [{id:"802",appointmentId:"A...",appointmentType:{en},serviceType:{en},...}]
- *
- * REST master-data (welcome-crm-qa/api/v1) — ใช้ Bearer JWT เดิม, ไม่ติด CORS ใน APIRequestContext:
- *   /appointment_types → [{appointmentTypeId:<UUID>,en:<ชื่อ>,...}]  (UUID field = appointmentTypeId)
- *   /service_type (singular! ไม่ใช่ service_types) → [{serviceId:<UUID>,en:<ชื่อ>,...}] (UUID field = serviceId)
+ *   AppointmentType.GetListAppointmentType → data=[{appointmentTypeId:UUID,en,th,active,...}] ✅ probe 2026-06-23
+ *   ServiceType.GetListServiceType → data=[{serviceId:UUID,en,th,active,price,...}] ✅ probe 2026-06-23
  *
  * CreateAppointment input ✅:
  *   customerId: numeric string · appointmentTypeId/serviceId: UUID จาก master-data
  *   appointmentDate: ISO 8601 (e.g. "2026-11-12T14:30:00Z") · units: [] · caseId: null
  */
 
-// master-data เป็น REST (ไม่ใช่ GraphQL) — ใน browser โดน CORS block แต่ APIRequestContext ไม่ติด CORS
-export const CRM_REST = process.env.CP_CRM_REST || 'https://welcome-crm-qa.one-sky.ai/api/v1';
-
 const CREATE = 'mutation ($input: AppointmentInsertInput!) { Appointment { CreateAppointment(input: $input) { status msg data desc } } }';
 const DELETE = 'mutation ($input: GetIdInput!) { Appointment { DeleteAppointment(input: $input) { status msg data desc } } }';
 const LIST = 'query ($input: ListDataInput2) { Appointment { GetAppointmentByCustId(input: $input) { status msg data desc } } }';
+const GET_APPT_TYPES = 'query { AppointmentType { GetListAppointmentType { status msg data desc } } }';
+const GET_SVC_TYPES = 'query { ServiceType { GetListServiceType { status msg data desc } } }';
 
 const APPT_STORE = path.join(__dirname, '..', '..', '..', 'test-results', 'seeded-appointments.json');
 
 export interface ApptSeed {
-  appointmentType: string; // English name → resolve → appointmentTypeId UUID ผ่าน REST /appointment_types
-  serviceType: string;     // English name → resolve → serviceId UUID ผ่าน REST /service_type
+  appointmentType: string; // English name → resolve → appointmentTypeId UUID ผ่าน GraphQL GetListAppointmentType
+  serviceType: string;     // English name → resolve → serviceId UUID ผ่าน GraphQL GetListServiceType
   appointDate: string;     // ISO 8601 ✅ verified: "2026-11-12T14:30:00Z"
   note?: string;
 }
@@ -45,15 +42,13 @@ async function gql(req: APIRequestContext, token: string, query: string, variabl
   return res.json();
 }
 
-/** ดึง list จาก master-data REST — shape ✅ verified: {status,msg,data:[...]} */
-async function restList(req: APIRequestContext, token: string, resource: string): Promise<any[]> {
-  const res = await req.get(`${CRM_REST}/${resource}?search=&start=0&length=1000`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok()) throw new Error(`restList ${resource} → HTTP ${res.status()}`);
-  const body = await res.json();
-  // ✅ shape verified: {status,msg,data:[...]}
-  return Array.isArray(body) ? body : (body?.data || []);
+/** ดึง items จาก GraphQL query ที่ไม่รับ variables — shape ✅: {status,msg,data:[...]} */
+async function gqlList(req: APIRequestContext, token: string, query: string, path: string[]): Promise<any[]> {
+  const body = await gql(req, token, query, undefined);
+  let data: any = body?.data;
+  for (const k of path) data = data?.[k];
+  if (typeof data === 'string') { try { data = JSON.parse(data); } catch { data = []; } }
+  return Array.isArray(data) ? data : [];
 }
 
 /** หา UUID ของ master-data ตามชื่อ (case-insensitive English name = field "en") */
@@ -61,7 +56,7 @@ function matchUUID(rows: any[], name: string, uuidField: 'appointmentTypeId' | '
   const norm = (s: any) => String(s ?? '').trim().toLowerCase();
   const target = norm(name);
   const hit = rows.find((r) => norm(r.en) === target) || rows.find((r) => norm(r.en).includes(target));
-  if (!hit) throw new Error(`master-data: ไม่พบ "${name}" (${rows.length} rows, fields: ${JSON.stringify(rows[0]||{})})`);
+  if (!hit) throw new Error(`master-data: ไม่พบ "${name}" (${rows.length} rows, fields: ${JSON.stringify(rows[0] || {})})`);
   const id = String(hit[uuidField] ?? '');
   if (!id) throw new Error(`master-data: เจอ "${name}" แต่ field ${uuidField} ว่าง`);
   return id;
@@ -70,14 +65,14 @@ function matchUUID(rows: any[], name: string, uuidField: 'appointmentTypeId' | '
 let _typeCache: any[] | null = null;
 let _serviceCache: any[] | null = null;
 
-/** resolve appointmentType name → appointmentTypeId UUID (field ✅ verified) */
+/** resolve appointmentType name → appointmentTypeId UUID ✅ via GraphQL GetListAppointmentType (probe 2026-06-23) */
 export async function resolveAppointmentTypeId(req: APIRequestContext, token: string, name: string): Promise<string> {
-  _typeCache ??= await restList(req, token, 'appointment_types');
+  _typeCache ??= await gqlList(req, token, GET_APPT_TYPES, ['AppointmentType', 'GetListAppointmentType', 'data']);
   return matchUUID(_typeCache, name, 'appointmentTypeId');
 }
-/** resolve serviceType name → serviceId UUID (path ✅ singular "service_type", field ✅ "serviceId") */
+/** resolve serviceType name → serviceId UUID ✅ via GraphQL GetListServiceType (probe 2026-06-23) */
 export async function resolveServiceId(req: APIRequestContext, token: string, name: string): Promise<string> {
-  _serviceCache ??= await restList(req, token, 'service_type'); // singular path ✅
+  _serviceCache ??= await gqlList(req, token, GET_SVC_TYPES, ['ServiceType', 'GetListServiceType', 'data']);
   return matchUUID(_serviceCache, name, 'serviceId');
 }
 

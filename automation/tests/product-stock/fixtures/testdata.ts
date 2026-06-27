@@ -35,9 +35,9 @@ export const DEFAULT_STATUS_CODE = 'R001';
 export const DEFAULT_STATUS_LABEL = 'New';
 
 // ── exact texts (PO Q11) ──
-export const TOAST_CREATE = 'Product serial created successfully';
-export const TOAST_UPDATE = 'Product serial updated successfully';
-export const TOAST_DELETE = 'Product serial deleted successfully';
+export const TOAST_CREATE = 'Product Stock created successfully';
+export const TOAST_UPDATE = 'Product Stock updated successfully';
+export const TOAST_DELETE = 'Product Stock deleted successfully';
 
 // ── full Add payload (PS9 happy path) — API-first seed shape ──
 export const SEED_UNIT: ProductStockSeed = {

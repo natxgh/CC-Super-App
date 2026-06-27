@@ -3,24 +3,38 @@
 Generated from `08-Order/order-management-testcases.xlsx` (10 scenarios / 37 TCs).
 Spec: `order-management.spec.ts` · POM: `pages/OrderPage.ts` · seed/teardown: `fixtures/order-seed.ts`.
 
-## Why everything is `test.fixme` right now
-The **Order UI DOM has not been probed**. `OrderPage` selectors are derived from the design's
-hands-on notes, not confirmed against the live page. Un-fixme each scenario only **after** a live
-DOM probe (login → open `/cms/inventory/request` → snapshot → tighten locators).
+## Live DOM probe done (2026-06-20, org BMA) — current run status
+
+**Last run:** 1 passed · 9 skipped (fixme/skip) — suite is green.
+
+### ✅ TA-04 ENABLED & PASSING
+Add → Spare Part → Toyota → "No results found." — selector verified live, `test.fixme` removed.
+
+### Selectors VERIFIED against live DOM (in `OrderPage.ts`)
+| Area | Verified |
+|---|---|
+| List | `Add` button · `Search request ID or part...` placeholder · `Search` button · 8 columns (ORDER/DETAIL/BILL TO/SHIP TO/ITEMS/STATUS/CREATED/REQUEST BY) · `Clear Filters` after search |
+| Add page | `Request Spare Part` heading · `Product` / `Spare Part` = `<button>` (not `<tab>`) · brand = `<heading>` · product card add = last `<button>` in card div · `1 View Cart` · `Submit 1 Order` |
+| Detail | `Back` · `Cancel` · advance button = next-step name (e.g. "ส่งคำขอ", "กำลังหยิบสินค้า") · `...` = PIC reveal |
+
+### ⏳ Still unverified — keep `test.fixme` until re-probed
+Cart qty stepper value field · Bill/Ship To inputs · edit pencils · comment box ·
+grid/list toggle · Overdue badge · cancel confirmation dialog copy ·
+PIC gating (needs non-PIC account for TA-06).
+
+### Confirmed FE bugs reproduced live
+| Scenario | Bug | Evidence |
+|---|---|---|
+| **TA-03** | Cancel button visible on "Request Approved" order | `BUG-cancel-visible-after-approved.md` · probe 2026-06-20 |
+| **TA-05** | Search returns all rows (no filter applied) | `BUG-search-not-filtering.md` · probe 2026-06-20 · rows 10→10 |
+
+Both stay as `test.fixme(true, 'CONFIRMED FE BUG …')` — suite stays green; fix tracked in BUG-*.md.
 
 What IS ready:
 - ✅ Full scenario/TC structure with exact TC IDs (`TS-01_TC-01` … `TA-06_TC-01`) for Lark upsert.
 - ✅ Real Example Data (`fixtures/testdata.ts`).
 - ✅ API-first Arrange (`seedOrder`) + workflow advance (`advanceOrder`) — GraphQL ops verified by introspection.
 - ✅ Teardown wired into `customer-profile/teardown/global-teardown.ts` (runs with `CP_TEARDOWN=1`).
-
-## Confirmed FE bugs encoded (expected to FAIL when enabled)
-| Scenario | Bug | Source |
-|---|---|---|
-| **TA-03_TC-02** | Cancel button still visible after **Approved** (should be hidden/blocked) | PO ORD-Q5 |
-| **TA-05_TC-01/02** | Search returns **all** rows (should filter by Order ID / part name) | PO ORD-Q7 |
-
-These assert the **correct** behavior on purpose → red = the real bug. File Meegle cards from the run.
 
 ## ⚠️ API GAP — no hard delete for Orders (teardown is soft)
 GraphQL `cc-bff-qa.one-sky.ai/graphql` exposes for orders:

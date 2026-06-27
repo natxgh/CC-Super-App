@@ -50,11 +50,11 @@ test.describe('Order Management — Success', () => {
 
     await test.step('TS-01_TC-01 — Add a product to Cart from Add Order', async () => {
       await loginAndOpenOrders(page);
-      await o.addBtn.click();
+      await o.openAdd();
       await o.tabProduct.click();
-      await page.getByText(D.BRAND_XIAOMI).click();
-      await page.getByText(D.PRODUCT_OIL).locator('..').getByRole('button').click();
-      await expect(o.viewCartBtn).toBeVisible();
+      await o.selectBrand(D.BRAND_XIAOMI);
+      await o.addProductToCart(D.PRODUCT_OIL);
+      await expect(o.viewCartBtn).toBeVisible(); // "1 View Cart" ✅ verified
       await shot(page, 'TS-01_TC-01');
     });
     await test.step('TS-01_TC-02 — Increase Cart quantity to 2', async () => {
@@ -168,7 +168,7 @@ test.describe('Order Management — Success', () => {
 
     await test.step('TS-04_TC-01 — Add via Spare Part then Skip the Product step', async () => {
       await loginAndOpenOrders(page);
-      await o.addBtn.click();
+      await o.openAdd();
       await o.tabSparePart.click();
       await o.skipBtn.click();
       await shot(page, 'TS-04_TC-01');
@@ -200,10 +200,10 @@ test.describe('Order Management — Alternative', () => {
 
     await test.step('TA-01_TC-01 — Add a product to Cart from Add Order', async () => {
       await loginAndOpenOrders(page);
-      await o.addBtn.click();
+      await o.openAdd();
       await o.tabProduct.click();
-      await page.getByText(D.BRAND_XIAOMI).click();
-      await page.getByText(D.PRODUCT_OIL).locator('..').getByRole('button').click();
+      await o.selectBrand(D.BRAND_XIAOMI);
+      await o.addProductToCart(D.PRODUCT_OIL);
       await shot(page, 'TA-01_TC-01');
     });
     await test.step('TA-01_TC-02 — Submit with Ship By left blank (required) → blocked', async () => {
@@ -223,10 +223,10 @@ test.describe('Order Management — Alternative', () => {
 
     await test.step('TA-02_TC-01 — Decrease quantity below the minimum (− disabled at 1)', async () => {
       await loginAndOpenOrders(page);
-      await o.addBtn.click();
+      await o.openAdd();
       await o.tabProduct.click();
-      await page.getByText(D.BRAND_XIAOMI).click();
-      await page.getByText(D.PRODUCT_OIL).locator('..').getByRole('button').click();
+      await o.selectBrand(D.BRAND_XIAOMI);
+      await o.addProductToCart(D.PRODUCT_OIL);
       await o.viewCartBtn.click();
       await expect(o.qtyMinus).toBeDisabled(); // min=1, no max, not stock-bound (PO ORD-Q2)
       await shot(page, 'TA-02_TC-01');
@@ -245,32 +245,33 @@ test.describe('Order Management — Alternative', () => {
 
   // ── TA-03 — Edit locked after Submit + Cancel after Approved (BUG) ──────────
   test('TA-03 — bill/items locked after submit; Cancel must be hidden after Approved (BUG)', async ({ page }) => {
-    test.fixme(true, `CONFIRMED FE BUG (PO ORD-Q5): Cancel still shown after Approved — expected to FAIL. ${DOM_UNVERIFIED}`);
+    // 🐞 CONFIRMED live (probe 2026-06-20): ORD260610-00001 (Request Approved) STILL shows Cancel → see BUG-cancel-visible-after-approved.md
+    test.fixme(true, 'CONFIRMED FE BUG (PO ORD-Q5) — Cancel visible after Approved. Card drafted: BUG-cancel-visible-after-approved.md');
     const o = new OrderPage(page);
 
     await test.step('TA-03_TC-01 — After Submit — Bill & Items are locked', async () => {
       await loginAndOpenOrders(page);
-      // open a Request-Approved order → no pencil on Bill card / ORDER ITEMS
-      await expect(page.getByRole('button', { name: /edit|pencil/i })).toHaveCount(1); // only Title pencil
+      await o.openOrder('ORD260610-00001'); // Request Approved
+      await expect(page.getByRole('button', { name: /edit|pencil/i })).toHaveCount(1); // only Title pencil (⏳ verify on probe)
       await shot(page, 'TA-03_TC-01');
     });
     await test.step('TA-03_TC-02 — Cancel button should be hidden/blocked after Approved', async () => {
-      // EXPECTED (correct behavior): Cancel hidden after Approved → this assertion FAILS today = the bug
+      // EXPECTED (correct behavior): Cancel hidden after Approved → assertion FAILS today = the confirmed bug
       await expect(o.cancelBtn).toBeHidden();
       await shot(page, 'TA-03_TC-02');
     });
   });
 
   // ── TA-04 — Brand with no items → cannot proceed ───────────────────────────
+  // ✅ ENABLED — fully verified live (probe 2026-06-20): Toyota (Spare Part) → "No results found."
   test('TA-04 — brand with no items shows No results found', async ({ page }) => {
-    test.fixme(true, DOM_UNVERIFIED);
     const o = new OrderPage(page);
 
     await test.step('TA-04_TC-01 — Select a brand with no items → No results', async () => {
       await loginAndOpenOrders(page);
-      await o.addBtn.click();
+      await o.openAdd();
       await o.tabSparePart.click();
-      await page.getByText(D.BRAND_NO_ITEMS).click();
+      await o.selectBrand(D.BRAND_NO_ITEMS);
       await expect(o.noResults).toBeVisible();
       await shot(page, 'TA-04_TC-01');
     });
@@ -278,14 +279,16 @@ test.describe('Order Management — Alternative', () => {
 
   // ── TA-05 — Search does not filter (BUG) ───────────────────────────────────
   test('TA-05 — search should filter by Order ID and part name (BUG: returns all)', async ({ page }) => {
-    test.fixme(true, `CONFIRMED FE BUG (PO ORD-Q7): Search returns all rows — expected to FAIL. ${DOM_UNVERIFIED}`);
+    // 🐞 CONFIRMED live (probe 2026-06-20): search ORD260610-00004 → rows 10→10 (no filter) → see BUG-search-not-filtering.md
+    test.fixme(true, 'CONFIRMED FE BUG (PO ORD-Q7) — Search returns all rows. Card drafted: BUG-search-not-filtering.md');
     const o = new OrderPage(page);
 
     await test.step('TA-05_TC-01 — Search by Order ID filters the list', async () => {
       await loginAndOpenOrders(page);
-      await o.search('ORD260609-00001');
-      // EXPECTED (correct): only the matching row remains → FAILS today (returns all) = the bug
-      await expect(o.row('ORD260609-00001')).toHaveCount(1);
+      const before = await o.rowCount();
+      await o.search('ORD260610-00004');
+      // EXPECTED (correct): list shrinks to the matching row → FAILS today (count unchanged) = the bug
+      expect(await o.rowCount()).toBeLessThan(before);
       await shot(page, 'TA-05_TC-01');
     });
     await test.step('TA-05_TC-02 — Search by part name filters the list', async () => {

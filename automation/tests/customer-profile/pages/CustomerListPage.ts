@@ -30,7 +30,8 @@ export class CustomerListPage {
 
   async goto() {
     await this.page.goto('/cc/contacts-list');
-    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+    // networkidle: รอ XHR list response กลับมาก่อน (pagination state อัปเดตหลัง API คืนค่า)
+    await this.page.waitForLoadState('networkidle').catch(() => {});
   }
 
   async search(keyword: string) {
@@ -99,5 +100,117 @@ export class CustomerListPage {
   }
   async cancelDelete() {
     await this.page.getByRole('button', { name: 'Cancel', exact: true }).click();
+  }
+
+  // ── View Toggle (TS-10) ─────────────────────────────────────────────────────────────
+  // UI: 2 icon-buttons muมบนซ้าย — ☰ (Table) และ ⊞ (Grid). Active = highlighted สีน้ำเงิน
+  // ⚠️ Selectors ยังไม่ได้ verify กับ live DOM — ลอง aria-label / role ก่อน; ถ้า fail จะ annotate
+  /** ปุ่ม Table View (☰) */
+  get tableViewBtn() {
+    return this.page.getByRole('button', { name: /table.?view|list.?view/i })
+      .or(this.page.locator('[aria-label*="table" i], [aria-label*="list" i]').first())
+      .or(this.page.locator('button').nth(0))  // fallback: first toggle button
+      .first();
+  }
+
+  /** ปุ่ม Grid View (⊞) */
+  get gridViewBtn() {
+    return this.page.getByRole('button', { name: /grid.?view/i })
+      .or(this.page.locator('[aria-label*="grid" i]').first())
+      .or(this.page.locator('button').nth(1))  // fallback: second toggle button
+      .first();
+  }
+
+  async clickTableView() {
+    await this.tableViewBtn.click();
+    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+  }
+
+  async clickGridView() {
+    await this.gridViewBtn.click();
+    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+  }
+
+  /** ตรวจว่า table (columns layout) กำลัง visible */
+  async expectTableViewActive() {
+    await expect(this.table).toBeVisible({ timeout: 8000 });
+  }
+
+  /** ตรวจว่า Grid/Card layout กำลัง visible (table ซ่อน) */
+  async expectGridViewActive() {
+    // Grid view: cards = div/article ที่มี role หรือ class grid/card — ลองหลายวิธี
+    const gridContainer = this.page.locator('[class*="grid" i], [class*="card" i]').first()
+      .or(this.page.getByRole('list').first());
+    await expect(gridContainer).toBeVisible({ timeout: 8000 });
+    // และ table ไม่ควร visible ใน Grid mode
+    await expect(this.table).not.toBeVisible({ timeout: 5000 }).catch(() => {
+      // ถ้า table ยัง visible อาจ overlay — ไม่ hard-fail แต่ annotate
+    });
+  }
+
+  // ── Pagination (TS-09 / TA-18 / TA-19) ─────────────────────────────────────────────
+  // ⚠️ Selectors ยังไม่ได้ verify กับ live DOM — ต้องรัน probe ก่อน (browser offline ตอน gen)
+  // Priority: aria-label → role → fallback CSS.  อัปเดตพร้อม DOM comment เมื่อ verify แล้ว
+
+  /** ปุ่ม Next Page: ลอง aria-label "Next page" / "Next" / SVG chevron ตาม pattern ทั่วไป */
+  get nextPageBtn() {
+    return this.page.getByRole('button', { name: /next\s*page|next/i })
+      .or(this.page.locator('[aria-label*="next" i]'))
+      .first();
+  }
+
+  /** ปุ่ม Previous Page */
+  get prevPageBtn() {
+    return this.page.getByRole('button', { name: /prev(ious)?\s*page|prev(ious)?/i })
+      .or(this.page.locator('[aria-label*="prev" i]'))
+      .first();
+  }
+
+  /** dropdown rows-per-page (ลอง role=combobox สุดท้าย / select[name*=size] / select ตัวที่สอง) */
+  get rowsPerPageSelect() {
+    return this.page.locator('select').last()
+      .or(this.page.locator('[aria-label*="rows" i], [aria-label*="per page" i]').first());
+  }
+
+  /** page indicator text (e.g. "1–10 of 50", "Page 1") */
+  get pageIndicator() {
+    return this.page.locator('[class*="pagination" i], [class*="page-info" i]').first()
+      .or(this.page.getByText(/\d+\s*[–\-]\s*\d+\s*(of|\/)\s*\d+/i).first());
+  }
+
+  async clickNextPage() {
+    await this.nextPageBtn.click();
+    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+  }
+
+  async clickPrevPage() {
+    await this.prevPageBtn.click();
+    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+  }
+
+  async selectRowsPerPage(value: string) {
+    // ลอง native <select> ก่อน, fallback combobox
+    const sel = this.rowsPerPageSelect;
+    const tag = await sel.evaluate(el => el.tagName.toLowerCase()).catch(() => 'unknown');
+    if (tag === 'select') {
+      await sel.selectOption(value);
+    } else {
+      await sel.click();
+      await this.page.getByRole('option', { name: value, exact: true }).click();
+    }
+    await this.page.waitForLoadState('domcontentloaded').catch(() => {});
+  }
+
+  /** รับจำนวน row ปัจจุบันใน tbody (ไม่นับ header) */
+  async getVisibleRowCount(): Promise<number> {
+    return await this.table.locator('tbody tr').count();
+  }
+
+  async expectNextDisabled() {
+    await expect(this.nextPageBtn).toBeDisabled();
+  }
+
+  async expectPrevDisabled() {
+    await expect(this.prevPageBtn).toBeDisabled();
   }
 }

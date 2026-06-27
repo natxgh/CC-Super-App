@@ -34,14 +34,43 @@ export const NAME_FOR_CASE = 'Somying Rakdee';
 /** phone ที่ "ไม่มี" ลูกค้าในระบบ (AC4 negative / TA-05) */
 export const PHONE_NO_MATCH = '0990000001';
 
-/** Real Example Data ของเคส (CCTV camera malfunction) */
+/**
+ * Real Example Data ของเคส (CCTV camera malfunction)
+ * ✅ Values verified live DOM (probe 2026-06-22):
+ *   - caseType: LI text = "1002-Camera Malfunction -Repair" (note trailing space after "Malfunction")
+ *   - contactMethod: LI text = "CALL" (exact, all caps)
+ *   - serviceCenter: ⚠️ shows "No Option." on QA — no real value verified yet
+ *   - expectedPriority: from GetListCaseTypeWithSubTypes priority=3 (Medium or High — check UI label)
+ * 🐛 CreateCase API broken on QA (BFF 500 when versions field set; -1 DB NOT NULL without it)
+ *    → case-seed.ts seedCase() will fail until backend is fixed
+ */
 export const NEW_CASE = {
-  caseType: '1002-Camera Malfunction -Repair',
+  caseType: '1002-Camera Malfunction -Repair',  // exact LI text on creation form
   contactMethod: 'CALL',
-  serviceCenter: 'Thailand-Thonburi South Zone-phasicharoen',
+  serviceCenter: 'Thailand-Thonburi South Zone-phasicharoen', // ⚠️ unverified — Service Center shows No Option.
   caseDetail: 'The CCTV camera at the front entrance is not working, the image is dark; checked and the power LED is off',
   phone: '0812345678',
-  expectedPriority: 'High Priority',
+  expectedPriority: 'High Priority',            // ⚠️ unverified — actual label text depends on UI mapping
+};
+
+/**
+ * API seed values (for case-seed.ts) — verified from GetListCaseTypeWithSubTypes (probe 2026-06-22)
+ * NOTE: CreateCase API currently broken on QA — keep for when backend fix lands
+ */
+export const CASE_SEED_IDS = {
+  caseTypeId:  '6c312319-4b4e-44e1-97de-cac72341f006', // Camera Malfunction (UUID)
+  caseSTypeId: '5972c770-2b72-4d65-ac93-d19c1555aaf8', // Repair (sTypeCode 1002)
+  wfId:        '9a62ccfe-e68e-4402-8da2-52629ef9acbf', // workflow for Camera Malfunction
+  caseSla:     '97',
+  priority:    3,
+  statusIds: {
+    draft:      'S000',
+    newCase:    'S001',
+    dispatched: 'S004',   // numeric id=4 in status list
+    inProgress: 'S016',   // numeric id=16
+    done:       'S017',   // numeric id=17
+    closed:     'S008',
+  },
 };
 
 /** Case Type กลุ่ม Service Request (AC3-TC2 / TS-04) */

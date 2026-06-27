@@ -327,7 +327,7 @@
 - [x] **Hidden Assumptions Q1–Q9 ตอบครบ (PO ยืนยัน 13/06/2026)** — apply เข้า design ครบ
 - [x] **Sign-off ปลดบล็อก** — ไม่มีคำถามค้าง
 - [x] ติด ID + ทำสัญลักษณ์เคสที่ใช้ใน Scenario
-- [ ] **HA-DFC1–4 รอ PO ยืนยัน** (อยู่ใน Step 4 DFC)
+- [x] **HA-DFC1–4 PO ยืนยันแล้ว (22/06/2026)** — apply เข้า design ครบ · เพิ่ม DFC2-TC5 (all-OFF) + DFC2-TC6 (data-safety)
 
 ---
 
@@ -336,7 +336,7 @@
 
 > **อัปเดต 17/06/2026:** ตรวจ STG พบว่าหน้า Customer Form Configuration มี 4 section เพิ่มเติม
 > นอกจาก Custom Form — toggle ต่อ field ควบคุมว่า field ไหนจะแสดงบนหน้า Add/Edit Customer
-> Scope ส่วนนี้เพิ่งถูก identify — **HA-DFC1–4 รอ PO ยืนยัน** ก่อน finalize
+> **อัปเดต 22/06/2026:** PO ยืนยัน HA-DFC1–4 ครบ — finalized
 
 ---
 
@@ -411,6 +411,8 @@
 | DFC2-TC2 | Date of Birth = OFF → Save Configuration | ไปหน้า Add Customer | Date of Birth OFF | Date of Birth ไม่ปรากฏใน Personal Details บน Add Customer |
 | DFC2-TC3 | Blood Type = OFF (STG default) → toggle ON → Save Configuration | ไปหน้า Add Customer | Blood Type ON | Blood Type ปรากฏใน Personal Details บน Add Customer |
 | DFC2-TC4 | ตั้ง 9 fields ทุก field ใน Personal Details = ON → Save Configuration | ไปหน้า Add Customer | ทุก field ON | ทั้ง 9 fields แสดงครบ (Display Name, Title, First Name, Middle Name, Last Name, Citizen ID, Date of Birth, Blood Type, Gender) |
+| DFC2-TC5 *(HA-DFC1)* | ตั้งทุก field ใน Personal Details = OFF → Save Configuration | ไปหน้า Add Customer | all-OFF — toggle ได้ทุก field (ไม่มีข้อยกเว้น PO ยืนยัน) | ทุก field ใน Personal Details ไม่ปรากฏ (ไม่มี field ที่ toggle ไม่ได้) |
+| DFC2-TC6 *(HA-DFC2)* | customer มีข้อมูล Date of Birth อยู่แล้ว → toggle Date of Birth = OFF → Save Configuration | ไปหน้า Edit Customer คนนั้น | data hidden (ไม่ cleared) — PO ยืนยัน | field Date of Birth ไม่ปรากฏบน Edit Customer · toggle กลับ ON → field + ข้อมูลเดิมกลับมาครบ |
 
 #### DFC3 — Address field toggle (EP)
 | TC ID | Arrange | Act | Tested Condition | Expected |
@@ -443,16 +445,14 @@
 
 ---
 
-### Step 4 (DFC) — Hidden Assumptions (⏳ รอ PO)
+### Step 4 (DFC) — Hidden Assumptions (✅ PO ยืนยันครบ 22/06/2026)
 
-| Q | ประเด็น | Proposed | Affects |
+| Q | ประเด็น | คำตอบ PO | Affects |
 |---|---|---|---|
-| HA-DFC1 | field บังคับที่ toggle OFF ไม่ได้ — Display Name / First Name / Last Name ต้องเปิดเสมอไหม? | ✅ toggle ได้ทุก field · ❌ บาง field required ปิดไม่ได้ | DFC2-TC4 · edge case all-OFF |
-| HA-DFC2 | toggle OFF field ที่ customer มีข้อมูลแล้ว → data hidden (เก็บ server-side) หรือ cleared? | ✅ hidden เท่านั้น · ❌ cleared | data-safety TCs |
-| HA-DFC3 | ปุ่ม Save Configuration บันทึก standard sections + Custom Form ทุก section พร้อมกันในครั้งเดียว? | ✅ one save all · ❌ separate save per section | DFC5-TC1 |
-| HA-DFC4 | Blood Type แสดง OFF ใน STG — เป็น system default หรือถูก config มาก่อน? | ✅ default = OFF · ❌ manual config | DFC2-TC3 baseline |
-
-> ⏳ **HA-DFC1–4 รอ PO ยืนยัน** — apply เข้า design เมื่อตอบแล้ว
+| HA-DFC1 | field บังคับที่ toggle OFF ไม่ได้ — Display Name / First Name / Last Name ต้องเปิดเสมอไหม? | ✅ **toggle ได้ทุก field ไม่มีข้อยกเว้น** | DFC2-TC4, **DFC2-TC5** (all-OFF edge case) |
+| HA-DFC2 | toggle OFF field ที่ customer มีข้อมูลแล้ว → data hidden (เก็บ server-side) หรือ cleared? | ✅ **data ไม่ถูก clear — hidden เท่านั้น** (toggle ON กลับมาเห็นข้อมูลเดิม) | **DFC2-TC6** (data-safety) |
+| HA-DFC3 | ปุ่ม Save Configuration บันทึก standard sections + Custom Form ทุก section พร้อมกันในครั้งเดียว? | ✅ **ปุ่มเดียว save ทุก section พร้อมกัน** | DFC5-TC1 ✓ (confirmed) |
+| HA-DFC4 | Blood Type แสดง OFF ใน STG — เป็น system default หรือถูก config มาก่อน? | ✅ **Blood Type = OFF เป็น system default** (ไม่บังคับแสดง) | DFC2-TC3 baseline ✓ (confirmed) |
 
 ---
 
@@ -484,6 +484,8 @@
 | Scenario | Flow (ลำดับ TC) | ผลลัพธ์ |
 |---|---|---|
 | **DFC_TA01** | Toggle Profile Photo=OFF + Date of Birth=OFF + Note=OFF → DFC5-TC1 Save → Add Customer | ทั้ง 3 fields ไม่ปรากฏบนหน้า Add Customer |
+| **DFC_TA02** *(HA-DFC1)* | `DFC2-TC5` ตั้ง Personal Details ทุก field = OFF → Save → Add Customer | ไม่มี field ใน Personal Details ปรากฏเลย (all-OFF valid) |
+| **DFC_TA03** *(HA-DFC2)* | `DFC2-TC6` toggle Date of Birth = OFF (customer มีข้อมูลอยู่แล้ว) → Save → Edit Customer → toggle ON → Edit อีกครั้ง | data ไม่ถูก clear — field + ข้อมูลเดิมกลับมาหลัง toggle ON |
 
 #### 🔁 UI behavior
 `DFC_UI01` — Section accordion: `DFC7-TC1 → DFC7-TC2` (ยุบ → ขยาย)

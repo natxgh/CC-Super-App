@@ -42,18 +42,18 @@
 | SPS1-TC02 | on stock page (List view) | click Table-view toggle | SPS1 | Table header `SERIAL NO./SPARE PART/STORE/STATUS/ACTION`, row SN0000019 shown in full | POS |
 | SPS2-TC01 | unit SN0000019 exists | type `SN0000019` → Search | SPS2 | list shows only row SN0000019 (1 item) | POS |
 | SPS2-TC02 | units 5W-30-0002..0005 exist | type `5W-30` → Search | SPS2 | list shows only Synthetic Engine Oil 5W-30 units | POS |
-| SPS2-TC03 | — | type `SN9999999` → Search | SPS2 | empty list + empty state `""` (no error) | NEG |
+| SPS2-TC03 | — | type `SN9999999` → Search | SPS2 | empty list + empty state `"No entries to show"` (no error) | NEG |
 | SPS3-TC01 | multiple Spare Parts | Filters → Spare Part = `iPhone 17 Pro Screen` | SPS3 | list shows only iPhone 17 Pro Screen units | POS |
 | SPS3-TC02 | multiple Stores | Filters → Store = `Store2` | SPS3 | list shows only units in Store2 | POS |
 | SPS3-TC03 | — | Filters → Spare Part=`iPhone 17 Pro Screen` + Store=`Store2` | SPS3 | list = intersection of both conditions | POS |
 | SPS4-TC01 | search/filter active | click Reset | SPS4 | search+filter cleared, list shows all units again | POS |
 | SPS5-TC01 | unit SN0000019 (Store2,R001) | click View on row SN0000019 | SPS5 | modal `Item Details`: Serial=SN0000019 / Part=iPhone 17 Pro Screen / Store=Store2 / Status=R001 + Delete/Edit/Close buttons | POS |
-| SPS6-TC01 | unit SN0000019 | Edit → Store = `Store1` → Update | SPS6,SPS9 | success toast `""` + row SN0000019 Store=Store1 | POS |
-| SPS6-TC02 | unit SN0000019 in Edit | clear Serial No. → Update | SPS6 | Serial No. field error state `""` + not saved (modal stays open) | NEG |
-| SPS6-TC03 | unit SN0000019 in Edit | clear Spare Part → Update | SPS6 | Spare Part field error state `""` + not saved | NEG |
+| SPS6-TC01 | unit SN0000019 | Edit → Store = `Store1` → Update | SPS6,SPS9 | success toast **"Spare Parts Stock updated successfully"** + row SN0000019 Store=Store1 | POS |
+| SPS6-TC02 | unit SN0000019 in Edit | clear Serial No. → Update | SPS6 | Serial No. field error: **"Please fill in: Serial No."** + not saved (modal stays open) | NEG |
+| SPS6-TC03 | unit SN0000019 in Edit | clear Spare Part → Update | SPS6 | Spare Part field error: **"Please fill in: Spare Part"** + not saved | NEG |
 | SPS7-TC01 | unit in Edit | click Spare Part dropdown → type `Mercedes` | SPS7 | dropdown shows only matching master parts (Mercedes-Benz OM654.920); free value not saved | POS |
 | SPS8-TC01 | SN0000018 + SN0000019 exist | Edit SN0000018 → Serial No.=`SN0000019` → Update | SPS8 | duplicate error `""` + not saved `[H]` | NEG |
-| SPS10-TC01 | unit SN0000016 (iPhone 17 Pro Screen, count=N) | View → Delete → confirm | SPS10 | row SN0000016 gone from list + iPhone 17 Pro Screen stock count = N−1 | POS |
+| SPS10-TC01 | unit SN0000016 (iPhone 17 Pro Screen, count=N) | View → Delete → confirm | SPS10 | success toast **"Spare Parts Stock deleted successfully"** + row SN0000016 gone from list + iPhone 17 Pro Screen stock count = N−1 | POS |
 | SPS11-TC01 | any unit | open Edit form | SPS11 | form has only Serial No./Spare Part/Store — **no Status field** `[H]` (code meaning) | POS |
 | SPS12-TC01 | Table view, ≥2 units | click `Serial No.` header (asc) | SPS12 | rows sorted Serial No. low→high | POS |
 | SPS12-TC02 | Table view, sorted asc | click `Serial No.` header again | SPS12 | rows sorted high→low (desc) | POS |
@@ -145,7 +145,7 @@ SPS_TA04  RBAC no permission  [H Q8]
 | RBAC | manage = Warehouse Staff / Admin; other roles (Agent) see no Add/Edit/Delete |
 | Edit integrity | Order-linked unit → Spare Part/Store locked or warns |
 | Out-of-Stock at Pick | cross-feature; tested in Order round, **not in this set** |
-| Exact texts | update toast `Spare parts serial updated successfully` · delete `…deleted successfully` · empty state `No entries to show` · validation = red error under input · duplicate text still `""` |
+| Exact texts | ✅ create `Spare Parts Stock created successfully` · update `Spare Parts Stock updated successfully` · delete `Spare Parts Stock deleted successfully` · empty state `No entries to show` · per-field required: `Please fill in: Serial No.` / `Please fill in: Spare Part` / `Please fill in: Store` · duplicate text still `""` (pending PO) |
 | Pagination | exists; page-size selectable 10/20/50/100 (no lazy-load) |
 
 > Still open: exact text for duplicate-Serial error, Order-lock warning, and invalid-format error (`""` placeholders).

@@ -44,11 +44,11 @@ const S = [
     ['TS-03_TC-01','View unit before editing','POSITIVE','Click View on row SN0000019','SN0000019','Item Details modal shows unit data + Edit button'],
     ['TS-03_TC-02','Edit form has no Status field (read-only)','POSITIVE','In the modal, click Edit','—','"Edit Spare Parts Stock" form has only Serial No.* / Spare Part* / Store* — no Status field (Status is not editable)'],
     ['TS-03_TC-03','Spare Part selectable from master only','POSITIVE','Click the Spare Part dropdown and type to search','Mercedes','Dropdown shows only matching parts from master (Mercedes-Benz OM654.920); free text not in master is not saved'],
-    ['TS-03_TC-04','Change Store then Update successfully','POSITIVE','Select a new Store and click Update Spare Parts Stock','Store: Store1','Success toast "Spare parts serial updated successfully"; row SN0000019 updated to Store=Store1 in the list'],
+    ['TS-03_TC-04','Change Store then Update successfully','POSITIVE','Select a new Store and click Update Spare Parts Stock','Store: Store1','Success toast "Spare Parts Stock updated successfully"; row SN0000019 updated to Store=Store1 in the list'],
   ]],
   ['TS-04','Delete stock unit & decrease stock count','1. View Item Details\n2. Delete unit + stock count drops\n3. Order-linked unit cannot be deleted',[
     ['TS-04_TC-01','View unit before deleting','POSITIVE','Click View on row SN0000016','SN0000016','Item Details modal shows iPhone 17 Pro Screen / Store2 + Delete button'],
-    ['TS-04_TC-02','Delete unit → confirm → count decreases','POSITIVE','Click Delete and confirm in the confirm dialog','SN0000016','Confirm dialog appears; after confirm, toast "Spare parts serial deleted successfully"; row SN0000016 disappears; iPhone 17 Pro Screen stock count on Spare Parts master decreases by 1'],
+    ['TS-04_TC-02','Delete unit → confirm → count decreases','POSITIVE','Click Delete and confirm in the confirm dialog','SN0000016','Confirm dialog appears; after confirm, toast "Spare Parts Stock deleted successfully"; row SN0000016 disappears; iPhone 17 Pro Screen stock count on Spare Parts master decreases by 1'],
     ['TS-04_TC-03','Cannot delete Order-linked unit','NEGATIVE','Open a unit whose Status is not Available (e.g. R003 Reserved / R004 Confirmed) and click Delete','Serial: SN0000019 (Status R003 Reserved)','Delete is blocked: unit linked to an Order cannot be deleted — system locks/warns "" (exact text TBD); unit remains in list'],
   ]],
   ['TS-05','Stock badge (Out/Low/In, BVA) → drill-down','1. Stock badge Out of Stock / Low Stock / In Stock\n2. External-link drill-down to stock\n3. Filter by Spare Part',[
@@ -66,8 +66,8 @@ const S = [
   ]],
   ['TA-01','Edit — missing required field','1. Edit required fields (Serial No./Spare Part/Store)',[
     ['TA-01_TC-01','View → open Edit','POSITIVE','Click View → Edit on row SN0000019','SN0000019','Edit form opens with existing values'],
-    ['TA-01_TC-02','Clear Serial No. → Update','NEGATIVE','Clear the Serial No. value and click Update Spare Parts Stock','Serial No.: (empty)','Serial No. field shows a red error message under the input box (required); not saved, modal stays open'],
-    ['TA-01_TC-03','Clear Spare Part → Update','NEGATIVE','Clear the Spare Part value and click Update','Spare Part: (empty)','Spare Part field shows a red error message under the input box (required); not saved'],
+    ['TA-01_TC-02','Clear Serial No. → Update','NEGATIVE','Clear the Serial No. value and click Update Spare Parts Stock','Serial No.: (empty)','"Please fill in: Serial No." error shown under Serial No. field; not saved, modal stays open'],
+    ['TA-01_TC-03','Clear Spare Part → Update','NEGATIVE','Clear the Spare Part value and click Update','Spare Part: (empty)','"Please fill in: Spare Part" error shown under Spare Part field; not saved'],
   ]],
   ['TA-02','Edit — duplicate Serial No. (uniqueness, system-wide)','1. Serial No. unique (system-wide)',[
     ['TA-02_TC-01','View → open Edit of another unit','POSITIVE','Click View → Edit on row SN0000018','SN0000018','Edit form opens'],

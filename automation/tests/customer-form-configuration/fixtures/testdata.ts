@@ -46,7 +46,16 @@ export const ASSET_BAD_UPLOAD = 'contract.pdf';        // .pdf 5MB — ผิด
 export const DFC_FIELD_LABELS = {
   profilePhoto: 'Profile Photo',
   dateOfBirth: 'Date of Birth',
-  bloodType: 'Blood Type',
+  bloodType: 'Blood Type',   // label on config page (matches FIELD_ID key)
   note: 'Note',
   userType: 'User Type',
+};
+
+/**
+ * Labels as they appear on the Add Customer / Edit Customer consumer form.
+ * These may differ from config-page labels (e.g. "Blood Type" in config = "Blood Group" on form).
+ */
+export const CONSUMER_FIELD_LABELS = {
+  dateOfBirth: 'Date of Birth',
+  bloodGroup: 'Blood Group',   // config label "Blood Type" shows as "Blood Group" on Add Customer
 };

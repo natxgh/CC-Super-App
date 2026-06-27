@@ -44,7 +44,7 @@ export const SOMCHAI: CustomerData = {
 /** ลูกค้าที่ TS-03/TS-04 จะแก้ไข/ลบ — ต้อง seed ก่อน */
 export const WANNAPA: CustomerData = {
   email: 'wannapa@gmail.com',
-  phone: '0873331134',
+  phone: '0873331136',  // ต้องไม่ซ้ำกับ SIRIWIMON_NEW (0873331134)
   title: 'Mrs.',
   firstName: 'Wannapa',
   lastName: 'Suksai',
@@ -60,6 +60,17 @@ export const NATTHAWAT: CustomerData = {
   firstName: 'Natthawat',
   lastName: 'Jetbordin',
   type: 'Gold',
+};
+
+/**
+ * TS-08 — display fallback (PO round-2): ลูกค้าที่ "ไม่มี First/Last name + ไม่มี Type"
+ * seed สร้างได้ (firstName/lastName = "" ยัง satisfy String!) → displayName = email
+ * Expected: View Detail/List แสดง Display Name = email · Type = "N/A"
+ */
+export const NONAME: CustomerData = {
+  email: 'noname.case@gmail.com',
+  phone: '0855550001',
+  // ไม่ใส่ firstName/lastName/type โดยตั้งใจ
 };
 
 /** ข้อมูลใหม่สำหรับ TS-02 (Add) */
@@ -83,6 +94,18 @@ export const SIRIWIMON_NEW: CustomerData = {
   preferences: { contactMethod: 'Mobile Number', language: 'Thai', note: 'VIP prefer to contact us in the morning 09:00–11:00 am.' },
   custom: { companyName: 'Siam Technology Company Limited', employeeId: 'EMP00256', lineId: 'siriwimon_sm', drivingLicense: 'TH-464087219', position: 'Marketing Manager' },
 };
+
+/**
+ * TS-09 — Pagination arrange: ต้องมี ≥ 11 customers เพื่อให้ Next page active (default page = 10)
+ * ใช้ email domain qa-pagi-cp.test เพื่อ identify / teardown ง่าย
+ */
+export const PAGINATION_CUSTOMERS: CustomerData[] = Array.from({ length: 55 }, (_, i) => ({
+  email: `pagi.cp${String(i + 1).padStart(2, '0')}@qa-pagi-cp.test`,
+  phone: `08${String(10000000 + i).padStart(8, '0')}`,
+  firstName: `PagiTest${String(i + 1).padStart(2, '0')}`,
+  lastName: 'CpAuto',
+  type: 'Bronze' as const,
+}));
 
 /** ข้อมูลหลังแก้ไขสำหรับ TS-03 (Update Wannapa → Wannapha) */
 export const WANNAPHA_UPDATED: CustomerData = {

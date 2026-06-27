@@ -2,11 +2,12 @@ import type { CustomerData } from '../../customer-profile/pages/CustomerFormPage
 
 /**
  * Real Example Data — Customer Appointment (CAP)
- * ตรงกับ Arrange ใน 02-Customer Appointment/customer-appointment-test-design.md (sync base export 16/06/2026)
+ * ตรงกับ Arrange ใน customer-appointment-testcases.xlsx (column "Arrange")
  *
- * NB (data gap): API seed สร้างได้แค่ "ตัวลูกค้า" — ยังไม่มี endpoint seed "appointment list".
- *   → CUST_HAS_APPT ที่ seed มาจะ "ยังไม่มี" appointment rows (ใช้ verify navigation/Schedule button ได้)
- *     ส่วนเคสที่ต้องมี Pending row จริง (Confirm/Delete) = fixme อยู่แล้ว.
+ * Base Arrange ทุก TS (CUST_HAS_APPT = Siriwimon Somjit):
+ *   #1 SEED_CONFIRMED_APPT — Present / Advise product / 20 Oct 2026 09:00 / Confirmed
+ *      ⚠️ API CreateAppointment สร้างเป็น Pending เสมอ → status "Confirmed" ต้อง confirm ผ่าน UI/probe mutation
+ *   #2 SEED_PENDING_APPT   — Follow Up / Installation / 12 Nov 2026 14:30 / Pending
  */
 
 /** ลูกค้าที่ใช้ View / Add / Confirm / Delete (Arrange: Siriwimon Somjit) */
@@ -68,14 +69,24 @@ export const NEW_APPT = {
 export const PENDING_ROW = 'Follow Up'; // appointment #2 ใน Arrange = Follow Up / Installation / Pending
 
 /**
- * Arrange ผ่าน API (TS-04/TS-05) — seed Pending appointment ตรงกับ Arrange #2 ของ TS-01
- *   Follow Up / Installation / 12/11/2026 02:30 PM / Pending
- * appointDate = ISO (API format ⚠️ ยืนยันก่อนใช้); new appointment default status = Pending
+ * Arrange #1 — Present / Advise product / 20 Oct 2026 09:00 AM ICT
+ * (Design: Status=Confirmed แต่ API สร้างเป็น Pending → ต้อง confirm ต่อผ่าน mutation ถ้า FE fix bug แล้ว)
+ */
+export const SEED_CONFIRMED_APPT = {
+  appointmentType: 'Present',
+  serviceType: 'Advise product',
+  appointDate: '2026-10-20T02:00:00Z', // 09:00 ICT = 02:00 UTC
+  note: 'Onsite customer office' as string | undefined,
+};
+
+/**
+ * Arrange #2 — Follow Up / Installation / 12 Nov 2026 02:30 PM ICT / Pending
+ * (TS-04/05: row ที่ใช้ Confirm + Delete — match PENDING_ROW = 'Follow Up')
  */
 export const SEED_PENDING_APPT = {
   appointmentType: 'Follow Up',
   serviceType: 'Installation',
-  appointDate: '2026-11-12T14:30:00Z', // = 12/11/2026 02:30 PM
+  appointDate: '2026-11-12T14:30:00Z', // 14:30 ICT = 07:30 UTC
   note: undefined as string | undefined,
 };
 

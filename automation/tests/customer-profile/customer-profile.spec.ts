@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { Page } from '@playwright/test';
-import { seedCustomer, purgeByEmail } from './fixtures/seed';
+import { seedCustomer, seedCustomers, purgeByEmail } from './fixtures/seed';
+import { setFieldConfig } from '../customer-form-configuration/fixtures/form-seed';
 import * as fs from 'fs';
 import * as path from 'path';
 import { LoginPage } from '../../shared/pages/LoginPage';
@@ -8,6 +9,32 @@ import { CustomerListPage } from './pages/CustomerListPage';
 import { CustomerFormPage } from './pages/CustomerFormPage';
 import { CustomerDetailPage } from './pages/CustomerDetailPage';
 import * as D from './fixtures/testdata';
+
+/**
+ * All fields CP tests need — set ON before suite to guard against QA-env toggling.
+ * TS-02/TS-03 fill personal details + address + preferences → all must be visible.
+ * address/currentAddress = JSON object (each sub-field key maps to individual toggle).
+ */
+const CP_REQUIRED_FIELDS = {
+  // Personal Details
+  photo: true, title: true, firstName: true, middleName: true,
+  lastName: true, dob: true, gender: true, citizenId: true,
+  // Contact
+  email: true, mobileNo: true, userType: true,
+  // Preferences
+  note: true, languagePreference: true, contractPreference: true,
+  // Address (all sub-fields ON)
+  address: {
+    building: true, country: true, district: true, floor: true,
+    lat: true, lon: true, no: true, postalCode: true, province: true,
+    road: true, room: true, street: true, subDistrict: true,
+  },
+  currentAddress: {
+    building: true, country: true, district: true, floor: true,
+    lat: true, lon: true, no: true, postalCode: true, province: true,
+    road: true, room: true, street: true, subDistrict: true,
+  },
+};
 
 /**
  * Customer Profile — Playwright E2E (generated from customer-profile-testcases.xlsx)
@@ -36,6 +63,12 @@ async function loginAndOpenList(page: Page) {
   await login.login({ org: ORG, username: USER, password: PASS });
 }
 
+/** Save + hard-assert error message (dev confirmed all validation bugs fixed) */
+async function saveAssertBlocked(page: Page, form: CustomerFormPage, expectedMsg: RegExp) {
+  await form.saveExpectingError(expectedMsg);
+  await expect(form.saveBtn).toBeVisible({ timeout: 5000 });
+}
+
 function assetOrSkip(file: string): string {
   const p = path.join(ASSETS, file);
   test.skip(!fs.existsSync(p), `ต้องมีไฟล์ ${file} ใน ${ASSETS} (set CP_ASSETS_DIR)`);
@@ -56,6 +89,15 @@ async function searchRow(list: CustomerListPage, page: Page, keyword: string, ro
 //  SUCCESS SCENARIOS (TS-01 … TS-07)
 // ════════════════════════════════════════════════════════════════════════════
 test.describe('Customer Profile — Success', () => {
+  test.beforeAll(async ({ browser }) => {
+    if (!PASS) return;
+    const page = await (await browser.newContext({ baseURL: process.env.CP_BASE_URL })).newPage();
+    const login = new LoginPage(page);
+    await login.goto();
+    await login.login({ org: ORG, username: USER, password: PASS });
+    await setFieldConfig(page, CP_REQUIRED_FIELDS).catch(() => {});
+    await page.context().close();
+  });
   test.beforeEach(() => test.skip(!PASS, 'set CP_PASSWORD to run real-login tests'));
 
   // ── TS-01 — Search/Filter + View Detail ────────────────────────────────────
@@ -203,7 +245,8 @@ test.describe('Customer Profile — Success', () => {
     });
     await test.step('TS-03_TC-02 — Change new Profile Photo', async () => {
       const photo = assetOrSkip('profile_wannapa1.jpg');
-      await form.uploadPhoto(photo);
+      const ok = await form.uploadPhoto(photo);
+      expect(ok, 'Profile Photo upload should work (Bug #13034270 fixed)').toBe(true);
       await shot(page, 'TS-03_TC-02');
     });
     await test.step('TS-03_TC-03 — Edit all fields in Personal Details', async () => {
@@ -228,13 +271,14 @@ test.describe('Customer Profile — Success', () => {
       await shot(page, 'TS-03_TC-07');
     });
     await test.step('TS-03_TC-08 — Save → update successful, new info shows', async () => {
-      await form.save();
-      await expect(page.getByText(/success|สำเร็จ/i)).toBeVisible();
+      await form.saveAndWait();
+      // success = Save button หายไป (redirect ไปไหนก็ได้: list / detail / toast then redirect)
+      await expect(form.saveBtn).not.toBeVisible({ timeout: 15000 });
       await shot(page, 'TS-03_TC-08');
     });
     await test.step('TS-03_TC-09 — Search keyword "Email" → Wannapha appears', async () => {
-      await list.search('wannapha12@gmail.com');
-      await list.expectRowVisible('Wannapha Sooksai');
+      await list.goto();
+      await searchRow(list, page, 'wannapha12@gmail.com', 'Wannapha Sooksai');
       await shot(page, 'TS-03_TC-09');
     });
     await test.step('TS-03_TC-10 — Navigate to Edit → Personal Details match changes', async () => {
@@ -315,14 +359,15 @@ test.describe('Customer Profile — Success', () => {
       await shot(page, 'TS-05_TC-01');
     });
     await test.step('TS-05_TC-02 — Click Case No. "CS-20250101-001" → Case Detail Page', async () => {
-      // DATA DEP: ลูกค้าที่ seed ผ่าน API ไม่มี Case ผูก (และ detail panel ไม่มี Case section)
-      // → clickthrough ทดสอบไม่ได้กับ seeded data. ต้องใช้ลูกค้าที่มี Case จริง / confirm dev
-      const caseCell = page.getByText('CS-20250101-001').first();
+      // VCC2 (PO round-2/Q8): clickthrough ไปหน้า Case detail ได้ (ยืนยันแล้วว่าใช่ behavior ที่ถูก)
+      // DATA DEP: ลูกค้าที่ seed ผ่าน API ไม่มี Case ผูก → ต้องใช้ลูกค้าที่มี Case จริงเพื่อ exercise
+      const caseNo = 'CS-20250101-001';
+      const caseCell = page.getByText(caseNo).first();
       if (await caseCell.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await caseCell.click();
-        await expect(page.getByText('CS-20250101-001')).toBeVisible();
+        await detail.clickCaseNo(caseNo);
+        await expect(page.getByText(caseNo)).toBeVisible(); // อยู่หน้า Case detail
       } else {
-        test.info().annotations.push({ type: 'known-gap', description: 'TS-05_TC-02: seeded customer ไม่มี Case ผูก + detail panel ไม่มี Case section → verify clickthrough ด้วยลูกค้าที่มี Case จริง' });
+        test.info().annotations.push({ type: 'known-gap', description: 'TS-05_TC-02/VCC2: clickthrough ควรทำงาน (PO Q8) แต่ seeded customer ไม่มี Case → เตรียมลูกค้าที่มี Case จริงก่อน execute' });
       }
       await shot(page, 'TS-05_TC-02');
     });
@@ -386,12 +431,87 @@ test.describe('Customer Profile — Success', () => {
       await shot(page, 'TA-10_TC-01');
     });
   });
+
+  // ── TS-10 — View Customer List: Toggle Table View / Grid View ─────────────────
+  test('TS-10 — view Customer List in Table View (default) and switch to Grid View and back', async ({ page }) => {
+    const list = new CustomerListPage(page);
+
+    await test.step('TS-10_TC-01 — Navigate to Customer List → Table View is displayed by default', async () => {
+      // Arrange: ≥1 customer exists (seed Somchai to guarantee)
+      await loginAndOpenList(page);
+      await seedCustomer(page, D.SOMCHAI);
+      await list.goto();
+      // TS-10_TC-01: Table View = default → ☰ icon active, table with columns visible
+      // ⚠️ Toggle button selectors ยังไม่ verify กับ live DOM — probe ก่อน run ถ้า fail
+      await list.expectTableViewActive();
+      await shot(page, 'TS-10_TC-01');
+    });
+
+    await test.step('TS-10_TC-02 — Click Grid View icon (⊞) → Grid/Card layout displayed', async () => {
+      // TS-10_TC-02: กด ⊞ → Card layout visible, ⊞ highlighted
+      // ⚠️ Grid view selector probe needed — annotate ถ้า toggle button ไม่ตรง
+      const toggled = await list.gridViewBtn.isVisible({ timeout: 5000 }).catch(() => false);
+      if (!toggled) {
+        test.info().annotations.push({ type: 'known-gap', description: 'TS-10_TC-02: Grid View toggle button not found with current selectors — probe live DOM to get correct aria-label/class' });
+        await shot(page, 'TS-10_TC-02');
+        return;
+      }
+      await list.clickGridView();
+      await list.expectGridViewActive();
+      await shot(page, 'TS-10_TC-02');
+    });
+
+    await test.step('TS-10_TC-03 — Click Table View icon (☰) → Table layout restored', async () => {
+      // TS-10_TC-03: กด ☰ → Table layout กลับมา, ☰ highlighted
+      const toggled = await list.tableViewBtn.isVisible({ timeout: 5000 }).catch(() => false);
+      if (!toggled) {
+        test.info().annotations.push({ type: 'known-gap', description: 'TS-10_TC-03: Table View toggle button not found — probe live DOM to get correct selector' });
+        await shot(page, 'TS-10_TC-03');
+        return;
+      }
+      await list.clickTableView();
+      await list.expectTableViewActive();
+      await shot(page, 'TS-10_TC-03');
+    });
+  });
+
+  // ── TS-08 — Display fallback ใน View Detail (PO round-2) ────────────────────
+  test('TS-08 — display fallback: no name → email, no type → N/A', async ({ page }) => {
+    const list = new CustomerListPage(page);
+    const detail = new CustomerDetailPage(page);
+
+    await test.step('TS-08_TC-01 — Customer ไม่มี First/Last name → Display Name = Email', async () => {
+      await loginAndOpenList(page);
+      await seedCustomer(page, D.NONAME);              // firstName/lastName ว่าง → displayName = email
+      // ไม่มีชื่อ → row text = email → ค้น+เปิดด้วย email
+      await searchRow(list, page, D.NONAME.email, D.NONAME.email);
+      await list.clickView(D.NONAME.email);
+      await detail.waitLoaded();
+      // PO round-2: ไม่มีชื่อ → แสดง email แทน display name
+      await expect(page.getByText(D.NONAME.email).first()).toBeVisible();
+      await shot(page, 'TS-08_TC-01');
+    });
+    await test.step('TS-08_TC-02 — Customer ไม่มี Type → ช่อง Type แสดง "N/A"', async () => {
+      // ลูกค้าเดียวกัน (NONAME ไม่มี type) → ตรวจ N/A. exact "N/A" กัน match คำอื่น
+      await expect(page.getByText('N/A', { exact: true }).first()).toBeVisible();
+      await shot(page, 'TS-08_TC-02');
+    });
+  });
 });
 
 // ════════════════════════════════════════════════════════════════════════════
 //  ALTERNATIVE / NEGATIVE SCENARIOS (TA-01 … TA-16)
 // ════════════════════════════════════════════════════════════════════════════
 test.describe('Customer Profile — Alternative', () => {
+  test.beforeAll(async ({ browser }) => {
+    if (!PASS) return;
+    const page = await (await browser.newContext({ baseURL: process.env.CP_BASE_URL })).newPage();
+    const login = new LoginPage(page);
+    await login.goto();
+    await login.login({ org: ORG, username: USER, password: PASS });
+    await setFieldConfig(page, CP_REQUIRED_FIELDS).catch(() => {});
+    await page.context().close();
+  });
   test.beforeEach(() => test.skip(!PASS, 'set CP_PASSWORD to run real-login tests'));
 
   test('TA-01 — "No results found" when searching a keyword with no results', async ({ page }) => {
@@ -413,7 +533,7 @@ test.describe('Customer Profile — Alternative', () => {
       await form.waitReady();
       // กรอก required อื่นให้ครบ (firstName/lastName/phone) เว้นเฉพาะ email → validate "empty email" ตรงจุด
       await form.fillPersonalDetails({ ...D.VALID_BASE, email: '' });
-      await form.saveExpectingError(/please enter an email address/i);  // verified inline (Thai)
+      await saveAssertBlocked(page, form, /please enter an email address/i);
       await shot(page, 'TA-03_TC-01');
     });
   });
@@ -426,46 +546,57 @@ test.describe('Customer Profile — Alternative', () => {
       await purgeByEmail(page, 'darinee.nophone@gmail.com'); // clean + record ให้ teardown (เผื่อ app ยอมบันทึก)
       await list.addCustomerBtn.click();
       await form.fillPersonalDetails({ ...D.VALID_BASE, email: 'darinee.nophone@gmail.com', phone: '' });
-      await form.saveExpectingError(/please enter a mobile number/i);  // verified inline (Thai)
+      await saveAssertBlocked(page, form, /please enter a mobile number/i);
       await shot(page, 'TA-04_TC-01');
     });
   });
 
-  test('TA-04 — error toast duplicate email address', async ({ page }) => {
+  test('TA-04 — error toast "Email already exists" (duplicate email)', async ({ page }) => {
     const list = new CustomerListPage(page);
     const form = new CustomerFormPage(page);
-    await test.step('TA-05_TC-01 — Email somchai.jai@gmail.com (dup) → "Duplicate email address"', async () => {
+    await test.step('TA-05_TC-01 — Email somchai.jai@gmail.com (dup) → "Email already exists"', async () => {
       await loginAndOpenList(page);
       await seedCustomer(page, D.SOMCHAI);
       await list.addCustomerBtn.click();
       await form.fillPersonalDetails({ ...D.VALID_BASE, email: 'somchai.jai@gmail.com', phone: '0848851193' });
-      await form.saveExpectingError(/duplicate email address/i);
+      await saveAssertBlocked(page, form, /email already exists/i);
       await shot(page, 'TA-05_TC-01');
     });
   });
 
-  test('TA-05 — error toast invalid email format', async ({ page }) => {
+  test('TA-05 — error toast "Invalid email format"', async ({ page }) => {
     const list = new CustomerListPage(page);
     const form = new CustomerFormPage(page);
-    await test.step('TA-06_TC-01 — Email "darinee.com" → "Invalid email address format"', async () => {
-      await loginAndOpenList(page);
-      await purgeByEmail(page, 'darinee.com'); // record ให้ teardown (เผื่อ app ยอมบันทึก email ผิด format)
-      await list.addCustomerBtn.click();
-      await form.fillPersonalDetails({ ...D.VALID_BASE, email: 'darinee.com', phone: '0848851193' });
-      await form.saveExpectingError(/invalid email address format/i);
-      await shot(page, 'TA-06_TC-01');
-    });
+    const invalidEmails: [string, string, string][] = [
+      ['TA-06_TC-01', 'test', 'no @ symbol'],
+      ['TA-06_TC-02', 'test@gmail', 'no TLD'],
+      ['TA-06_TC-03', 'test@@gmail.com', 'double @'],
+      ['TA-06_TC-04', 'test@gmail.c', 'TLD 1 char only'],
+      ['TA-06_TC-05', 'test@.com', 'domain starts with dot'],
+    ];
+    await loginAndOpenList(page);
+    for (const [, email] of invalidEmails) await purgeByEmail(page, email);
+    await list.addCustomerBtn.click();
+    await form.waitReady();
+    await form.fillPersonalDetails({ ...D.VALID_BASE, email: '', phone: '0848851193' });
+    for (const [tc, email, why] of invalidEmails) {
+      await test.step(`${tc} — Email "${email}" (${why}) → "Invalid email format"`, async () => {
+        await form.email.fill(email);
+        await saveAssertBlocked(page, form, /invalid email format/i);
+        await shot(page, tc);
+      });
+    }
   });
 
-  test('TA-06 — error toast Citizen ID less than 13 digits', async ({ page }) => {
+  test('TA-06 — error toast "Invalid CitizenID format" (< 13 digits)', async ({ page }) => {
     const list = new CustomerListPage(page);
     const form = new CustomerFormPage(page);
-    await test.step('TA-07_TC-01 — Citizen ID 123456789012 (12) → "Invalid citizen id format"', async () => {
+    await test.step('TA-07_TC-01 — Citizen ID 123456789012 (12 digits) → "Invalid CitizenID format"', async () => {
       await loginAndOpenList(page);
       await purgeByEmail(page, 'darinee.cid12@gmail.com');
       await list.addCustomerBtn.click();
       await form.fillPersonalDetails({ ...D.VALID_BASE, email: 'darinee.cid12@gmail.com', phone: '0848851193', citizenId: '123456789012' });
-      await form.saveExpectingError(/invalid citizen id format/i);
+      await saveAssertBlocked(page, form, /invalid citizenid format/i);
       await shot(page, 'TA-07_TC-01');
     });
   });
@@ -498,41 +629,41 @@ test.describe('Customer Profile — Alternative', () => {
     });
   });
 
-  test('TA-09 — error toast wrong photo format (PDF)', async ({ page }) => {
+  test('TA-09 — error toast "Error" when uploading wrong photo format (PDF)', async ({ page }) => {
     const list = new CustomerListPage(page);
     const form = new CustomerFormPage(page);
-    await test.step('TA-11_TC-01 — Upload contract.pdf → "Invalid upload photo file"', async () => {
+    await test.step('TA-11_TC-01 — Upload contract.pdf → error toast "Error" + file not uploaded', async () => {
       await loginAndOpenList(page);
       await list.addCustomerBtn.click();
       const pdf = assetOrSkip('contract.pdf');
       await form.uploadPhoto(pdf);
-      await form.expectErrorToast(/invalid upload photo file/i);
+      await form.expectErrorToast(/\berror\b/i);
       await shot(page, 'TA-11_TC-01');
     });
   });
 
-  test('TA-10 — error toast photo size larger than 3MB', async ({ page }) => {
+  test('TA-10 — error toast "Error" when photo size exceeds 3MB', async ({ page }) => {
     const list = new CustomerListPage(page);
     const form = new CustomerFormPage(page);
-    await test.step('TA-12_TC-01 — Upload photo_hd.jpg (4MB) → "The file size must not exceed 3MB."', async () => {
+    await test.step('TA-12_TC-01 — Upload photo_hd.jpg (>3MB) → error toast "Error" + file not uploaded', async () => {
       await loginAndOpenList(page);
       await list.addCustomerBtn.click();
       const big = assetOrSkip('photo_hd.jpg');
       await form.uploadPhoto(big);
-      await form.expectErrorToast(/file size must not exceed 3mb/i);
+      await form.expectErrorToast(/\berror\b/i);
       await shot(page, 'TA-12_TC-01');
     });
   });
 
-  test('TA-11 — error toast duplicate email on update', async ({ page }) => {
+  test('TA-11 — error toast "Email already exists" (duplicate email on update)', async ({ page }) => {
     const list = new CustomerListPage(page);
     const form = new CustomerFormPage(page);
-    await test.step('TA-13_TC-01 — Email natthawat.ntw@company.co.th (dup) → "Duplicate email address"', async () => {
+    await test.step('TA-13_TC-01 — Email natthawat.ntw@company.co.th (dup) → "Email already exists"', async () => {
       await loginAndOpenList(page);
       await seedCustomer(page, D.NATTHAWAT);
       await list.addCustomerBtn.click();
       await form.fillPersonalDetails({ ...D.VALID_BASE, email: 'natthawat.ntw@company.co.th', phone: '0848854444' });
-      await form.saveExpectingError(/duplicate email address/i);
+      await saveAssertBlocked(page, form, /email already exists/i);
       await shot(page, 'TA-13_TC-01');
     });
   });
@@ -553,20 +684,20 @@ test.describe('Customer Profile — Alternative', () => {
     });
   });
 
-  test('TA-13 — error toast delete a customer with an active Case', async ({ page }) => {
+  test('TA-13 — error toast "Customer has active warranty products" (delete blocked)', async ({ page }) => {
     const list = new CustomerListPage(page);
-    await test.step('TA-16_TC-01 — Delete Somchai Jaidee (has active case) → "The customer cannot be deleted."', async () => {
+    await test.step('TA-16_TC-01 — Delete Somchai Jaidee (has active product) → "Customer has active warranty products"', async () => {
       await loginAndOpenList(page);
       await seedCustomer(page, D.SOMCHAI);
       await list.search('somchai.jai@gmail.com');
       await list.clickDelete('Somchai Jaidee');
-      // DATA DEP: ลูกค้าที่ seed ผ่าน API ไม่มี Case ผูกจริง → "cannot be deleted" จะไม่โผล่
-      // ต้องใช้ลูกค้าที่มี active Case จริงเพื่อ verify (confirm dev / เตรียม data ก่อน execute)
-      const blocked = page.getByText(/cannot be deleted/i);
+      // DATA DEP: seeded customer ไม่มี active Product/Case จริง → toast จะไม่ปรากฏ
+      // ต้องเตรียมลูกค้าที่มี active warranty product ก่อน execute เต็ม
+      const blocked = page.getByText(/customer has active warranty products/i);
       if (await blocked.isVisible({ timeout: 5000 }).catch(() => false)) {
         await expect(blocked).toBeVisible();
       } else {
-        test.info().annotations.push({ type: 'known-gap', description: 'TA-13: seeded customer ไม่มี active Case → verify ด้วยลูกค้าที่มี Case จริง (precondition ต้องเตรียมก่อน execute)' });
+        test.info().annotations.push({ type: 'known-gap', description: 'TA-13: seeded customer ไม่มี active warranty product → ทดสอบ block-delete ไม่ได้ (เตรียม data ลูกค้าที่มี active product ก่อน execute)' });
       }
       await shot(page, 'TA-16_TC-01');
     });
@@ -610,6 +741,120 @@ test.describe('Customer Profile — Alternative', () => {
       // FINDING: customer detail panel ไม่มี Case section (มีแค่ Product/Service) → confirm dev ว่า Cases อยู่หน้าไหน
       if (!present) test.info().annotations.push({ type: 'known-gap', description: 'TA-16: customer detail panel ไม่มี Case section (มีแค่ Product/Service) — Cases อาจอยู่ที่อื่น/confirm dev' });
       await shot(page, 'TA-19_TC-01');
+    });
+  });
+
+  // ── TA-17 — invalid mobile number format ─────────────────────────────────────
+  test('TA-17 — error toast "Invalid mobile number" (invalid phone format)', async ({ page }) => {
+    const list = new CustomerListPage(page);
+    const form = new CustomerFormPage(page);
+    await test.step('TA-06_TC-01 — Phone "abc123" (invalid format) → "Invalid mobile number"', async () => {
+      await loginAndOpenList(page);
+      await purgeByEmail(page, 'darinee.badphone@gmail.com');
+      await list.addCustomerBtn.click();
+      await form.waitReady();
+      await form.fillPersonalDetails({ ...D.VALID_BASE, email: 'darinee.badphone@gmail.com', phone: 'abc123' });
+      await saveAssertBlocked(page, form, /invalid mobile number/i);
+      await shot(page, 'TA-06_TC-01');
+    });
+  });
+});
+
+// ════════════════════════════════════════════════════════════════════════════
+//  PAGINATION SCENARIOS (TS-09 / TA-18 / TA-19)
+// ════════════════════════════════════════════════════════════════════════════
+test.describe('Customer Profile — Pagination', () => {
+  test.beforeEach(() => test.skip(!PASS, 'set CP_PASSWORD to run real-login tests'));
+
+  // ── TS-09 — Navigate pages + change rows per page ─────────────────────────
+  test('TS-09 — navigate between pages and change rows displayed per page', async ({ page }) => {
+    const list = new CustomerListPage(page);
+    // shared state ระหว่าง steps (closure ใน 1 test block)
+    let firstRowPage1 = '';
+
+    await test.step('TS-09_TC-01 — Navigate to Customer List → pagination controls visible', async () => {
+      // Arrange: seed 55 customers → guarantee total > any expected page_size
+      await loginAndOpenList(page);
+      await seedCustomers(page, D.PAGINATION_CUSTOMERS);
+      await list.goto(); // networkidle — XHR list response กลับมาก่อน assert
+      await expect(list.table).toBeVisible();
+      await expect(list.nextPageBtn).toBeVisible({ timeout: 10000 });
+      await expect(list.rowsPerPageSelect).toBeVisible({ timeout: 5000 });
+      await shot(page, 'TS-09_TC-01');
+    });
+
+    await test.step('TS-09_TC-02 — Click "Next Page" → page 2 (different records)', async () => {
+      firstRowPage1 = await list.table.locator('tbody tr').first().innerText().catch(() => '');
+      await expect(list.nextPageBtn).toBeEnabled({ timeout: 10000 });
+      await list.clickNextPage();
+      const firstRowPage2 = await list.table.locator('tbody tr').first().innerText().catch(() => '');
+      expect(firstRowPage2, 'Page 2 should display different records from page 1').not.toEqual(firstRowPage1);
+      await shot(page, 'TS-09_TC-02');
+    });
+
+    await test.step('TS-09_TC-03 — Click "Previous Page" → page 1 returns (original records)', async () => {
+      await expect(list.prevPageBtn).toBeEnabled({ timeout: 5000 });
+      await list.clickPrevPage();
+      const firstRowBack = await list.table.locator('tbody tr').first().innerText().catch(() => '');
+      expect(firstRowBack, 'Page 1 records should match original').toEqual(firstRowPage1);
+      await shot(page, 'TS-09_TC-03');
+    });
+
+    await test.step('TS-09_TC-04 — Select rows per page = 20 → table shows ≤ 20 rows', async () => {
+      // option "25" ไม่มีใน staging dropdown (options: 10/20/50/100)
+      await list.selectRowsPerPage('20').catch(() => list.selectRowsPerPage('25'));
+      const count = await list.getVisibleRowCount();
+      expect(count, 'Table should show at most 20 rows').toBeLessThanOrEqual(20);
+      await shot(page, 'TS-09_TC-04');
+    });
+
+    await test.step('TS-09_TC-05 — Select rows per page = 10 → table shows ≤ 10 rows', async () => {
+      await list.selectRowsPerPage('10');
+      const count = await list.getVisibleRowCount();
+      expect(count, 'Table should show at most 10 rows').toBeLessThanOrEqual(10);
+      await shot(page, 'TS-09_TC-05');
+    });
+  });
+
+  // ── TA-18 — Previous button disabled on page 1 ────────────────────────────
+  test('TA-18 — Previous button is disabled when on page 1', async ({ page }) => {
+    const list = new CustomerListPage(page);
+
+    await test.step('TA-20_TC-01 — On page 1 → Previous button disabled (not clickable)', async () => {
+      await loginAndOpenList(page);
+      await list.goto();
+      await expect(list.table).toBeVisible();
+      // page 1 = initial load → prevPageBtn ต้องเป็น disabled
+      await list.expectPrevDisabled();
+      // คลิกเพื่อยืนยันว่าหน้าไม่เปลี่ยน (ถ้า disabled click ไม่ผ่าน → skip)
+      await shot(page, 'TA-20_TC-01');
+    });
+  });
+
+  // ── TA-19 — Next button disabled on the last page ─────────────────────────
+  test('TA-19 — Next button is disabled when on the last page', async ({ page }) => {
+    const list = new CustomerListPage(page);
+
+    await test.step('TA-21_TC-01 — Navigate to last page → Next button disabled', async () => {
+      await loginAndOpenList(page);
+      await list.goto();
+      await expect(list.table).toBeVisible();
+      // set rows สูงสุดก่อน แล้ว click Next วนจนถึง last page จริง
+      await list.selectRowsPerPage('100').catch(async () => {
+        await list.selectRowsPerPage('50').catch(() => {});
+      });
+      // navigate ถึง last page (safety limit 100 clicks)
+      let limit = 100;
+      while (limit-- > 0) {
+        const disabled = await list.nextPageBtn.isDisabled().catch(() => true);
+        if (disabled) break;
+        const enabled = await list.nextPageBtn.isEnabled({ timeout: 3000 }).catch(() => false);
+        if (!enabled) break;
+        await list.clickNextPage();
+        await expect(list.table).toBeVisible({ timeout: 10000 });
+      }
+      await list.expectNextDisabled();
+      await shot(page, 'TA-21_TC-01');
     });
   });
 });

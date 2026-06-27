@@ -97,7 +97,7 @@ Thailand Post · Kerry Express · Flash Express · J&T Express · DHL Express ·
 | TA-02_TC-01 | Cart has 1 item, qty 1 | In Cart tap **−** | ORD-A2 (lower bound) | Stays at **1** (− disabled at 1; remove only via trash). No max cap; not bound to stock `[PO ORD-Q2]` | NEGATIVE |
 | TS-01_TC-03 | Cart has item · BILLING/SHIPPING INFO expanded | Fill Bill To `บริษัท สยามทีวี เซอร์วิส จำกัด`, Ship To `คุณสมหญิง รักดี 081-234-5678`, Ship By `Kerry Express` | ORD-A3 | **Submit 1 Order** becomes enabled | POSITIVE |
 | TA-01_TC-01 | Cart has item · Ship By blank (only Bill To, Ship To filled) | Tap Submit | ORD-A3 | Cannot submit / error on **Ship By** field, message `""` | NEGATIVE |
-| TS-01_TC-04 | Bill To/Ship To/Ship By all filled | Tap **Submit 1 Order** | ORD-A5 | New order, status **Create Order** · Order No `ORD260614-#####` appears in list | POSITIVE |
+| TS-01_TC-04 | Bill To/Ship To/Ship By all filled | Tap **Submit 1 Order** | ORD-A5 | New order, status **Create Order** · Order No `ORD260614-#####` appears in list · success toast **"สร้าง คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
 | TS-04_TC-01 | tab **Spare Part** | Select brand → tap **Skip** at Product → select Spare Part | ORD-A1 | Spare Part step opens without selecting a Product | POSITIVE |
 | TA-04_TC-01 | tab Spare Part | Select brand **Toyota** (no parts) | ORD-A6 | Shows **"No results found."** · cannot proceed to Spare Part | NEGATIVE |
 
@@ -112,22 +112,22 @@ Thailand Post · Kerry Express · Flash Express · J&T Express · DHL Express ·
 ### R-C — Update Order Detail
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
-| TS-03_TC-01 | order status **Create Order** | Pencil on Bill → change Ship By to `Flash Express` → **Save** | ORD-C1 | Bill card shows Ship By = `Flash Express` (saved) | POSITIVE |
-| TS-03_TC-02 | order status Create Order | Pencil on **ORDER ITEMS** → change qty to 5 | ORD-C2 | Order Item shows **Quantity 5 item** | POSITIVE |
-| TS-03_TC-03 | any order | Pencil on Title → change to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` | ORD-C3 | Title tag updates to the new text | POSITIVE |
+| TS-03_TC-01 | order status **Create Order** | Pencil on Bill → change Ship By to `Flash Express` → **Save** | ORD-C1 | Bill card shows Ship By = `Flash Express` (saved) · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
+| TS-03_TC-02 | order status Create Order | Pencil on **ORDER ITEMS** → change qty to 5 | ORD-C2 | Order Item shows **Quantity 5 item** · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
+| TS-03_TC-03 | any order | Pencil on Title → change to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` | ORD-C3 | Title tag updates to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
 | TA-03_TC-01 | order status **Request Approved** | Open detail | ORD-C4 | **No pencil** on Bill card or ORDER ITEMS (locked) · Title pencil still present | NEGATIVE |
 
 ### R-D — Workflow / Status
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
-| TS-01_TC-05 | order Create Order · logged in as PIC of "ส่งคำขอ" | Tap Advance **"ส่งคำขอ"** | ORD-D1 | "คำสั่งซื้อ" gets ✓ + timestamp+actor · current step → "ส่งคำขอ" · status badge updates | POSITIVE |
-| TS-01_TC-06 | current step = "ส่งคำขอ" · logged in as approval PIC (Warehouse Approver / Manager) | Tap Advance **"ได้รับการอนุมัติ"** | ORD-D1 | current step → "ได้รับการอนุมัติ" (Request Approved, OS003) · prev step ✓ | POSITIVE |
-| TS-01_TC-07 | current step = "ได้รับการอนุมัติ" · logged in as PIC | Tap Advance **"กำลังหยิบสินค้า"** | ORD-D1 | current step → "กำลังหยิบสินค้า" (Picking, OS004) | POSITIVE |
-| TS-01_TC-08 | current step = "กำลังหยิบสินค้า" · logged in as PIC | Tap Advance **"กำลังแพ็คสินค้า"** | ORD-D1 | current step → "กำลังแพ็คสินค้า" (Packing, OS005) · prev step ✓ | POSITIVE |
-| TS-01_TC-09 | current step = "กำลังแพ็คสินค้า" · logged in as PIC | Tap Advance **"ส่งออกจากคลัง"** | ORD-D1 | current step → "ส่งออกจากคลัง" (Dispatched, OS006) · prev step ✓ | POSITIVE |
-| TS-01_TC-10 | current step = "ส่งออกจากคลัง" · logged in as PIC | Tap Advance **"กำลังจัดส่ง"** | ORD-D1 | current step → "กำลังจัดส่ง" (Out for Delivery, OS007) · prev step ✓ | POSITIVE |
-| TS-01_TC-11 | current step = "กำลังจัดส่ง" · logged in as PIC | Tap Advance **"ส่งถึงแล้ว"** | ORD-D1 | current step → "ส่งถึงแล้ว" (Delivered, OS008) · prev step ✓ | POSITIVE |
-| TS-01_TC-12 | current step = "ส่งถึงแล้ว" · logged in as PIC | Tap Advance **"เสร็จสิ้น"** | ORD-D1 | order reaches final step "เสร็จสิ้น" (Complete, OS009) · all 9 steps ✓ · terminal success | POSITIVE |
+| TS-01_TC-05 | order Create Order · logged in as PIC of "ส่งคำขอ" | Tap Advance **"ส่งคำขอ"** | ORD-D1 | "คำสั่งซื้อ" gets ✓ + timestamp+actor · current step → "ส่งคำขอ" · status badge updates · ไม่มี toast (STG ยังไม่แสดง Toast สำหรับ state transition) | POSITIVE |
+| TS-01_TC-06 | current step = "ส่งคำขอ" · logged in as approval PIC (Warehouse Approver / Manager) | Tap Advance **"ได้รับการอนุมัติ"** | ORD-D1 | current step → "ได้รับการอนุมัติ" (Request Approved, OS003) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
+| TS-01_TC-07 | current step = "ได้รับการอนุมัติ" · logged in as PIC | Tap Advance **"กำลังหยิบสินค้า"** | ORD-D1 | current step → "กำลังหยิบสินค้า" (Picking, OS004) · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
+| TS-01_TC-08 | current step = "กำลังหยิบสินค้า" · logged in as PIC | Tap Advance **"กำลังแพ็คสินค้า"** | ORD-D1 | current step → "กำลังแพ็คสินค้า" (Packing, OS005) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
+| TS-01_TC-09 | current step = "กำลังแพ็คสินค้า" · logged in as PIC | Tap Advance **"ส่งออกจากคลัง"** | ORD-D1 | current step → "ส่งออกจากคลัง" (Dispatched, OS006) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
+| TS-01_TC-10 | current step = "ส่งออกจากคลัง" · logged in as PIC | Tap Advance **"กำลังจัดส่ง"** | ORD-D1 | current step → "กำลังจัดส่ง" (Out for Delivery, OS007) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
+| TS-01_TC-11 | current step = "กำลังจัดส่ง" · logged in as PIC | Tap Advance **"ส่งถึงแล้ว"** | ORD-D1 | current step → "ส่งถึงแล้ว" (Delivered, OS008) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
+| TS-01_TC-12 | current step = "ส่งถึงแล้ว" · logged in as PIC | Tap Advance **"เสร็จสิ้น"** | ORD-D1 | order reaches final step "เสร็จสิ้น" (Complete, OS009) · all 9 steps ✓ · terminal success · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
 | TA-06_TC-01 | logged in **not** in the step's PIC list (PIC roles = Warehouse Approver / Manager) | Open the order detail | ORD-D2 | The step's Advance button **does not appear** `[PO ORD-Q3]` | NEGATIVE |
 | TS-02_TC-07 | order whose current step "ได้รับการอนุมัติ" idle > 61 min | View Operating Procedure | ORD-D3 | Current step shows **`Overdue`** badge (red); SLA for this step = 61 min `[PO ORD-Q4]` | POSITIVE |
 | TS-01_TC-13 | order with requester + next-step PIC | PIC taps Advance | ORD-D4 | Related accounts (requester + next PIC) get real-time in-app bell: `{actor} ส่งถึงคุณ {Status} :: {Order ID}` `[PO ORD-Q6]` | POSITIVE |
@@ -135,7 +135,7 @@ Thailand Post · Kerry Express · Flash Express · J&T Express · DHL Express ·
 ### R-E — Cancel Order
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
-| TA-02_TC-02 | order status Create Order (before Approved) | Tap **Cancel** → confirm | ORD-E1 | Dialog `"ยืนยันการยกเลิกคำสั่งซื้อ ___ ?"` + Confirm/Cancel · after confirm → status **Cancel** (terminal); if already Picked, stock is returned `[PO ORD-Q9]` | NEGATIVE |
+| TA-02_TC-02 | order status Create Order (before Approved) | Tap **Cancel** → confirm | ORD-E1 | Dialog `"ยืนยันการยกเลิกคำสั่งซื้อ ___ ?"` + Confirm/Cancel · after confirm → status **Cancel** (terminal) · success toast **"ลบ คำสั่งซื้อ เรียบร้อยแล้ว"** · if already Picked, stock is returned `[PO ORD-Q9]` | NEGATIVE |
 | TA-03_TC-02 | current step = "ได้รับการอนุมัติ" | Check whether Cancel is present | ORD-E2 | Cancel **should be hidden/blocked** after Approved; it currently still appears → **BUG**, expected to FAIL `[BUG] [PO ORD-Q5]` | NEGATIVE |
 
 ### R-F — Table List / Search / Filter
