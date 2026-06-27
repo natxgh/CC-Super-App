@@ -41,7 +41,7 @@ const FORM_LIST   = 'query ($input: ListDataInput) { Forms { GetFormAll (input: 
 const FORM_DELETE = 'mutation ($input: GetIdInput!) { Forms { DeleteForms (input: $input) { status msg data desc } } }';
 const FORM_CREATE = 'mutation ($input: FormInput) { Forms { CreateForms (input: $input) { status msg data desc } } }';
 const CFG_GET     = 'query { CustomerForm { GetListCustomerForm { status msg data desc } } }';
-const CFG_UPDATE  = 'mutation ($input: CustomerFormConfigUpdateInput) { CustomerForm { UpdateCustomerForm (input: $input) { status msg data desc } } }';
+const CFG_UPDATE  = 'mutation ($input: CustomerFormConfigUpdateInput!) { CustomerForm { UpdateCustomerForm (input: $input) { status msg data desc } } }';
 
 async function gql(req: APIRequestContext, token: string, query: string, variables: any) {
   const res = await req.post(GQL, {

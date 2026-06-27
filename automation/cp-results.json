@@ -1,79 +1,464 @@
 [
-  {"tcNo":"TS-01_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-02","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-03","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-04","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-05","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-06","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-07","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-08","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-09","result":"PASSED","note":"","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-01_TC-10","result":"PASSED","note":"known-gap: API-seeded dynamicForm ไม่ surface บนหน้า detail","video":"test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"},
-  {"tcNo":"TS-02_TC-01","result":"FAILED","note":"Browser closed (Target page, context has been closed) ระหว่าง selectOption ใน Personal Details — staging crash/instability","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-02","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-03","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-04","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-05","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-06","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-07","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-08","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-09","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-10","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-11","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-12","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-02_TC-13","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-01","result":"FAILED","note":"uploadPhoto() returns false — Bug #13034270 regression: Profile Photo upload section ยังไม่ fix ใน staging","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-02","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail (photo upload regression)","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-03","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-04","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-05","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-06","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-07","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-08","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-09","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-10","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-11","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-12","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-03_TC-13","result":"FAILED","note":"ไม่ถึงจาก TC-01 fail","video":"test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"},
-  {"tcNo":"TS-04_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"},
-  {"tcNo":"TS-04_TC-02","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"},
-  {"tcNo":"TS-04_TC-03","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"},
-  {"tcNo":"TS-04_TC-04","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"},
-  {"tcNo":"TS-04_TC-05","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"},
-  {"tcNo":"TS-04_TC-06","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"},
-  {"tcNo":"TS-05_TC-01","result":"PASSED","note":"known-gap: Product/Service dummy data; Cases ไม่มีใน seeded customer","video":"test-results/customer-profile-customer--fe513-and-navigate-to-Case-detail-chromium/video.webm"},
-  {"tcNo":"TS-05_TC-02","result":"PASSED","note":"known-gap: seeded customer ไม่มี CS-20250101-001 — annotated","video":"test-results/customer-profile-customer--fe513-and-navigate-to-Case-detail-chromium/video.webm"},
-  {"tcNo":"TS-08_TC-01","result":"PASSED","note":"known-gap: Add Product cascade ตัน (staging catalog data ไม่ครบ 3 ชั้น)","video":"test-results/customer-profile-customer--6cbcd--and-service-QA-Phase-Only--chromium/video.webm"},
-  {"tcNo":"TS-08_TC-02","result":"PASSED","note":"Customer ไม่มี Type → ช่อง Type แสดง N/A ✓","video":"test-results/customer-profile-customer--4ee69--name-→-email-no-type-→-N-A-chromium/video.webm"},
-  {"tcNo":"TS-09_TC-01","result":"PASSED","note":"known-gap: Add Service cascade ตัน (staging service data ไม่ครบ)","video":"test-results/customer-profile-customer--6cbcd--and-service-QA-Phase-Only--chromium/video.webm"},
-  {"tcNo":"TS-09_TC-02","result":"PASSED","note":"Click Next Page → page 2 different records ✓","video":"test-results/customer-profile-customer--3f333-nge-rows-displayed-per-page-chromium/video.webm"},
-  {"tcNo":"TS-09_TC-03","result":"PASSED","note":"Click Previous Page → page 1 restored ✓","video":"test-results/customer-profile-customer--6cbcd--and-service-QA-Phase-Only--chromium/video.webm"},
-  {"tcNo":"TS-09_TC-04","result":"PASSED","note":"Rows per page = 20 (option 25 ไม่มีใน staging dropdown, ใช้ 20 แทน) ✓","video":"test-results/customer-profile-customer--3f333-nge-rows-displayed-per-page-chromium/video.webm"},
-  {"tcNo":"TS-09_TC-05","result":"PASSED","note":"Rows per page = 10 ✓","video":"test-results/customer-profile-customer--3f333-nge-rows-displayed-per-page-chromium/video.webm"},
-  {"tcNo":"TS-10_TC-01","result":"PASSED","note":"Table View default — role=table visible ✓","video":"test-results/customer-profile-customer--99d62-witch-to-Grid-View-and-back-chromium/video.webm"},
-  {"tcNo":"TS-10_TC-02","result":"FAILED","note":"Strict mode violation — grid selector ชน sidebar SVG (lucide-layout-grid) + unrelated <ul>. Root: grid container ไม่มี unique selector หลัง switch mode","video":"test-results/customer-profile-customer--99d62-witch-to-Grid-View-and-back-chromium-retry1/video.webm"},
-  {"tcNo":"TS-10_TC-03","result":"FAILED","note":"ไม่ถึงจาก TC-02 fail","video":"test-results/customer-profile-customer--99d62-witch-to-Grid-View-and-back-chromium-retry1/video.webm"},
-  {"tcNo":"TA-02_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--084d0-g-a-keyword-with-no-results-chromium/video.webm"},
-  {"tcNo":"TA-03_TC-01","result":"FAILED","note":"pollForText timeout — toast 'Please enter an email address' ไม่โผล่ (toast text เปลี่ยนหรือไม่ render ใน staging)","video":"test-results/customer-profile-customer--799d4--email-address-empty-email--chromium-retry1/video.webm"},
-  {"tcNo":"TA-04_TC-01","result":"FAILED","note":"pollForText timeout — toast 'Please enter a mobile number' ไม่โผล่ (toast text เปลี่ยนหรือไม่ render)","video":"test-results/customer-profile-customer--ddf8c--mobile-number-empty-phone--chromium-retry1/video.webm"},
-  {"tcNo":"TA-05_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--6acf0-ady-exists-duplicate-email--chromium/video.webm"},
-  {"tcNo":"TA-06_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--aa0f9-umber-invalid-phone-format--chromium/video.webm"},
-  {"tcNo":"TA-06_TC-02","result":"PASSED","note":"","video":"test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"},
-  {"tcNo":"TA-06_TC-03","result":"PASSED","note":"","video":"test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"},
-  {"tcNo":"TA-06_TC-04","result":"PASSED","note":"","video":"test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"},
-  {"tcNo":"TA-06_TC-05","result":"PASSED","note":"","video":"test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"},
-  {"tcNo":"TA-07_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--54a30-CitizenID-format-13-digits--chromium/video.webm"},
-  {"tcNo":"TA-08_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--2c0b2--digits-is-blocked-rejected-chromium/video.webm"},
-  {"tcNo":"TA-09_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--29441-e-future-cannot-be-selected-chromium/video.webm"},
-  {"tcNo":"TA-10_TC-01","result":"PASSED","note":"DOB = today → Save OK ✓","video":"test-results/customer-profile-customer--fc0a8-sing-today-as-Date-of-Birth-chromium/video.webm"},
-  {"tcNo":"TA-11_TC-01","result":"FAILED","note":"pollForText timeout — toast 'Error' (PDF format rejection) ไม่โผล่ใน staging","video":"test-results/customer-profile-customer--a26b0-ing-wrong-photo-format-PDF--chromium-retry1/video.webm"},
-  {"tcNo":"TA-12_TC-01","result":"FAILED","note":"pollForText timeout — toast 'Error' (photo >3MB rejection) ไม่โผล่ใน staging","video":"test-results/customer-profile-customer--01cff-when-photo-size-exceeds-3MB-chromium-retry1/video.webm"},
-  {"tcNo":"TA-13_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--d6c6d--duplicate-email-on-update--chromium/video.webm"},
-  {"tcNo":"TA-14_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--e7223-click-Edit-then-Cancel-Back-chromium/video.webm"},
-  {"tcNo":"TA-16_TC-01","result":"PASSED","note":"known-gap: seeded customer ไม่มี active warranty product","video":"test-results/customer-profile-customer--feca8-ty-products-delete-blocked--chromium/video.webm"},
-  {"tcNo":"TA-17_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--5caed-stomer-Product-with-no-data-chromium/video.webm"},
-  {"tcNo":"TA-18_TC-01","result":"PASSED","note":"","video":"test-results/customer-profile-customer--1d27a-stomer-Service-with-no-data-chromium/video.webm"},
-  {"tcNo":"TA-19_TC-01","result":"PASSED","note":"known-gap: customer detail panel ไม่มี Case section","video":"test-results/customer-profile-customer--4e71a--customer-Case-with-no-data-chromium/video.webm"},
-  {"tcNo":"TA-20_TC-01","result":"PASSED","note":"Previous button disabled on page 1 ✓","video":"test-results/customer-profile-customer--eb6e5--is-disabled-when-on-page-1-chromium/video.webm"},
-  {"tcNo":"TA-21_TC-01","result":"PASSED","note":"Navigated to last page → Next button disabled ✓ (dev fix confirmed)","video":"test-results/customer-profile-customer--92328-abled-when-on-the-last-page-chromium/video.webm"}
+  {
+    "tcNo": "TS-01_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-02",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-03",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-04",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-05",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-06",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-07",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-08",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-09",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-01_TC-10",
+    "result": "PASSED",
+    "note": "known-gap: API-seeded dynamicForm ไม่ surface บนหน้า detail",
+    "video": "test-results/customer-profile-customer--f79d4-st-and-view-customer-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-02",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-03",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-04",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-05",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-06",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-07",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-08",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-09",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-10",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-11",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-12",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-02_TC-13",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--39283-r-profile-Siriwimon-Somjit--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-01",
+    "result": "FAILED",
+    "note": "uploadPhoto() returns false — Bug #13034270 regression: Profile Photo upload section ยังไม่ fix ใน staging",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-02",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail (photo upload regression)",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-03",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-04",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-05",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-06",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-07",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-08",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-09",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-10",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-11",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-12",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-03_TC-13",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-01 fail",
+    "video": "test-results/customer-profile-customer--8717d-profile-Wannapa-→-Wannapha--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-04_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-04_TC-02",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-04_TC-03",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-04_TC-04",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-04_TC-05",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-04_TC-06",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e87b3-r-profile-Wannapha-Sooksai--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-05_TC-01",
+    "result": "PASSED",
+    "note": "known-gap: Product/Service dummy data; Cases ไม่มีใน seeded customer",
+    "video": "test-results/customer-profile-customer--fe513-and-navigate-to-Case-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-05_TC-02",
+    "result": "PASSED",
+    "note": "known-gap: seeded customer ไม่มี CS-20250101-001 — annotated",
+    "video": "test-results/customer-profile-customer--fe513-and-navigate-to-Case-detail-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-08_TC-01",
+    "result": "PASSED",
+    "note": "known-gap: Add Product cascade ตัน (staging catalog data ไม่ครบ 3 ชั้น)",
+    "video": "test-results/customer-profile-customer--6cbcd--and-service-QA-Phase-Only--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-08_TC-02",
+    "result": "PASSED",
+    "note": "Customer ไม่มี Type → ช่อง Type แสดง N/A ✓",
+    "video": "test-results/customer-profile-customer--4ee69--name-→-email-no-type-→-N-A-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-09_TC-01",
+    "result": "PASSED",
+    "note": "known-gap: Add Service cascade ตัน (staging service data ไม่ครบ)",
+    "video": "test-results/customer-profile-customer--6cbcd--and-service-QA-Phase-Only--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-09_TC-02",
+    "result": "PASSED",
+    "note": "Click Next Page → page 2 different records ✓",
+    "video": "test-results/customer-profile-customer--3f333-nge-rows-displayed-per-page-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-09_TC-03",
+    "result": "PASSED",
+    "note": "Click Previous Page → page 1 restored ✓",
+    "video": "test-results/customer-profile-customer--6cbcd--and-service-QA-Phase-Only--chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-09_TC-04",
+    "result": "PASSED",
+    "note": "Rows per page = 20 (option 25 ไม่มีใน staging dropdown, ใช้ 20 แทน) ✓",
+    "video": "test-results/customer-profile-customer--3f333-nge-rows-displayed-per-page-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-09_TC-05",
+    "result": "PASSED",
+    "note": "Rows per page = 10 ✓",
+    "video": "test-results/customer-profile-customer--3f333-nge-rows-displayed-per-page-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-10_TC-01",
+    "result": "PASSED",
+    "note": "Table View default — role=table visible ✓",
+    "video": "test-results/customer-profile-customer--99d62-witch-to-Grid-View-and-back-chromium/video.webm"
+  },
+  {
+    "tcNo": "TS-10_TC-02",
+    "result": "FAILED",
+    "note": "Strict mode violation — grid selector ชน sidebar SVG (lucide-layout-grid) + unrelated <ul>. Root: grid container ไม่มี unique selector หลัง switch mode",
+    "video": "test-results/customer-profile-customer--99d62-witch-to-Grid-View-and-back-chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TS-10_TC-03",
+    "result": "FAILED",
+    "note": "ไม่ถึงจาก TC-02 fail",
+    "video": "test-results/customer-profile-customer--99d62-witch-to-Grid-View-and-back-chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TA-02_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--084d0-g-a-keyword-with-no-results-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-03_TC-01",
+    "result": "FAILED",
+    "note": "pollForText timeout — toast 'Please enter an email address' ไม่โผล่ (toast text เปลี่ยนหรือไม่ render ใน staging)",
+    "video": "test-results/customer-profile-customer--799d4--email-address-empty-email--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TA-04_TC-01",
+    "result": "FAILED",
+    "note": "pollForText timeout — toast 'Please enter a mobile number' ไม่โผล่ (toast text เปลี่ยนหรือไม่ render)",
+    "video": "test-results/customer-profile-customer--ddf8c--mobile-number-empty-phone--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TA-05_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--6acf0-ady-exists-duplicate-email--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-06_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--aa0f9-umber-invalid-phone-format--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-06_TC-02",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-06_TC-03",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-06_TC-04",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-06_TC-05",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--eac93-toast-Invalid-email-format--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-07_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--54a30-CitizenID-format-13-digits--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-08_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--2c0b2--digits-is-blocked-rejected-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-09_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--29441-e-future-cannot-be-selected-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-10_TC-01",
+    "result": "PASSED",
+    "note": "DOB = today → Save OK ✓",
+    "video": "test-results/customer-profile-customer--fc0a8-sing-today-as-Date-of-Birth-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-11_TC-01",
+    "result": "FAILED",
+    "note": "pollForText timeout — toast 'Error' (PDF format rejection) ไม่โผล่ใน staging",
+    "video": "test-results/customer-profile-customer--a26b0-ing-wrong-photo-format-PDF--chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TA-12_TC-01",
+    "result": "FAILED",
+    "note": "pollForText timeout — toast 'Error' (photo >3MB rejection) ไม่โผล่ใน staging",
+    "video": "test-results/customer-profile-customer--01cff-when-photo-size-exceeds-3MB-chromium-retry1/video.webm"
+  },
+  {
+    "tcNo": "TA-13_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--d6c6d--duplicate-email-on-update--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-14_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--e7223-click-Edit-then-Cancel-Back-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-16_TC-01",
+    "result": "PASSED",
+    "note": "known-gap: seeded customer ไม่มี active warranty product",
+    "video": "test-results/customer-profile-customer--feca8-ty-products-delete-blocked--chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-17_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--5caed-stomer-Product-with-no-data-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-18_TC-01",
+    "result": "PASSED",
+    "note": "",
+    "video": "test-results/customer-profile-customer--1d27a-stomer-Service-with-no-data-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-19_TC-01",
+    "result": "PASSED",
+    "note": "known-gap: customer detail panel ไม่มี Case section",
+    "video": "test-results/customer-profile-customer--4e71a--customer-Case-with-no-data-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-20_TC-01",
+    "result": "PASSED",
+    "note": "Previous button disabled on page 1 ✓",
+    "video": "test-results/customer-profile-customer--eb6e5--is-disabled-when-on-page-1-chromium/video.webm"
+  },
+  {
+    "tcNo": "TA-21_TC-01",
+    "result": "PASSED",
+    "note": "Navigated to last page → Next button disabled ✓ (dev fix confirmed)",
+    "video": "test-results/customer-profile-customer--92328-abled-when-on-the-last-page-chromium/video.webm"
+  }
 ]

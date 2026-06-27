@@ -11,29 +11,14 @@ import { CustomerDetailPage } from './pages/CustomerDetailPage';
 import * as D from './fixtures/testdata';
 
 /**
- * All fields CP tests need — set ON before suite to guard against QA-env toggling.
- * TS-02/TS-03 fill personal details + address + preferences → all must be visible.
- * address/currentAddress = JSON object (each sub-field key maps to individual toggle).
+ * All Personal Details + Contact + Preferences fields CP tests need — boolean fields only.
+ * address/currentAddress excluded (already ON in staging by default).
  */
 const CP_REQUIRED_FIELDS = {
-  // Personal Details
   photo: true, title: true, firstName: true, middleName: true,
   lastName: true, dob: true, gender: true, citizenId: true,
-  // Contact
   email: true, mobileNo: true, userType: true,
-  // Preferences
   note: true, languagePreference: true, contractPreference: true,
-  // Address (all sub-fields ON)
-  address: {
-    building: true, country: true, district: true, floor: true,
-    lat: true, lon: true, no: true, postalCode: true, province: true,
-    road: true, room: true, street: true, subDistrict: true,
-  },
-  currentAddress: {
-    building: true, country: true, district: true, floor: true,
-    lat: true, lon: true, no: true, postalCode: true, province: true,
-    road: true, room: true, street: true, subDistrict: true,
-  },
 };
 
 /**
