@@ -38,4 +38,19 @@ export class ProductDetailPage {
     await expect.soft(this.editBtn).toBeVisible();
     await expect.soft(this.closeBtn).toBeVisible();
   }
+
+  /**
+   * Assert product image is displayed with a valid uploaded URL.
+   * ⚠️ Known FE bug: upload API is never called → image src is empty/null after create.
+   * This assertion is intentionally expected to FAIL until the bug is fixed.
+   */
+  async expectProductImage() {
+    const img = this.modal.locator('img').first();
+    await expect(img).toBeVisible({ timeout: 5000 });
+    const src = await img.getAttribute('src') ?? '';
+    // A properly uploaded image has a server URL with a UUID; placeholder/empty src = FE bug
+    expect(src, '[BUG] Product image not uploaded — FE did not call uploadFile API').toMatch(
+      /^https?:\/\/.+[0-9a-f-]{8}/i,
+    );
+  }
 }

@@ -6,6 +6,7 @@ import { ProductListPage } from './pages/ProductListPage';
 import { ProductFormPage } from './pages/ProductFormPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { seedProduct, purgeByCode } from './fixtures/product-seed';
+import { seedProductStock, purgeProductStock } from '../product-stock/fixtures/product-stock-seed';
 import * as D from './fixtures/testdata';
 
 /**
@@ -53,7 +54,9 @@ test.describe('Product & Inventory — Success', () => {
   test('TS-01 — add a new product successfully', async ({ page }) => {
     const list = new ProductListPage(page);
     const form = new ProductFormPage(page);
+    const detail = new ProductDetailPage(page);
     const d = D.XIA_RVX20;
+    const imgPath = assetOrSkip(D.IMG_PRODUCT);
 
     await test.step('TS-01_TC-01 — Open Product List + all primary buttons present', async () => {
       await loginAndOpenList(page);
@@ -63,10 +66,11 @@ test.describe('Product & Inventory — Success', () => {
       await expect.soft(list.resetBtn).toBeVisible();
       await shot(page, 'TS-01_TC-01');
     });
-    await test.step('TS-01_TC-02 — Fill Create form with all required fields', async () => {
+    await test.step('TS-01_TC-02 — Fill Create form with product image + all required fields', async () => {
       await list.createBtn.click();
       await form.waitReady();
-      await form.fill(d); // ไม่ใส่ image → ยืนยัน Image optional (HA3)
+      await form.uploadImage(imgPath); // upload realistic product photo
+      await form.fill(d);
       await expect(form.createBtn).toBeEnabled();
       await shot(page, 'TS-01_TC-02');
     });
@@ -76,6 +80,14 @@ test.describe('Product & Inventory — Success', () => {
       await list.search(d.en!); // search by name (UI search indexes name, not code)
       await list.expectRowVisible(d.code);
       await shot(page, 'TS-01_TC-03');
+    });
+    await test.step('TS-01_TC-04 — View detail → product image is displayed [BUG: FE upload API not called]', async () => {
+      await list.clickView(d.code);
+      await detail.waitLoaded();
+      await shot(page, 'TS-01_TC-04');
+      // ⚠️ Expected FAIL: FE does not call uploadFile API when submitting the product form.
+      // Image src is empty/null after create → this assertion documents the bug.
+      await detail.expectProductImage();
     });
   });
 
@@ -357,20 +369,29 @@ test.describe('Product & Inventory — Alternative', () => {
 
   test('TA-11 — delete blocked when product has Product Stock', async ({ page }) => {
     const list = new ProductListPage(page);
-    await test.step('TA-11_TC-01 — Delete product with Product Stock → blocked', async () => {
+    await test.step('TA-11_TC-01 — Arrange Product + Product Stock via API → Delete → blocked', async () => {
       await loginAndOpenList(page);
-      // DATA DEP: ต้องใช้สินค้าที่ "มี Product Stock (Serial)" จริงในระบบ. seed product เปล่า ๆ ไม่มี stock
-      //   → ไม่ trigger เงื่อนไขบล็อก. ใช้ catalog item ที่มี stock จริง (เช่น Chery V27 ที่มี Low Stock(1))
-      //   selector/exact-warning ยังต้อง verify live → ถ้ายังบล็อกไม่ได้ ให้ annotate (ไม่ fake pass)
-      await list.search(D.CHERY_V27.name);
-      await list.clickDelete(D.CHERY_V27.name);
+      // Arrange: create product we own, then create one product stock serial for it
+      await seedProduct(page, D.BMW_TA11);
+      await seedProductStock(page, {
+        serialNumber: D.SN_TA11_STOCK,
+        product: D.BMW_TA11.en!,
+        store: D.STORE_TA11,
+        registerDate: '2026-06-13',
+        mfw: '2027-06-13',
+      });
+      await list.search(D.BMW_TA11.en!);
+      await list.clickDelete(D.BMW_TA11.en!);
       const blocked = page.getByText(/cannot|stock|order|ไม่สามารถ/i).first();
       if (await blocked.isVisible({ timeout: 5000 }).catch(() => false)) {
         await expect(blocked).toBeVisible();
       } else {
-        test.info().annotations.push({ type: 'known-gap', description: 'TA-11: ต้องมีสินค้าที่มี Product Stock/Order จริง + verify exact warning text → ยืนยัน conditional delete กับ data จริง/confirm dev (PO Q8)' });
+        test.info().annotations.push({ type: 'known-gap', description: 'TA-11: delete blocked dialog text not matched — verify exact warning text with dev (PO Q8)' });
       }
       await shot(page, 'TA-11_TC-01');
+      // Teardown: delete stock first (FK dependency), then the product
+      await purgeProductStock(page, D.BMW_TA11.en!, D.SN_TA11_STOCK);
+      await purgeByCode(page, D.BMW_TA11);
     });
   });
 

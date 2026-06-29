@@ -238,7 +238,7 @@
 | `PIM_TA06` | `PIM20-TC1` → `PIM22-TC1` (click Cancel) | product remains intact | reverse |
 | `PIM_TA07` | `PIM3-TC3` (search `Zznotexist`) | empty state | empty-state text pending PO (`""`) |
 | `PIM_TA08` | `PIM6-TC2` (Status `Inactive`) | inactive only / empty | ✅HA8 (status = soft filter) |
-| `PIM_TA09` | `PIM20-TC1` → `PIM23-TC1` (Delete product with Product Stock) | blocked, cannot delete + product remains | ✅HA8 conditional delete |
+| `PIM_TA09` | Arrange: API seed `BMW-TA11` (product) + `BMW5G60-TA11-001` (product stock) → `PIM20-TC1` → `PIM23-TC1` (Delete product with Product Stock) → Teardown: API delete stock + product | blocked, cannot delete + product remains | ✅HA8 conditional delete · data arranged & torn down by test (no pre-existing QA data) |
 | `PIM_TA10` | `PIM15-TC4` (image JPG > 3MB) | reject, exceeds max 3MB | ✅HA7 max size |
 
 ### 🔁 UI behavior

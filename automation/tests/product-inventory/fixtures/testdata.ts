@@ -40,6 +40,20 @@ export const XIA_FREEBIE: ProductData = {
   price: 0,
 };
 
+// ── TA-11 arrange: product + product stock (delete-blocked test) ─────────────
+export const BMW_TA11: ProductData = {
+  code: 'BMW-TA11',
+  th: 'BMW 5 Series G60 TA11',
+  en: 'BMW 5 Series G60 TA11',
+  brand: 'BMW',
+  category: 'Vehicles',
+  year: 2026,
+  warranty: 365,
+  price: 4500000,
+};
+export const SN_TA11_STOCK = 'BMW5G60-TA11-001'; // serial arranged for TA-11 delete-blocked verify
+export const STORE_TA11 = 'Store2';               // store for TA-11 product stock seed
+
 // ── existing catalog items (สำรวจจาก STG — ใช้สำหรับ View/Search/Sort/Delete-dep) ──
 export const CHERY_V27 = { code: 'CheryV27', name: 'Chery V27', brand: 'Chery', category: 'Vehicles' };
 export const PRODUCT_1001 = { code: '1001', brand: 'Xiaomi', category: 'Smart Tech & Gadgets', year: 2026, warranty: 1, price: 1001 };
@@ -63,6 +77,7 @@ export const YEAR_MIN = 2017;
 export const YEAR_MAX = new Date().getFullYear() + 1; // dynamic upper bound (2027 in 2026)
 
 // ── image assets (UI-only cases) ─────────────────────────────────────────────
+export const IMG_PRODUCT = 'mercedes_glc_2026.jpg'; // realistic product photo for TS-01 image upload TC
 export const IMG_VALID = 'profile_siriwimon.jpg'; // reuse existing JPG asset (≤3MB)
 export const IMG_PDF = 'contract.pdf';             // unsupported → reject
 export const IMG_OVER_3MB = 'photo_hd.jpg';        // >3MB → reject (reuse existing 4MB asset)

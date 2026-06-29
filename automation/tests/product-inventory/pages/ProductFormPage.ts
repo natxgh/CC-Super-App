@@ -30,7 +30,9 @@ export class ProductFormPage {
     this.nameTH = page.locator('input[name="th"]');
     this.nameEN = page.locator('input[name="en"]');
     this.code = page.locator('input[name="productCode"]');
-    this.year = page.locator('select'); // หน้า form มี native select เดียว = Year
+    // Year select: identified by its unique placeholder option "Select year"
+    // (form is a drawer panel co-existing with list's pagination <select>, so need specific filter)
+    this.year = page.locator('select').filter({ has: page.locator('option:text("Select year")') });
     this.warranty = page.locator('input[name="warranty"]');
     this.price = page.locator('input[name="price"]');
     this.imageInput = page.locator('#photo-upload');

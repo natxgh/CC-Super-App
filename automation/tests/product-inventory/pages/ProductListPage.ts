@@ -80,7 +80,8 @@ export class ProductListPage {
       const search = this.page.locator('input[placeholder="Search..."]').last();
       await search.fill(value);
       await this.page.waitForTimeout(300);
-      await this.page.locator('div.cursor-pointer').filter({ hasText: value }).last().click();
+      // dispatchEvent required: .click() closes the dropdown but doesn't fire React's synthetic onClick
+      await this.page.locator('div.px-3.py-2.cursor-pointer').filter({ hasText: new RegExp(`^${value}$`) }).first().dispatchEvent('click');
     }
 
     await this.searchBtn.click().catch(() => {});
