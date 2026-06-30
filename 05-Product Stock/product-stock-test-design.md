@@ -8,7 +8,10 @@
 > - Part 1: Add Product Stock = create a unit per Serial No. in the unit registry at `/cms/products/stock`
 > - Part 2: Low Product Stock Notification = qty-based alerts (badge In/Low/Out + bell) on `/cms/products` and `/cms/inventory` (Spare Parts)
 >
-> Test Data: Real Example from STG (Mercedes / BMW / Chery / Store1–8 / existing SN "100003-002")
+> Test Data: All test data is arranged and torn down by each test via API seed — no reliance on pre-existing QA data.
+> Serials: MB2026GLC-0007 (create happy path) · MB2026GLC-DUPE01 (TA-03 seed) · MB2026GLC-DETAIL01 (TS-07 view seed)
+> Masters: "2026 Mercedes GLC SUV" (Product) · "Store2" (Store) — must exist in STG master (not managed by tests)
+> Image: assets/mercedes_glc_2026.jpg (2026 Mercedes GLC SUV photo, Unsplash free-use)
 
 ---
 
@@ -89,8 +92,8 @@
 ### PS4 — Serial No. Uniqueness (EP)
 | TC | Arrange | Act | Expected |
 |----|---------|-----|----------|
-| `PS4-TC1` ✔ | SN "MB2026GLC-0007" does NOT exist in system | Create with SN "MB2026GLC-0007" + required fields | Toast **"Product Stock created successfully"**; unit added to list |
-| `PS4-TC2` ✔ | SN "100003-002" already exists in system | Create with SN "100003-002" + required fields | Error shown (duplicate Serial No.); unit not created |
+| `PS4-TC1` ✔ | API teardown: purge SN "MB2026GLC-0007" if exists → SN not in system | Create with SN "MB2026GLC-0007" + required fields | Toast **"Product Stock created successfully"**; unit added to list |
+| `PS4-TC2` ✔ | API seed: create unit SN "MB2026GLC-DUPE01" via API → SN now exists in system | Create with SN "MB2026GLC-DUPE01" + required fields; API teardown after | Error shown (duplicate Serial No.); unit not created |
 
 ### PS5 — Serial No. Format & Length (EP + BVA)
 | TC | Arrange | Act | Expected |
@@ -123,7 +126,7 @@
 ### PS9 — Add Success Happy Path (Use Case)
 | TC | Arrange | Act | Expected |
 |----|---------|-----|----------|
-| `PS9-TC1` ✔ | SN "MB2026GLC-0007" does not exist; "2026 Mercedes GLC SUV" and "Store2" in master | Fill: SN "MB2026GLC-0007" / Product "2026 Mercedes GLC SUV" / Store "Store2" / Registered "2026-06-13" / MW "2027-06-13" → click Create | Toast **"Product Stock created successfully"**; modal closes; row "MB2026GLC-0007 / 2026 Mercedes GLC SUV / Store2" visible in list; Status = "R001 / New" |
+| `PS9-TC1` ✔ | API teardown: purge SN "MB2026GLC-0007" → SN not in system; "2026 Mercedes GLC SUV" and "Store2" in master | Fill: SN "MB2026GLC-0007" / Product "2026 Mercedes GLC SUV" / Store "Store2" / Registered "2026-06-13" / MW "2027-06-13" / Image "mercedes_glc_2026.jpg" → click Create | Toast **"Product Stock created successfully"**; modal closes; row "MB2026GLC-0007 / 2026 Mercedes GLC SUV / Store2" visible in list; Status = "R001 / New" ⚠️ BUG: image not saved (UploadFileCRM not called) |
 
 ### PS10 — RBAC (EP)
 | TC | Arrange | Act | Expected |
@@ -231,10 +234,14 @@ All other hidden assumptions (HA1–HA5, HA7–HA12) resolved by PO answers Q1�
 3. `PS14-TC3` — Staff restocks Out(0)→In(10); badge removed
 → **Out of Stock notified; badge clears after restock**
 
-`PS_TS07` — View Stock Detail Modal
-1. `PS13-TC1` — Out of Stock badge visible on /cms/inventory
-2. `PS17-TC1` — Click detail icon → modal "Spare Parts Stock: Mercedes-Benz M112" opens
-→ **Modal shows Available / Status / unit table correctly**
+`PS_TS07` — View Stock Detail (Item Details overlay on `/cms/products/stock`)
+> Arrange: API seed SN "MB2026GLC-DETAIL01" (Product Stock unit) → do not depend on pre-existing QA rows
+1. API seed: create unit SN "MB2026GLC-DETAIL01" / Product "2026 Mercedes GLC SUV" / Store "Store2"
+2. Open `/cms/products/stock` → search / find row → click "View" → "Item Details" overlay opens
+3. Verify overlay shows Serial No. / Product / Store / Status fields
+4. Click Close → overlay dismissed
+5. API teardown: purge SN "MB2026GLC-DETAIL01"
+→ **Overlay shows correct unit fields; close works**
 
 `PS_TS08` — Notification type filter
 1. `PS15-TC1` — Open bell → see All Types
@@ -261,13 +268,14 @@ All other hidden assumptions (HA1–HA5, HA7–HA12) resolved by PO answers Q1�
 |----------|-----------|-----------------|-------|
 | `PS_TA01` | `PS3-TC1` | Serial No. empty → field error; form not submitted | |
 | `PS_TA02` | `PS3-TC2`, `PS3-TC3`, `PS3-TC4` | Product / Store / Registered Date empty → respective field errors | |
-| `PS_TA03` | `PS4-TC2` | Duplicate SN "100003-002" → duplicate error; unit not created | |
+| `PS_TA03` | `PS4-TC2` | Arrange SN "MB2026GLC-DUPE01" via API seed → duplicate SN via UI → duplicate error; seed unit torn down after | |
 | `PS_TA04` | `PS5-TC2` | SN with spaces/special chars → invalid; form not submitted | |
 | `PS_TA05` | `PS5-TC5` | SN 101 chars (over max) → field error; form not submitted | |
 | `PS_TA06` | `PS8-TC3` | MW "2025-01-01" before Registered "2026-06-13" → date validation error | |
 | `PS_TA07` | `PS6-TC2`, `PS7-TC2` | Non-master product/store → no option; cannot select | |
 | `PS_TA08` | `PS10-TC3` | Agent role → Add button not rendered | |
 | `PS_TA09` | `PS16-TC1` | Pick zero-stock product in Order → Out of Stock alert; pick blocked | ⚠️ known bug |
+| `PS_TA11` | — | Delete unit with Status "Delivered" → error toast "Delete failed"; unit remains in list | SN "100003-001" (stable QA unit, Status Delivered; API blocks delete) |
 
 ### 🔁 UI / State Behavior
 

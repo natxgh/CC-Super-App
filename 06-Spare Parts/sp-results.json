@@ -1,0 +1,38 @@
+[
+  { "tc": "TS-01_TC-01", "result": "Passed", "note": "List view renders (Search/Reset visible) after API-seeding QA-AUTO Brake parts." },
+  { "tc": "TS-01_TC-02", "result": "Passed", "note": "Search 'QA-AUTO Brake' returns the 2 seeded parts (BR-2001, BR-2002)." },
+  { "tc": "TS-01_TC-03", "result": "Passed", "note": "Item Details popup shows seeded part fields + Delete/Edit/Close." },
+  { "tc": "TS-02_TC-01", "result": "Passed", "note": "Table view headers visible; seeded Apple part present." },
+  { "tc": "TS-02_TC-02", "result": "Passed", "note": "Seeded Apple part (no stock) shows 'Out of Stock (0)' badge." },
+  { "tc": "TS-02_TC-03", "result": "Passed", "note": "Brand filter = Apple returns the seeded Apple part." },
+  { "tc": "TS-02_TC-04", "result": "Passed", "note": "Reset clears search/filter; full list returns." },
+  { "tc": "TS-03_TC-01", "result": "Passed", "note": "Add button present (Warehouse/Admin); clean slate via API purge." },
+  { "tc": "TS-03_TC-02", "result": "Passed", "note": "JPG upload accepted (mercedes_glc_2026.jpg preview)." },
+  { "tc": "TS-03_TC-03", "result": "Passed", "note": "Create succeeds; toast 'Spare parts created successfully'; QA-AUTO Mobil Air Filter MAF-1101 in list (brand Denso N/A → used Mobil)." },
+  { "tc": "TS-04_TC-01", "result": "Passed", "note": "List view opened with seeded edit target (OF-4001)." },
+  { "tc": "TS-04_TC-02", "result": "Passed", "note": "Edit Price 100000→95000; toast 'Spare parts updated successfully'." },
+  { "tc": "TS-05_TC-01", "result": "Passed", "note": "View Detail popup for seeded deletable part (CF-5001, no stock/order)." },
+  { "tc": "TS-05_TC-02", "result": "Passed", "note": "Delete → confirm dialog → 'Spare Parts deleted successfully'; part removed." },
+  { "tc": "TS-06_TC-01", "result": "Passed", "note": "Table view opened with seeded rows (distinct prices)." },
+  { "tc": "TS-06_TC-02", "result": "Passed", "note": "PRICE column sort asc/desc reorders rows." },
+
+  { "tc": "TA-01_TC-01", "result": "Passed", "note": "List view opened." },
+  { "tc": "TA-01_TC-02", "result": "Passed", "note": "Search 'ZXQNOTEXIST999' → empty state." },
+  { "tc": "TA-01_TC-03", "result": "Passed", "note": "Reset → full list returns." },
+
+  { "tc": "TA-02_TC-01", "result": "Failed", "note": "Add form: leaving Name(EN) empty should show validation error.", "remark": "FAILED (test timeout 180s) — locator.click on Add-form custom dropdown (Category/Brand/Belong) never became actionable on the negative-path flow. Add-form dropdown selectors need live-DOM verification/stabilisation (POM is best-effort). App behaviour not yet confirmed; re-verify after fixing the dropdown locator." },
+  { "tc": "TA-03_TC-01", "result": "Failed", "note": "Add form: leaving Price empty should show validation error.", "remark": "FAILED (test timeout 180s) — same Add-form custom-dropdown click timeout as TA-02. Needs Add-form dropdown selector stabilisation before this negative case can assert the Price validation error." },
+  { "tc": "TA-04_TC-01", "result": "Failed", "note": "Edit: clearing Name(TH) should block update with a field error.", "remark": "FAILED — field-error assertion (input[name=th] aria-invalid=true) did not match. The UI does not expose the required-field error via aria-invalid; need exact field-error DOM/copy from PO Error & Success Matrix to assert correctly. Verify whether save is actually blocked (no success toast) vs. a real validation bug." },
+
+  { "tc": "TA-05_TC-01", "result": "Passed", "note": "View Detail popup for seeded part (SP-6001)." },
+  { "tc": "TA-05_TC-02", "result": "Passed", "note": "Delete → Cancel → seeded part remains in list." },
+
+  { "tc": "TA-06_TC-01", "result": "Passed", "note": "Upload unsupported type (PDF) → rejected." },
+
+  { "tc": "TA-07_TC-01", "result": "Failed", "note": "Upload >3MB image should be rejected with 'Max file size 3MB'.", "remark": "FAILED — expected over-size error message not visible after uploading the >3MB asset. Either the >3MB image was accepted (potential BUG vs SP-Q4) or the reject copy differs from the regex. Confirm exact error text/limit with PO and re-assert; capture asset photo_hd.jpg actual size." },
+
+  { "tc": "TA-08_TC-01", "result": "Passed", "note": "View Detail of seeded part with 3 serial-stock items (TB-7001)." },
+  { "tc": "TA-08_TC-02", "result": "Passed", "note": "Delete blocked (part has serial stock) — SP-BC12 guard verified via API-seeded stock; no Active Order dependency." },
+
+  { "tc": "TA-09_TC-01", "result": "Blocked", "note": "Add button should be hidden for Agent/Staff (RBAC SP-Q1).", "remark": "BLOCKED — skipped: requires an Agent/Staff test account (set SP_AGENT_USERNAME / SP_AGENT_PASSWORD, e.g. porntip). No non-privileged credential available in this run." }
+]

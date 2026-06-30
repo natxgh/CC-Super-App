@@ -165,6 +165,28 @@ const rows = [];
    '[รอ Q7,Q9] การ์ด Total +1 (=7) และ New +1 (=2) หลัง reload (ตามข้อเสนอ: อัปเดตเมื่อ reload)'));
 }
 
+// ===== Case Dashboard — TA03 Period toggle Monthly↔Daily (blocked V2.0 deploy) =====
+{
+ const s='TA-03', sn='Case Dashboard period toggle Monthly/Daily', bc='CD8';
+ rows.push(R(CDF,s,sn,bc, loginCase+' · ตรวจสอบว่า V2.0 deploy บน STG แล้ว · default view = Monthly', 'TA-03_TC-01','เปลี่ยนจาก Monthly เป็น Daily view','POSITIVE',
+   '1. กดปุ่มหรือ dropdown เปลี่ยนช่วงเวลาเป็น Daily บน Case Dashboard','—',
+   '[รอ V2.0 deploy] chart/data เปลี่ยนเป็น daily breakdown (แสดงข้อมูลรายวัน ไม่ใช่รายเดือน)'));
+ rows.push(R(CDF,s,sn,bc, loginCase+' · อยู่ใน Daily view', 'TA-03_TC-02','เปลี่ยนกลับจาก Daily เป็น Monthly view','POSITIVE',
+   '1. กดปุ่มหรือ dropdown เปลี่ยนกลับเป็น Monthly','—',
+   '[รอ V2.0 deploy] chart กลับเป็น stacked bar รายเดือน (เช่น Jan–Jun 2026) ไม่ error ไม่ค้าง'));
+}
+
+// ===== Case Dashboard — TA04 Export Case Dashboard (blocked Q2 + V2.0 deploy) =====
+{
+ const s='TA-04', sn='Case Dashboard exported data (V2.0)', bc='CD9';
+ rows.push(R(CDF,s,sn,bc, loginCase+' · ตรวจสอบว่า V2.0 deploy บน STG แล้ว', 'TA-04_TC-01','Export Case Dashboard report → ดาวน์โหลดได้','POSITIVE',
+   '1. กดปุ่ม Export บน Case Dashboard','—',
+   '[รอ Q2, V2.0 deploy] ระบบสร้างไฟล์รายงาน (format ตาม Q2 เช่น .xlsx) ดาวน์โหลดได้ ไฟล์ไม่ว่าง'));
+ rows.push(R(CDF,s,sn,bc, loginCase+' · จับเวลา start จากกด Export', 'TA-04_TC-02','Export เสร็จภายใน 60 วินาที (BRD target)','POSITIVE',
+   '1. กดปุ่ม Export บน Case Dashboard แล้วจับเวลาจนดาวน์โหลดเสร็จ','—',
+   '[รอ Q2, V2.0 deploy] เวลา generate < 60 วินาที (BRD FR-07 §3.5.7 Report Generation < 1 min)'));
+}
+
 // ── build workbook ──
 const wb = new ExcelJS.Workbook();
 const ws = wb.addWorksheet('TestCases');

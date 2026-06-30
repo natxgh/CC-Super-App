@@ -90,6 +90,11 @@ function buildItem(serialNumber: string) {
   return [{ serialNumber }];
 }
 
+/** server expects RFC3339 — append T00:00:00Z if only a date string is given */
+function toRFC3339(d: string): string {
+  return d.includes('T') ? d : `${d}T00:00:00Z`;
+}
+
 function recordUnit(productId: string, serialNumber: string) {
   fs.mkdirSync(path.dirname(STOCK_STORE), { recursive: true });
   const cur: Array<{ productId: string; serialNumber: string }> =
@@ -114,8 +119,8 @@ export async function seedProductStock(page: Page, d: ProductStockSeed): Promise
     storeId,
     productId,
     Item: buildItem(d.serialNumber), // ⚠️ shape inferred — see header caveat
-    registerDate: d.registerDate,
-    mfw: d.mfw ?? null,
+    registerDate: toRFC3339(d.registerDate),
+    mfw: d.mfw ? toRFC3339(d.mfw) : null,
     active: true,
   };
   const body = await gql(req, token, CREATE, { input });

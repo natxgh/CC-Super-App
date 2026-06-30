@@ -3,9 +3,25 @@
 Generated from `08-Order/order-management-testcases.xlsx` (10 scenarios / 37 TCs).
 Spec: `order-management.spec.ts` · POM: `pages/OrderPage.ts` · seed/teardown: `fixtures/order-seed.ts`.
 
+## ⛔ SEED / CREATE BLOCKER (verified live 2026-06-29) — read first
+
+API-first Arrange was re-verified against `cc-bff-qa.one-sky.ai/graphql` with the configured account (`ketwadee`):
+
+1. `CreateOrder` with only `{name}` items → `status -1 "productId or partId required"` → **seed now resolves productId via `GetListProduct`** (fixed in `order-seed.ts`).
+2. `CreateOrder` with a valid `productId` → `status -1 "Forbidden"` → **the account is NOT in the `inventory_order_workflow` pic list** (only `apiwat` / `watee.tha` can create). The same backend mutation backs the UI **Submit**, so UI create is blocked too.
+
+**Impact:** every create/seed scenario (TS-01, TS-02 detail, TS-03, TS-04, TA-02 cancel, TA-03, TA-05, TA-06) is **BLOCKED** — Arrange cannot produce an order with the available account. They stay `test.fixme` citing `SEED_BLOCKED` (not faked green). Read-only TA-04 still runs/passes.
+
+**This is NOT a missing API spec** — `CreateOrder`/`OrderControl`/`CancelOrder` are all schema-verified. It is a permission/data gap. To unblock, **one of**:
+- BE adds the test account to `inventory_order_workflow` pic list, or
+- provide `apiwat` / `watee.tha` credentials (add as `ORD_PIC_USERNAME/PASSWORD`), or
+- FE workflow SubType config deploy (Wisarud) that lets the account be assigned.
+
+See memory `order-workflow-config`. Probes: `probe-order-seed-verify.mjs`, `probe-order-resolve-product.mjs`.
+
 ## Live DOM probe done (2026-06-20, org BMA) — current run status
 
-**Last run:** 1 passed · 9 skipped (fixme/skip) — suite is green.
+**Last run (2026-06-29):** 1 passed (TA-04) · 9 skipped (fixme — SEED_BLOCKED + DOM unverified) — suite is honest-green (no fake pass).
 
 ### ✅ TA-04 ENABLED & PASSING
 Add → Spare Part → Toyota → "No results found." — selector verified live, `test.fixme` removed.

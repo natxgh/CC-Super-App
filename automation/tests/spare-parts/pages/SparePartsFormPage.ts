@@ -45,14 +45,17 @@ export class SparePartsFormPage {
    * DOM: label → div.relative (next sibling) → inner div[cursor-pointer] (trigger, shows "Search...")
    * After click, option list appears — click by exact text
    */
-  async selectCustom(labelText: 'Category' | 'Brand', value: string) {
+  async selectCustom(labelText: 'Category' | 'Brand' | 'Belong', value: string) {
     const trigger = this.page.locator('label')
       .filter({ hasText: new RegExp(`^${labelText}`, 'i') })
       .locator('xpath=following-sibling::div[1]')
       .locator('div').first();
     await trigger.click();
     await this.page.waitForTimeout(300);
-    await this.page.getByText(value, { exact: true }).last().click();
+    // product names may carry trailing spaces in master data → match by prefix, fall back to exact
+    const opt = this.page.getByText(value, { exact: true }).last();
+    if (await opt.isVisible({ timeout: 1500 }).catch(() => false)) await opt.click();
+    else await this.page.getByText(new RegExp(value.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')).last().click();
   }
 
   /** fill the whole form — skip fields whose value is undefined (intentionally-empty required cases) */
@@ -61,6 +64,7 @@ export class SparePartsFormPage {
     if (d.en !== undefined) await this.nameEN.fill(d.en);
     if (d.category !== undefined) await this.selectCustom('Category', d.category);
     if (d.brand !== undefined) await this.selectCustom('Brand', d.brand);
+    if (d.belongTo !== undefined) await this.selectCustom('Belong', d.belongTo).catch(() => {});
     if (d.year !== undefined) await this.year.selectOption({ label: String(d.year) }).catch(() => {});
     if (d.warranty !== undefined) await this.warranty.fill(String(d.warranty));
     if (d.price !== undefined) await this.price.fill(String(d.price));

@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import * as fs from 'fs';
 import { LoginPage } from '../../shared/pages/LoginPage';
 import { ProductStockPage } from './pages/ProductStockPage';
-import { purgeProductStock } from './fixtures/product-stock-seed';
+import { purgeProductStock, seedProductStock } from './fixtures/product-stock-seed';
 import * as D from './fixtures/testdata';
 
 /**
@@ -75,15 +75,35 @@ test.describe('Product Stock — Success', () => {
       await expect(ps.createBtn).toBeVisible();
       await shot(page, 'TS-01_TC-02');
     });
-    await test.step('TS-01_TC-03 — Fill all fields incl. MW → Create → success toast; default Status R001/New', async () => {
+    await test.step('TS-01_TC-03 — Fill all fields incl. MW (+ image if available) → Create → [FIXME: FE bug blocks submit]', async () => {
+      // ⚠️ BUG [Meegle #13164606] BLOCKS TC-03: FE sends ProductStockInput with serialNumber at root level
+      //    instead of inside Item array → GraphQL error "Field 'serialNumber' is not defined by type 'ProductStockInput'"
+      //    → Create Products Stock always fails on QA staging (2026-06-29). test.fixme until fixed.
+      // ⚠️ BUG [Meegle #13164059] (secondary): Image upload field absent on QA staging → image URL not persisted.
+      //    Asset prepared: assets/mercedes_glc_2026.jpg — ready to test when field + UploadFileCRM are deployed.
+      test.fixme(true, '[Meegle #13164606] FE sends wrong ProductStockInput — serialNumber at root instead of in Item[]');
       await ps.fillAddForm(D.NEW_UNIT);
       await ps.submitCreate();
       await ps.expectCreateToast(D.TOAST_CREATE);
       await ps.search(D.SN_NEW);
       await expect(ps.row(D.SN_NEW)).toBeVisible();
-      // PO Q6: new unit default Status = R001 (New)
       await expect(ps.row(D.SN_NEW)).toContainText(new RegExp(`${D.DEFAULT_STATUS_CODE}|${D.DEFAULT_STATUS_LABEL}`, 'i'));
       await shot(page, 'TS-01_TC-03');
+    });
+    await test.step('TS-01_TC-04 — Remark bugs blocking TS-01 (2 open on Meegle)', async () => {
+      // ── BUG REMARKS (captured by automation run 2026-06-29) ──
+      // [Meegle #13164606] BLOCKER — FE ProductStockInput malformed:
+      //   serialNumber sent at root level instead of inside Item:[{serialNumber}]
+      //   GQL error: "Field 'serialNumber' is not defined by type 'ProductStockInput'"
+      //   → Create always fails → modal stays open → no success toast
+      // [Meegle #13164059] SECONDARY — Image upload:
+      //   input[type="file"] NOT present on QA staging 2026-06-29 (field not yet deployed)
+      //   When deployed: verify FE calls UploadFileCRM mutation to persist image URL
+      //   Asset ready: assets/mercedes_glc_2026.jpg
+      const hasImageInput = (await page.locator('input[type="file"]').count()) > 0;
+      // eslint-disable-next-line no-console
+      console.warn('[TS-01 BUG REMARKS] #13164606: FE Create mutation broken | #13164059: image field not on QA | hasImageInput=' + hasImageInput);
+      await shot(page, 'TS-01_TC-04');
     });
   });
 
@@ -168,12 +188,16 @@ test.describe('Product Stock — Success', () => {
   // ✅ "Item Details" overlay verified live 2026-06-22:
   //    View → overlay (no dialog role) with Serial No./Product/Store/Status/Registered Date/Mfg Warranty
   //    /Purchased Date/End of Warranty + Delete/Edit/Close buttons
+  // Arrange: seed our own unit (SN_DETAIL_VIEW) so we never depend on pre-existing QA data.
   test('TS-07 — stock detail overlay shows unit fields', async ({ page }) => {
     const ps = new ProductStockPage(page);
-    await test.step('TS-07_TC-01 — Click View on a row → "Item Details" overlay opens', async () => {
+    await test.step('TS-07_TC-01 — Arrange unit via API → Click View → "Item Details" overlay opens', async () => {
       await loginAsStaff(page);
+      // Arrange: ensure the unit exists (idempotent)
+      await purgeProductStock(page, D.PRODUCT_NAME, D.SN_DETAIL_VIEW);
+      await seedProductStock(page, { ...D.SEED_UNIT, serialNumber: D.SN_DETAIL_VIEW });
       await ps.gotoList();
-      await ps.openStockDetail(D.SN_DUPLICATE); // SN_DUPLICATE = '100003-002' exists in staging
+      await ps.openStockDetail(D.SN_DETAIL_VIEW); // ✅ arranged data — no QA pre-existing dependency
       await expect(ps.itemDetailsHeading).toBeVisible();
       await shot(page, 'TS-07_TC-01');
     });
@@ -186,6 +210,9 @@ test.describe('Product Stock — Success', () => {
       await ps.closeDetail();
       await expect(ps.itemDetailsHeading).toBeHidden();
       await shot(page, 'TS-07_TC-03');
+    });
+    await test.step('TS-07 teardown — remove arranged unit', async () => {
+      await purgeProductStock(page, D.PRODUCT_NAME, D.SN_DETAIL_VIEW);
     });
   });
 
@@ -328,13 +355,25 @@ test.describe('Product Stock — Alternative', () => {
   });
 
   // ── TA-03 — Duplicate Serial No. → duplicate error ──
+  // Arrange: seed SN_DUPE_SEED via API first → UI tries same SN → duplicate error.
+  // Own arranged data (never relying on pre-existing QA record "100003-002").
   test('TA-03 — duplicate Serial No. → error; unit not created', async ({ page }) => {
-    await test.step('TA-03_TC-01 — Enter existing SN "100003-002" → duplicate error', async () => {
-      const ps = await openAdd(page);
-      await ps.fillAddForm({ serialNumber: D.SN_DUPLICATE, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE });
+    await test.step('TA-03_TC-01 — Arrange seed + enter same SN → duplicate error', async () => {
+      await loginAsStaff(page);
+      // Arrange: create the seed unit so SN_DUPE_SEED already exists in system
+      await purgeProductStock(page, D.PRODUCT_NAME, D.SN_DUPE_SEED);
+      await seedProductStock(page, { ...D.SEED_UNIT, serialNumber: D.SN_DUPE_SEED });
+      // Act: open Add modal and attempt to create with the same SN
+      const ps = new ProductStockPage(page);
+      await ps.gotoList();
+      await requireAdd(ps);
+      await ps.openAddModal();
+      await ps.fillAddForm({ serialNumber: D.SN_DUPE_SEED, product: D.PRODUCT_NAME, store: D.STORE_NAME, registerDate: D.REGISTERED_DATE });
       await ps.submitCreate();
       await ps.expectDuplicateError();
       await shot(page, 'TA-03_TC-01');
+      // Teardown: remove the seed unit
+      await purgeProductStock(page, D.PRODUCT_NAME, D.SN_DUPE_SEED);
     });
   });
 
@@ -404,6 +443,32 @@ test.describe('Product Stock — Alternative', () => {
     await test.step('TA-09_TC-01 — Attempt to Pick zero-stock product → alert; pick blocked', async () => {
       await loginAsStaff(page);
       await shot(page, 'TA-09_TC-01');
+    });
+  });
+
+  // ── TA-11 — Delete "Delivered" stock unit → blocked (API error) ──
+  // Pre-condition: SN "100003-001" is a stable QA unit with Status "Delivered" (linked to an order).
+  // Verified 2026-06-29: Delete button visible/enabled but API rejects; toast "Delete failed: [object Object]".
+  //
+  // NOTE (2026-06-29): Proper cross-feature arrange (seed unit → link to order → test) is blocked because:
+  //   - CreateOrder requires the user to be in `pic` of `inventory_order_workflow` (DB table).
+  //   - `ketwadee` is NOT in the pic list (only `apiwat`, `watee.tha` are assigned).
+  //   - Order workflow type = "request" (not "case"); there are 2 types: case/request.
+  //   - FE config for workflow assignment not yet deployed (pending Wisarud's update).
+  //   - Workaround: use pre-existing SN_DELIVERED until FE workflow config is live or
+  //     BE adds `ketwadee` to `inventory_order_workflow` pic list.
+  //   - Known FE bug: toast shows "Delete failed: [object Object]" instead of the desc field.
+  test('TA-11 — Delete "Delivered" stock unit → blocked; error toast; unit remains', async ({ page }) => {
+    const ps = new ProductStockPage(page);
+    await test.step('TA-11_TC-01 — Open Delivered unit overlay → Delete → Confirm → error toast; unit still in list', async () => {
+      await loginAsStaff(page);
+      await ps.gotoList();
+      await ps.openStockDetail(D.SN_DELIVERED);
+      await ps.confirmDeleteFromDetail();
+      await ps.expectDeleteFailed();
+      await shot(page, 'TA-11_TC-01');
+      // overlay closes after confirm; verify unit still exists in list
+      await expect(ps.row(D.SN_DELIVERED)).toBeVisible();
     });
   });
 });

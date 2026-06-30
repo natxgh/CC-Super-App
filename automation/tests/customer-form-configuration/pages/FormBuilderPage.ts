@@ -1,21 +1,22 @@
 import { Page, Locator, expect } from '@playwright/test';
 
-// All selectors verified via live DOM probe 2026-06-23:
+// All selectors verified via live DOM probes 2026-06-23 + 2026-06-29:
 //
-//   Modal:      [class*="modal" i]  (not role=dialog — count=0)
-//               hasText filter not reliable (textContent check missed inner nodes) — filter by waitOpen()
+//   Modal:      [class*="modal" i]  (not role=dialog)
 //   Form Name:  placeholder="Enter form name"  ✓
 //   Grid Cols:  #overallColSpan-input  ✓
-//   Close btn:  button.absolute.right-3.top-3 (top-right of modal, has SVG, no aria-label)
-//   Toolbar:    "Save Form", "Save Configuration", "Import", "Export", "Preview",
-//               "Hide All", "Show All"  — all confirmed by exact text  ✓
+//   Close btn:  button.absolute.right-3.top-3 (top-right of modal)
+//   Toolbar:    "Import", "Export", "Preview", "Hide All", "Show All"  ✓
+//               NO "Save Form" button exists inside the modal — saving is done by closing then
+//               clicking "Save Configuration" on the outer page.
 //
-//   Field card: div.space-y-4 that contains [id^="required-"]  ✓
-//               (none of the generic selectors matched — card uses only Tailwind classes)
+//   Field card: div.h-full.border-2.rounded-lg  filtered by has:[id^="required-"]  ✓
+//               (probe 2026-06-29: withRequired=3 for 3 fields, outer wrapper lacks h-full)
 //   Delete btn: button[title="Remove field"]  (revealed on hover — text = "✕")  ✓
 //   Per-field:  #required-<uuid>  ✓  |  #colSpan-select-<uuid>  ✓  |  #showLabel-toggle-<uuid>  ✓
-//   Label inp:  input[type="text"]:not([id])  nth(0) within card  ✓  (no ph, no label[for])
+//   Label inp:  input[type="text"]:not([id])  nth(0) within card  ✓
 //   Placeholder: input[type="text"]:not([id])  nth(1) within card  ✓
+//   Single-Select add option: placeholder="New option" + button text "+"  ✓
 
 export class FormBuilderPage {
   readonly page: Page;
@@ -27,8 +28,6 @@ export class FormBuilderPage {
   readonly gridColumns: Locator;
   /** Close button — top-right of modal, classes: absolute right-3 top-3 ✓ */
   readonly closeBtn: Locator;
-  /** Builder save — "Save Form" (outer page has "Save Configuration") ✓ */
-  readonly saveFormBtn: Locator;
   readonly importBtn: Locator;
   readonly exportBtn: Locator;
   readonly previewBtn: Locator;
@@ -43,10 +42,6 @@ export class FormBuilderPage {
     this.gridColumns  = page.locator('#overallColSpan-input');
     // Close btn: absolute right-3 top-3 (has SVG, no aria-label) — confirmed position x≈1148, y≈100
     this.closeBtn     = this.modal.locator('button.absolute.right-3.top-3').first();
-    // "Save Form" is inside the modal but inside a display:none div (portal pattern).
-    // getByRole skips display:none ancestors — must use locator() which searches full DOM.
-    // force: true on click bypasses visibility check and dispatches event directly.
-    this.saveFormBtn  = this.modal.locator('button', { hasText: 'Save Form' }).last();
     this.importBtn    = page.getByRole('button', { name: 'Import', exact: true });
     this.exportBtn    = page.getByRole('button', { name: 'Export', exact: true });
     this.previewBtn   = page.getByRole('button', { name: 'Preview', exact: true });
@@ -93,18 +88,17 @@ export class FormBuilderPage {
   }
 
   /**
-   * Field cards — each added field has exactly one [id^="required-"] checkbox.
-   * Probe 2026-06-23: div.rounded-2xl.border with has-filter returned count=1 (outer wrapper
-   * contains ALL fields). Use [id^="required-"] directly for count; XPath ancestor for card body.
+   * Field cards — probe 2026-06-29: per-field card class is "mb-6 h-full border-2 rounded-lg bg-gray-50".
+   * The outer canvas wrapper also has border-2+rounded-lg but lacks h-full, so h-full is the discriminator.
+   * filter({ has }) ensures only cards that own a required- checkbox are counted (1 per field).
    */
   fieldCards(): Locator {
-    return this.page.locator('[id^="required-"]');
+    return this.page.locator('div.h-full.border-2.rounded-lg')
+      .filter({ has: this.page.locator('[id^="required-"]') });
   }
 
   private fieldCard(idx: number): Locator {
-    // Walk up to the nearest div.rounded-2xl ancestor (per-field card wrapper)
-    return this.page.locator('[id^="required-"]').nth(idx)
-      .locator('xpath=ancestor::div[contains(@class,"rounded-2xl")][1]');
+    return this.fieldCards().nth(idx);
   }
 
   // ── Per-field config ──────────────────────────────────────────────────────────
@@ -181,22 +175,12 @@ export class FormBuilderPage {
   }
 
   /**
-   * Save from inside the builder.
-   * "Save Form" may be inside a display:none portal div — use page.evaluate to call DOM click()
-   * directly, bypassing all Playwright visibility / bounding-box checks.
-   * In Edit mode the button text may differ ("Update Form") — try both.
+   * "Save Form" does not exist inside the builder modal — probe 2026-06-29 confirmed there is
+   * no save button inside the modal. The correct flow is: close the modal (this method), then
+   * the caller must invoke cfg.saveConfiguration() on the outer page.
    */
   async saveForm() {
-    const clicked = await this.page.evaluate(() => {
-      const btns = Array.from(document.querySelectorAll('button'));
-      const SAVE_TEXTS = ['Save Form', 'Update Form'];
-      // Use last match — mirrors saveFormBtn = modal.locator('button', { hasText: 'Save Form' }).last()
-      const candidates = btns.filter(b => SAVE_TEXTS.includes(b.textContent?.trim() || ''));
-      const btn = candidates[candidates.length - 1];
-      if (btn) { btn.click(); return true; }
-      return false;
-    });
-    if (!clicked) throw new Error('Save Form / Update Form button not found in DOM');
+    await this.close();
   }
 
   /**

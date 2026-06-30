@@ -2,11 +2,12 @@
 
 > Black Box test design ตามมาตรฐานทีม (`qa-ai-pilot/test-design-standard.md`)
 > Feature: **Product Dashboard** (`/cms/products/dashboard`) + **Case Dashboard / Work Order Summary** (`/cms/`)
-> Source: `dashboard-requirements.md` (explored STG v0.26.3, 2026-06-14) + BRD v0.3 (FR-07, §3.5.7) + grooming §7
+> Source: `dashboard-requirements.md` (explored STG v0.26.3, 2026-06-14) + BRD v0.3 (FR-07, §3.5.7) + grooming §7 + Lark Architectural Doc §06 Dashboard Statistic (2026-06-29)
 > Project = AICC · Product = CC Super App
 >
 > ⚠️ บริบท: Product Dashboard = **mock data + 3 version UI (v1/v2/v3)** · Case Dashboard = **live data ว่าง (0 ทุกค่า)**
 > → หลาย TC ที่ตรวจ "ความถูกต้องของค่า/การคำนวณ" ถูก **block ด้วย Hidden Assumption** (ทำเครื่องหมาย 🔒) จนกว่า PO ตอบ + dev wire data จริง
+> 📄 Architectural Doc §06 ยืนยัน Case Dashboard V2.0 มี: **monthly reporting, daily reporting, exported data** — เพิ่ม BC CD8–CD9 + TC ที่เกี่ยวข้อง (ทั้งสอง block จน deploy V2.0 confirm)
 
 ---
 
@@ -36,6 +37,8 @@
 | CD5 | Empty state: เมื่อไม่มี Work Order → ทุกค่าเป็น 0, chart ว่าง | EP | 2 กลุ่ม (มีข้อมูล / ไม่มีข้อมูล) |
 | CD6 | Real-time: เมื่อมี Work Order ใหม่ ตัวเลขบน Dashboard อัปเดต | State Transition | สถานะข้อมูลเปลี่ยน (0 → มีค่า) ตาม event สร้าง WO |
 | CD7 | RBAC: เฉพาะ role ที่มีสิทธิ์เห็น Case Dashboard | EP | 2 กลุ่ม (มีสิทธิ์/ไม่มีสิทธิ์) |
+| CD8 | Case Dashboard V2.0: period toggle Monthly ↔ Daily (2 มุมมองเวลา) | State Transition | มี 2 สถานะ (Monthly/Daily) เปลี่ยนตาม action กดปุ่ม — ยืนยันจาก Architectural Doc §06 |
+| CD9 | Case Dashboard V2.0: exported data — ดาวน์โหลดรายงาน, generate < 60 วิ | Use Case + BVA | format/ขอบเขต (enumerate) + เวลา generate (ขอบ 60 วิ) — ยืนยันจาก Architectural Doc §06 |
 
 ---
 
@@ -82,6 +85,10 @@
 | CD6-TC1 | CD6 | สร้าง Work Order ใหม่ 1 ใบ | การ์ด Total +1 และ New +1 บน Dashboard (รีเฟรช/real-time) | POSITIVE | 🔒 (Q7,Q9) |
 | CD7-TC1 | CD7 | login role ที่มีสิทธิ์ | เมนู Case Dashboard เปิดได้ | POSITIVE | 🔒 (Q8) |
 | CD7-TC2 | CD7 | login role ที่ไม่มีสิทธิ์ | ไม่เห็นเมนู / เข้าไม่ได้ | NEGATIVE | 🔒 (Q8) |
+| CD8-TC1 | CD8 | จาก Monthly view กดปุ่มเปลี่ยนเป็น Daily | chart/data เปลี่ยนเป็น daily breakdown (เช่น รายวัน) | POSITIVE | 🔒 (V2.0 deploy) |
+| CD8-TC2 | CD8 | จาก Daily view กดปุ่มกลับ Monthly | chart กลับเป็น stacked bar รายเดือน Jan–Jun | POSITIVE | 🔒 (V2.0 deploy) |
+| CD9-TC1 | CD9 | กดปุ่ม Export บน Case Dashboard | ระบบสร้างไฟล์รายงาน ดาวน์โหลดได้ | POSITIVE | 🔒 (Q2, V2.0 deploy) |
+| CD9-TC2 | CD9 | กด Export (วัดเวลา) | รายงาน generate เสร็จ < 60 วินาที | POSITIVE | 🔒 (Q2, V2.0 deploy) |
 
 ---
 
@@ -137,6 +144,18 @@
 1. CD7-TC2 — login role ไม่มีสิทธิ์ → เข้าไม่ได้
 → Expected: ถูกปฏิเสธการเข้าถึง
 
+**CD_TA02 — Export Case Dashboard (Alternative)** 🔒 (V2.0 deploy + Q2)
+1. CD7-TC1 — login role มีสิทธิ์ + เปิด Case Dashboard
+2. CD9-TC1 — กด Export → ได้ไฟล์รายงาน
+3. CD9-TC2 — เสร็จ < 60 วิ
+→ Expected: ดาวน์โหลด Case Dashboard report สำเร็จภายในเวลา BRD
+
+**CD_TA03 — Period toggle Monthly/Daily (Alternative)** 🔒 (V2.0 deploy)
+1. CD7-TC1 — login + เปิด Case Dashboard (Monthly view default)
+2. CD8-TC1 — เปลี่ยนเป็น Daily view
+3. CD8-TC2 — กลับ Monthly view
+→ Expected: chart สลับระหว่าง daily/monthly ได้ถูกต้องทั้งสองทิศทาง
+
 ---
 
 ## D. Hidden Assumptions (→ po-questions.json) — propose-and-confirm
@@ -144,7 +163,7 @@
 | ID | 🔴/🟠 | หัวข้อ | ✅ ข้อเสนอ (assume) | กระทบ |
 |---|---|---|---|---|
 | Q1 | 🟠 | Product Dashboard: เวอร์ชัน UI final | v3 (rich) คือ final · v1/v2 เป็น draft ที่จะถูกถอด | PD8, PD_TS02 |
-| Q2 | 🔴 | Export Report: รูปแบบ + ขอบเขต | export เป็น **Excel (.xlsx)** ทั้งหน้า, ไม่มี filter, generate < 60 วิ | PD9, PD_TS03 |
+| Q2 | 🔴 | Export Report: รูปแบบ + ขอบเขต (Product + Case) | export เป็น **Excel (.xlsx)** ทั้งหน้า, ไม่มี filter, generate < 60 วิ · Architectural Doc §06 ยืนยัน Case Dashboard V2.0 มี exported data (format/scope ยังรอ PO) | PD9, PD_TS03, CD9, CD_TA02 |
 | Q3 | 🔴 | Product Dashboard ใช้ mock data | ตัวเลขปัจจุบันเป็น **mock** ยังไม่ wire DB จริง — TC ค่าจริงรอ dev ต่อ data | PD1,PD3,PD4,PD6 |
 | Q4 | 🟠 | Date range / tenant filter | **ไม่มี** filter ช่วงเวลา/บริษัทในเฟสนี้ (แสดงรวมทั้งหมด, ค่า default) | ทุก TC แสดงผล |
 | Q5 | 🟠 | Low Stock threshold | นับ low stock เมื่อ **stock < minimum** (เท่ากับ min ไม่ถือว่า low) | PD5 |
@@ -165,10 +184,11 @@
 | BVA ครบ น้อยกว่า/เท่ากับ/มากกว่า | ✅ บางส่วน (PD5: <,=,> · CD3: ก่อน/เท่ากับ/เกิน) — ⚠️ ค่าจริงรอ Q5/Q10 |
 | State Transition ครบเส้น (รวมย้อนกลับ/self-loop/system actor) | ✅ PD8 (v3→v1→v2→v3 ครบวง) · CD6 (system actor: สร้าง WO) |
 | ทุก TC มี 4 ส่วน (Arrange/Act/Tested/Expected) | ✅ (ดู xlsx) |
-| มีทั้ง Success + Alternative Scenario | ✅ (PD_TS×3 + PD_TA×2 · CD_TS×2 + CD_TA×1) |
+| มีทั้ง Success + Alternative Scenario | ✅ (PD_TS×3 + PD_TA×2 · CD_TS×2 + CD_TA×3) |
 | Scenario ไม่มีเงื่อนไขขัดแย้ง | ✅ |
 | Test Data เป็น Real Example ไม่มีคำว่า Test/ทดสอบ | ✅ |
 | ระบุ Hidden Assumption + ถาม PO | ✅ (Q1–Q10) |
 | ติด ID + ทำเครื่องหมายเคสที่ block | ✅ (🔒) |
 
 **Blocked on sign-off:** Q2, Q3, Q8, Q9, Q10 (🔴) — TC ค่าจริง/RBAC/SLA/Export ทั้งหมดรอคำตอบ PO + dev wire data
+**V2.0 deploy block:** CD8 (period toggle), CD9 (export), CD_TA02, CD_TA03 — รอ V2.0 deploy บน STG ยืนยัน (confirmed exist from Architectural Doc §06 แต่ยังไม่ verify บน STG)

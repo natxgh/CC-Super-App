@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import * as fs from 'fs';
 import { LoginPage } from '../../shared/pages/LoginPage';
 import { OrderPage } from './pages/OrderPage';
-import { seedOrder } from './fixtures/order-seed';
+import { seedOrder, advanceOrder, recordOrder } from './fixtures/order-seed';
 import * as D from './fixtures/testdata';
 
 /**
@@ -13,13 +13,28 @@ import * as D from './fixtures/testdata';
  *
  * ⚠️ staging needs real login — set CP_USERNAME/CP_PASSWORD/CP_ORG to run (else skip; never fake-pass).
  *
- * RUN/FIXME status (honest — 2026-06-20):
- *   ⏸ ALL scenarios are test.fixme — Order UI DOM has NOT been probed yet, so OrderPage selectors are
- *     unverified. Structure + TC IDs + API seed are in place; un-fixme each scenario AFTER a live DOM probe.
+ * RUN/FIXME status (honest — updated 2026-06-29):
+ *   ⛔ SEED/CREATE BLOCKED — verified live 2026-06-29: the configured account `ketwadee` is NOT in the
+ *      `inventory_order_workflow` pic list, so BOTH CreateOrder (API seed) and UI Submit return "Forbidden".
+ *      Only `apiwat` / `watee.tha` can create orders. → every create/seed scenario is BLOCKED until BE adds
+ *      the account (or those creds are provided). Read-only scenarios (TA-04) still run. See FIXME-PLAN.md +
+ *      order-workflow-config memory. NOTE: API spec is NOT missing — CreateOrder is verified; this is a
+ *      permission/data gap, and items require productId/partId (not free-text name) — seedOrder now resolves it.
+ *   ⏸ DOM also UNVERIFIED for most scenarios — OrderPage selectors not probed yet (un-fixme after probe).
  *   🐞 Two scenarios encode CONFIRMED FE bugs (PO-validated) and are expected to FAIL when enabled:
  *        TA-03 (Cancel button visible after Approved — should be hidden) → see FIXME-PLAN.md / design ORD-Q5
  *        TA-05 (Search returns all rows — should filter)                 → see FIXME-PLAN.md / design ORD-Q7
+ *
+ * Teardown strategy:
+ *   - seedOrder() records every created orderId in test-results/seeded-orders.json
+ *   - recordOrder(id) for UI-created orders (TS-01, TS-04): capture order no. from page text after submit
+ *   - Global teardown (CP_TEARDOWN=1 or ORD_TEARDOWN=1): calls teardownSeededOrders → CancelOrder
+ *   - ⚠️ NO DeleteOrder in API — teardown is soft (orders end as "Cancel" status, records remain)
+ *   - ⚠️ TS-01 walks to Complete (OS009) — CancelOrder fails at terminal state; recorded but uncancellable
+ *     until BE provides DeleteOrder. See FIXME-PLAN.md.
  */
+// ⛔ Shared BLOCKED reason — create/seed scenarios cannot run with the current account (see header).
+const SEED_BLOCKED = 'BLOCKED: account not in inventory_order_workflow pic list → CreateOrder/Submit = Forbidden (need apiwat/watee.tha). Verified live 2026-06-29.';
 const ORG = process.env.CP_ORG || '';
 const USER = process.env.CP_USERNAME || 'ketwadee';
 const PASS = process.env.CP_PASSWORD || '';
@@ -45,7 +60,7 @@ test.describe('Order Management — Success', () => {
 
   // ── TS-01 — Create → Submit → walk the full 9-step workflow to เสร็จสิ้น ──────
   test('TS-01 — create, submit and advance an order through all 9 workflow steps to Complete', async ({ page }) => {
-    test.fixme(true, DOM_UNVERIFIED);
+    test.fixme(true, `${SEED_BLOCKED} + ${DOM_UNVERIFIED}`);
     const o = new OrderPage(page);
 
     await test.step('TS-01_TC-01 — Add a product to Cart from Add Order', async () => {
@@ -75,6 +90,9 @@ test.describe('Order Management — Success', () => {
     await test.step('TS-01_TC-04 — Submit Order succeeds → new order created (Create Order)', async () => {
       await o.submitOrderBtn.click();
       await expect(page.getByText(/ORD\d{6}-\d{5}/)).toBeVisible();
+      // Capture UI-created order ID for best-effort teardown (CancelOrder will fail at Complete — see FIXME-PLAN.md)
+      const orderText = await page.getByText(/ORD\d{6}-\d{5}/).first().textContent().catch(() => '');
+      if (orderText?.trim()) recordOrder(orderText.trim());
       await shot(page, 'TS-01_TC-04');
     });
     // TC-05..TC-12 — advance through all 9 steps (PIC-gated). Each step = next-step Advance button.
@@ -96,8 +114,10 @@ test.describe('Order Management — Success', () => {
 
   // ── TS-02 — View / List / Detail (read paths) ──────────────────────────────
   test('TS-02 — view list, grid, detail and read elements', async ({ page }) => {
-    test.fixme(true, DOM_UNVERIFIED);
+    test.fixme(true, `${SEED_BLOCKED} (detail steps seed an order) + ${DOM_UNVERIFIED}`);
     const o = new OrderPage(page);
+    // Persists across steps: seeded order (Create Order state, iPhone item for OOS badge)
+    let seededOrderId = '';
 
     await test.step('TS-02_TC-01 — Toggle List ↔ Grid view', async () => {
       await loginAndOpenOrders(page);
@@ -111,15 +131,22 @@ test.describe('Order Management — Success', () => {
       await shot(page, 'TS-02_TC-02');
     });
     await test.step('TS-02_TC-03 — Order Detail page renders all elements', async () => {
-      await o.row('ORD').first().click();
+      // Arrange: API seed — fresh order with iPhone 17 Pro Screen (potentially OOS in QA)
+      seededOrderId = await seedOrder(page, D.SEED_ORDER_OOS);
+      await o.gotoList();
+      await o.search(seededOrderId);         // filter to seeded order (not pre-existing data)
+      await o.row(seededOrderId).first().click();
+      await o.backBtn.waitFor({ timeout: 15000 });
       await expect.soft(o.printBtn).toBeVisible();
       await shot(page, 'TS-02_TC-03');
     });
     await test.step('TS-02_TC-04 — Order Item shows Out of Stock badge', async () => {
-      await expect(page.getByText(/Out of Stock/i)).toBeVisible();
+      // ENV_DEPENDENT: OOS badge shows only if iPhone 17 Pro Screen stock = 0 in QA env
+      await expect.soft(page.getByText(/Out of Stock/i)).toBeVisible();
       await shot(page, 'TS-02_TC-04');
     });
     await test.step('TS-02_TC-05 — Chat box empty state = No Comment', async () => {
+      // Fresh seeded order has no comments — verifiable without pre-existing data
       await expect(page.getByText(/No Comment/i)).toBeVisible();
       await shot(page, 'TS-02_TC-05');
     });
@@ -130,12 +157,19 @@ test.describe('Order Management — Success', () => {
       await shot(page, 'TS-02_TC-06');
     });
     await test.step('TS-02_TC-07 — Current step over SLA → Overdue badge (Approved SLA=61min)', async () => {
+      // ENV_DEPENDENT: requires an order already sitting at OS003 for > 61 min.
+      // Set ORD_OVERDUE_ID env to an existing overdue order, or leave unset to skip.
+      test.skip(!process.env.ORD_OVERDUE_ID, 'ENV_DEPENDENT: set ORD_OVERDUE_ID to an order at OS003 idle > 61 min');
+      await o.gotoList();
+      await o.search(process.env.ORD_OVERDUE_ID!);
+      await o.row(process.env.ORD_OVERDUE_ID!).first().click();
+      await o.backBtn.waitFor({ timeout: 15000 });
       await expect(o.overdueBadge).toBeVisible();
       await shot(page, 'TS-02_TC-07');
     });
     await test.step('TS-02_TC-08 — Clear Filters restores the full list', async () => {
       await o.gotoList();
-      await o.search('ORD260609-00001');
+      await o.search(seededOrderId);         // use seeded order ID (not hard-coded pre-existing)
       await o.clearFiltersBtn.click();
       await expect(o.searchInput).toHaveValue('');
       await shot(page, 'TS-02_TC-08');
@@ -144,13 +178,18 @@ test.describe('Order Management — Success', () => {
 
   // ── TS-03 — Update Order Detail (before submit) ────────────────────────────
   test('TS-03 — update bill/shipping, items and title while Create Order', async ({ page }) => {
-    test.fixme(true, DOM_UNVERIFIED);
+    test.fixme(true, `${SEED_BLOCKED} + ${DOM_UNVERIFIED}`);
     const o = new OrderPage(page);
+    let seededOrderId = '';
 
     await test.step('TS-03_TC-01 — Edit Bill/Shipping inline then Save', async () => {
       await loginAndOpenOrders(page);
-      await seedOrder(page, D.SEED_ORDER); // Arrange: Create Order state (API-first)
-      // open the seeded order, edit Ship By → Flash Express, Save (selectors on probe)
+      seededOrderId = await seedOrder(page, D.SEED_ORDER); // Arrange: Create Order state (API-first)
+      await o.gotoList();
+      await o.search(seededOrderId);
+      await o.row(seededOrderId).first().click();
+      await o.backBtn.waitFor({ timeout: 15000 });
+      // edit Ship By → Flash Express, Save (selectors on probe)
       await shot(page, 'TS-03_TC-01');
     });
     await test.step('TS-03_TC-02 — Edit Order Item quantity to 5', async () => {
@@ -163,7 +202,7 @@ test.describe('Order Management — Success', () => {
 
   // ── TS-04 — Add via Spare Part path (Skip product) ─────────────────────────
   test('TS-04 — add an order via Spare Part skipping the product step', async ({ page }) => {
-    test.fixme(true, DOM_UNVERIFIED);
+    test.fixme(true, `${SEED_BLOCKED} (UI Submit hits same Forbidden) + ${DOM_UNVERIFIED}`);
     const o = new OrderPage(page);
 
     await test.step('TS-04_TC-01 — Add via Spare Part then Skip the Product step', async () => {
@@ -182,6 +221,9 @@ test.describe('Order Management — Success', () => {
     await test.step('TS-04_TC-03 — Submit Order succeeds → new order created', async () => {
       await o.submitOrderBtn.click();
       await expect(page.getByText(/ORD\d{6}-\d{5}/)).toBeVisible();
+      // Arrange teardown: capture UI-created order ID so teardown can CancelOrder
+      const orderText = await page.getByText(/ORD\d{6}-\d{5}/).first().textContent().catch(() => '');
+      if (orderText?.trim()) recordOrder(orderText.trim());
       await shot(page, 'TS-04_TC-03');
     });
   });
@@ -214,11 +256,12 @@ test.describe('Order Management — Alternative', () => {
       await expect(o.submitOrderBtn).toBeDisabled();
       await shot(page, 'TA-01_TC-02');
     });
+    // No teardown needed: cart only — no order was created (Submit not tapped)
   });
 
   // ── TA-02 — Cancel before Approved + quantity boundary ─────────────────────
   test('TA-02 — quantity lower bound and cancel before Approved', async ({ page }) => {
-    test.fixme(true, DOM_UNVERIFIED);
+    test.fixme(true, `${SEED_BLOCKED} (TC-02 seeds an order to cancel) + ${DOM_UNVERIFIED}`);
     const o = new OrderPage(page);
 
     await test.step('TA-02_TC-01 — Decrease quantity below the minimum (− disabled at 1)', async () => {
@@ -232,26 +275,40 @@ test.describe('Order Management — Alternative', () => {
       await shot(page, 'TA-02_TC-01');
     });
     await test.step('TA-02_TC-02 — Cancel an order before Approved → status Cancel', async () => {
-      const id = await seedOrder(page, D.SEED_ORDER); // Arrange: Create Order (before Approved)
+      // Arrange: API seed — Create Order state (before Approved, cancellable)
+      const id = await seedOrder(page, D.SEED_ORDER);
       expect(id).toBeTruthy();
       await o.gotoList();
+      await o.search(id);
+      await o.row(id).first().click();
+      await o.backBtn.waitFor({ timeout: 15000 });
       await o.cancelBtn.click();
       // confirmation dialog "ยืนยันการยกเลิกคำสั่งซื้อ ___ ?" + Confirm (PO ORD-Q9)
       await page.getByRole('button', { name: /Confirm/i }).click();
       await expect(page.getByText(/Cancel/i)).toBeVisible();
       await shot(page, 'TA-02_TC-02');
+      // Teardown: order is now in Cancel terminal state — no further teardown needed
     });
   });
 
   // ── TA-03 — Edit locked after Submit + Cancel after Approved (BUG) ──────────
   test('TA-03 — bill/items locked after submit; Cancel must be hidden after Approved (BUG)', async ({ page }) => {
-    // 🐞 CONFIRMED live (probe 2026-06-20): ORD260610-00001 (Request Approved) STILL shows Cancel → see BUG-cancel-visible-after-approved.md
-    test.fixme(true, 'CONFIRMED FE BUG (PO ORD-Q5) — Cancel visible after Approved. Card drafted: BUG-cancel-visible-after-approved.md');
+    // 🐞 CONFIRMED live (probe 2026-06-20): Cancel visible after Approved → see BUG-cancel-visible-after-approved.md
+    // ⛔ Also seed-blocked: arrange seeds + advances to OS003, which needs pic-list access (Forbidden for ketwadee).
+    test.fixme(true, `${SEED_BLOCKED} | CONFIRMED FE BUG (PO ORD-Q5) — Cancel visible after Approved. Card: BUG-cancel-visible-after-approved.md`);
     const o = new OrderPage(page);
 
     await test.step('TA-03_TC-01 — After Submit — Bill & Items are locked', async () => {
       await loginAndOpenOrders(page);
-      await o.openOrder('ORD260610-00001'); // Request Approved
+      // Arrange: API seed → advance to OS003 (Request Approved) — no pre-existing order
+      const id = await seedOrder(page, D.SEED_ORDER);
+      const adv1 = await advanceOrder(page, id, 'OS001');
+      const adv2 = await advanceOrder(page, id, 'OS003');
+      if (!adv1 || !adv2) throw new Error(`advanceOrder to OS003 failed (OS001=${adv1} OS003=${adv2})`);
+      await o.gotoList();
+      await o.search(id);
+      await o.row(id).first().click();
+      await o.backBtn.waitFor({ timeout: 15000 });
       await expect(page.getByRole('button', { name: /edit|pencil/i })).toHaveCount(1); // only Title pencil (⏳ verify on probe)
       await shot(page, 'TA-03_TC-01');
     });
@@ -275,23 +332,30 @@ test.describe('Order Management — Alternative', () => {
       await expect(o.noResults).toBeVisible();
       await shot(page, 'TA-04_TC-01');
     });
+    // No teardown needed: read-only catalog check — no data created
   });
 
   // ── TA-05 — Search does not filter (BUG) ───────────────────────────────────
   test('TA-05 — search should filter by Order ID and part name (BUG: returns all)', async ({ page }) => {
     // 🐞 CONFIRMED live (probe 2026-06-20): search ORD260610-00004 → rows 10→10 (no filter) → see BUG-search-not-filtering.md
-    test.fixme(true, 'CONFIRMED FE BUG (PO ORD-Q7) — Search returns all rows. Card drafted: BUG-search-not-filtering.md');
+    // ⛔ Also seed-blocked: arrange seeds 2 orders to search for (Forbidden for ketwadee).
+    test.fixme(true, `${SEED_BLOCKED} | CONFIRMED FE BUG (PO ORD-Q7) — Search returns all rows. Card: BUG-search-not-filtering.md`);
     const o = new OrderPage(page);
 
     await test.step('TA-05_TC-01 — Search by Order ID filters the list', async () => {
+      // Arrange: API seed 2 orders so we have a specific ID to search for (no hard-coded pre-existing data)
+      const id1 = await seedOrder(page, D.SEED_ORDER);
+      await seedOrder(page, D.SEED_ORDER_OOS); // 2nd order so list has > 1 row
       await loginAndOpenOrders(page);
       const before = await o.rowCount();
-      await o.search('ORD260610-00004');
+      await o.search(id1);
       // EXPECTED (correct): list shrinks to the matching row → FAILS today (count unchanged) = the bug
       expect(await o.rowCount()).toBeLessThan(before);
       await shot(page, 'TA-05_TC-01');
     });
     await test.step('TA-05_TC-02 — Search by part name filters the list', async () => {
+      // Arrange: seeded order with iPhone 17 Pro Screen already in list from TC-01
+      await o.gotoList();
       await o.search('iPhone');
       await expect(page.getByText(D.PART_IPHONE)).toBeVisible();
       await shot(page, 'TA-05_TC-02');
@@ -300,12 +364,17 @@ test.describe('Order Management — Alternative', () => {
 
   // ── TA-06 — PIC gating ─────────────────────────────────────────────────────
   test('TA-06 — non-PIC user cannot see the Advance button', async ({ page }) => {
-    test.fixme(true, `${DOM_UNVERIFIED} (also needs a non-PIC account — PIC roles: Warehouse Approver / Manager)`);
+    test.fixme(true, `${SEED_BLOCKED} (arrange seeds an order) + ${DOM_UNVERIFIED} (also needs a non-PIC account — PIC roles: Warehouse Approver / Manager)`);
     const o = new OrderPage(page);
 
     await test.step('TA-06_TC-01 — Non-PIC user → Advance button does not appear', async () => {
       await loginAndOpenOrders(page);
-      await o.row('ORD').first().click();
+      // Arrange: API seed a fresh order — no pre-existing row needed
+      const id = await seedOrder(page, D.SEED_ORDER);
+      await o.gotoList();
+      await o.search(id);
+      await o.row(id).first().click();
+      await o.backBtn.waitFor({ timeout: 15000 });
       await expect(o.advanceBtn(D.STEPS[1])).toBeHidden();
       await shot(page, 'TA-06_TC-01');
     });

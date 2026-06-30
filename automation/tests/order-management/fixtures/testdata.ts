@@ -42,3 +42,16 @@ export const SEED_ORDER: OrderSeed = {
   items: [{ name: PRODUCT_OIL, quantity: 1, price: 9999 }],
   remark: 'seeded by automation (order-management.spec)',
 };
+
+// Seed payload for TS-02 — contains iPhone 17 Pro Screen which is consistently OOS in QA env
+// (OOS badge is ENV_DEPENDENT: shows only if that product's actual stock = 0 in QA)
+export const SEED_ORDER_OOS: OrderSeed = {
+  title: 'เบิกจอ iPhone งานซ่อม — Job #TS02',
+  billTo: BILL_TO,
+  billAddr: '199/12 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110',
+  shipTo: SHIP_TO,
+  shipAddr: '88/4 หมู่ 5 ถนนเพชรเกษม ตำบลอ้อมน้อย อำเภอกระทุ่มแบน สมุทรสาคร 74130',
+  shipBy: SHIP_BY,
+  items: [{ name: PART_IPHONE, quantity: 1, price: 4900 }],
+  remark: 'seeded by automation — TS-02 view/detail scenario',
+};

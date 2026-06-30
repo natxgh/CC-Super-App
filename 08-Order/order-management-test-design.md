@@ -104,18 +104,18 @@ Thailand Post · Kerry Express · Flash Express · J&T Express · DHL Express ·
 ### R-B — View Order
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
-| TS-02_TC-01 | order `ORD260610-00004` exists | Open order detail | ORD-B1 | Shows Order No + status badge + date + requester + **Print** + Bill card + Order Items + Operating Procedure | POSITIVE |
-| TS-02_TC-02 | order has an out-of-stock item | View Order Items | ORD-B2 | Item "iPhone 17 Pro Screen" shows **Out of Stock** badge (red) | POSITIVE |
-| TS-02_TC-03 | order with no comment | Open the Chat box | ORD-B3 | Box shows **"No Comment"** + Comment field + Comment button | POSITIVE |
-| TS-02_TC-04 | any order · Chat box open | Type `รบกวนเร่งจัดส่งภายในวันนี้ครับ` → tap **Comment** | ORD-B3 | Comment appears (replacing "No Comment") with author + time | POSITIVE |
+| TS-02_TC-01 | **API seed**: `seedOrder(SEED_ORDER_OOS)` — Create Order with "iPhone 17 Pro Screen" item (potentially OOS in QA env) | Open order detail via seeded orderId | ORD-B1 | Shows Order No + status badge + date + requester + **Print** + Bill card + Order Items + Operating Procedure | POSITIVE |
+| TS-02_TC-02 | same seeded order as TC-01 (iPhone 17 Pro Screen item) · **ENV_DEPENDENT**: OOS badge shows only if product stock = 0 in QA | View Order Items | ORD-B2 | Item "iPhone 17 Pro Screen" shows **Out of Stock** badge (red) | POSITIVE |
+| TS-02_TC-03 | same seeded order as TC-01 (fresh = no comments yet) | Open the Chat box | ORD-B3 | Box shows **"No Comment"** + Comment field + Comment button | POSITIVE |
+| TS-02_TC-04 | same seeded order open from TC-03 | Type `รบกวนเร่งจัดส่งภายในวันนี้ครับ` → tap **Comment** | ORD-B3 | Comment appears (replacing "No Comment") with author + time | POSITIVE |
 
 ### R-C — Update Order Detail
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
-| TS-03_TC-01 | order status **Create Order** | Pencil on Bill → change Ship By to `Flash Express` → **Save** | ORD-C1 | Bill card shows Ship By = `Flash Express` (saved) · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
-| TS-03_TC-02 | order status Create Order | Pencil on **ORDER ITEMS** → change qty to 5 | ORD-C2 | Order Item shows **Quantity 5 item** · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
-| TS-03_TC-03 | any order | Pencil on Title → change to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` | ORD-C3 | Title tag updates to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
-| TA-03_TC-01 | order status **Request Approved** | Open detail | ORD-C4 | **No pencil** on Bill card or ORDER ITEMS (locked) · Title pencil still present | NEGATIVE |
+| TS-03_TC-01 | **API seed**: `seedOrder(SEED_ORDER)` — Create Order state (OS000), open via seeded orderId | Pencil on Bill → change Ship By to `Flash Express` → **Save** | ORD-C1 | Bill card shows Ship By = `Flash Express` (saved) · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
+| TS-03_TC-02 | same seeded order as TC-01 (Create Order state) | Pencil on **ORDER ITEMS** → change qty to 5 | ORD-C2 | Order Item shows **Quantity 5 item** · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
+| TS-03_TC-03 | same seeded order as TC-01 | Pencil on Title → change to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` | ORD-C3 | Title tag updates to `เบิกอะไหล่งานซ่อมจอ iPhone — Job #4821` · success toast **"อัปเดต คำสั่งซื้อ เรียบร้อยแล้ว"** | POSITIVE |
+| TA-03_TC-01 | **API seed**: `seedOrder(SEED_ORDER)` → `advanceOrder(OS001)` → `advanceOrder(OS003)` — seed to Request Approved state; no pre-existing order | Open detail via seeded orderId | ORD-C4 | **No pencil** on Bill card or ORDER ITEMS (locked) · Title pencil still present | NEGATIVE |
 
 ### R-D — Workflow / Status
 | TC ID | Arrange | Act | Tested | Expected | Type |
@@ -128,24 +128,24 @@ Thailand Post · Kerry Express · Flash Express · J&T Express · DHL Express ·
 | TS-01_TC-10 | current step = "ส่งออกจากคลัง" · logged in as PIC | Tap Advance **"กำลังจัดส่ง"** | ORD-D1 | current step → "กำลังจัดส่ง" (Out for Delivery, OS007) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
 | TS-01_TC-11 | current step = "กำลังจัดส่ง" · logged in as PIC | Tap Advance **"ส่งถึงแล้ว"** | ORD-D1 | current step → "ส่งถึงแล้ว" (Delivered, OS008) · prev step ✓ · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
 | TS-01_TC-12 | current step = "ส่งถึงแล้ว" · logged in as PIC | Tap Advance **"เสร็จสิ้น"** | ORD-D1 | order reaches final step "เสร็จสิ้น" (Complete, OS009) · all 9 steps ✓ · terminal success · ไม่มี toast (STG ยังไม่แสดง Toast) | POSITIVE |
-| TA-06_TC-01 | logged in **not** in the step's PIC list (PIC roles = Warehouse Approver / Manager) | Open the order detail | ORD-D2 | The step's Advance button **does not appear** `[PO ORD-Q3]` | NEGATIVE |
-| TS-02_TC-07 | order whose current step "ได้รับการอนุมัติ" idle > 61 min | View Operating Procedure | ORD-D3 | Current step shows **`Overdue`** badge (red); SLA for this step = 61 min `[PO ORD-Q4]` | POSITIVE |
+| TA-06_TC-01 | **API seed**: `seedOrder(SEED_ORDER)` — fresh order; login with non-PIC account (needs `ORD_NON_PIC_USERNAME` + `ORD_NON_PIC_PASSWORD` env) (PIC roles = Warehouse Approver / Manager) | Open the seeded order detail | ORD-D2 | The step's Advance button **does not appear** `[PO ORD-Q3]` | NEGATIVE |
+| TS-02_TC-07 | **ENV_DEPENDENT**: order at OS003 (ได้รับการอนุมัติ) idle > 61 min — set `ORD_OVERDUE_ID` env var to a known overdue order; TC skipped if not set (cannot seed + wait 61 min in CI) | View Operating Procedure | ORD-D3 | Current step shows **`Overdue`** badge (red); SLA for this step = 61 min `[PO ORD-Q4]` | POSITIVE |
 | TS-01_TC-13 | order with requester + next-step PIC | PIC taps Advance | ORD-D4 | Related accounts (requester + next PIC) get real-time in-app bell: `{actor} ส่งถึงคุณ {Status} :: {Order ID}` `[PO ORD-Q6]` | POSITIVE |
 
 ### R-E — Cancel Order
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
-| TA-02_TC-02 | order status Create Order (before Approved) | Tap **Cancel** → confirm | ORD-E1 | Dialog `"ยืนยันการยกเลิกคำสั่งซื้อ ___ ?"` + Confirm/Cancel · after confirm → status **Cancel** (terminal) · success toast **"ลบ คำสั่งซื้อ เรียบร้อยแล้ว"** · if already Picked, stock is returned `[PO ORD-Q9]` | NEGATIVE |
-| TA-03_TC-02 | current step = "ได้รับการอนุมัติ" | Check whether Cancel is present | ORD-E2 | Cancel **should be hidden/blocked** after Approved; it currently still appears → **BUG**, expected to FAIL `[BUG] [PO ORD-Q5]` | NEGATIVE |
+| TA-02_TC-02 | **API seed**: `seedOrder(SEED_ORDER)` — Create Order state (OS000, before Approved) | Tap **Cancel** → confirm | ORD-E1 | Dialog `"ยืนยันการยกเลิกคำสั่งซื้อ ___ ?"` + Confirm/Cancel · after confirm → status **Cancel** (terminal) · success toast **"ลบ คำสั่งซื้อ เรียบร้อยแล้ว"** · if already Picked, stock is returned `[PO ORD-Q9]` | NEGATIVE |
+| TA-03_TC-02 | same seeded order as TA-03_TC-01 (at OS003) | Check whether Cancel is present | ORD-E2 | Cancel **should be hidden/blocked** after Approved; it currently still appears → **BUG**, expected to FAIL `[BUG] [PO ORD-Q5]` | NEGATIVE |
 
 ### R-F — Table List / Search / Filter
 | TC ID | Arrange | Act | Tested | Expected | Type |
 |---|---|---|---|---|---|
 | TS-02_TC-06 | orders in list · List view | Toggle to **Grid** | ORD-F1 | Orders render as cards (Order No · status · Title · requester · "X Items · Y Total Qty" · date), same set as table | POSITIVE |
 | TS-02_TC-07 | List view | Inspect table header | ORD-F2 | All columns: ORDER · DETAIL · BILL TO · SHIP TO · ITEMS · STATUS · CREATED · REQUEST BY | POSITIVE |
-| TA-05_TC-01 | multiple orders | Type **`ORD260609-00001`** in Search → tap Search | ORD-F3 | **Expected:** list filters to `ORD260609-00001`. **Actual: returns all orders (no filter)** → `[BUG] [PO ORD-Q7]` | NEGATIVE |
-| TA-05_TC-02 | an order with "iPhone 17 Pro Screen" + others | Type **`iPhone`** → tap Search | ORD-F4 | **Expected:** only orders with iPhone. **Actual: returns all orders** → `[BUG] [PO ORD-Q7]` | NEGATIVE |
-| TS-02_TC-08 | a search is active with Clear Filters visible | Tap **Clear Filters** | ORD-F5 | List returns to all orders · search box cleared (no separate status filter this round `[PO ORD-Q8]`) | POSITIVE |
+| TA-05_TC-01 | **API seed**: 2 orders (`seedOrder(SEED_ORDER)` + `seedOrder(SEED_ORDER_OOS)`) — use seeded orderId (not hard-coded pre-existing ID) | Type seeded orderId in Search → tap Search | ORD-F3 | **Expected:** list filters to matching row. **Actual: returns all orders (no filter)** → `[BUG] [PO ORD-Q7]` | NEGATIVE |
+| TA-05_TC-02 | same seeded orders from TC-01 (SEED_ORDER_OOS has iPhone 17 Pro Screen) | Type **`iPhone`** → tap Search | ORD-F4 | **Expected:** only orders with iPhone. **Actual: returns all orders** → `[BUG] [PO ORD-Q7]` | NEGATIVE |
+| TS-02_TC-08 | search active via seeded orderId (from TS-02_TC-03 seed) | Tap **Clear Filters** | ORD-F5 | List returns to all orders · search box cleared (no separate status filter this round `[PO ORD-Q8]`) | POSITIVE |
 
 ---
 
@@ -249,7 +249,7 @@ All 9 questions in `po-question.json` were answered by PO in the Lark PO table:
 | Right technique per condition | ✅ EP/BVA/State Transition/Use Case covered |
 | BVA numeric/time, less/equal/greater | ✅ qty min (TA-02_TC-01); SLA boundary at 61 min (TS-02_TC-05) |
 | State Transition complete (reverse/self-loop/system actor) | ✅ 9-step workflow + Cancel terminal + SLA (system actor=Overdue); self-loop=comment |
-| Every TC has all 4 parts (Arrange/Act/Tested/Expected) | ✅ |
+| Every TC has all 4 parts (Arrange/Act/Tested/Expected) | ✅ — all Arrange updated to API seed (no pre-existing data) 2026-06-29 |
 | Has Success + Alternative | ✅ 4 Success + 6 Alternative |
 | No contradictory conditions in a scenario | ✅ |
 | Test Data is Real Example (no Test/placeholder) | ✅ real names/brands/carriers |

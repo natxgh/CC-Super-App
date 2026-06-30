@@ -6,26 +6,32 @@ import type { SparePartData } from './testdata';
 /**
  * API-First Arrange + Teardown (GraphQL) — Spare Parts & Inventory
  *
- * ⚠️ UNVERIFIED OPS — the SparePart GraphQL namespace/operations below are modelled on the
- *    verified Product namespace (see product-inventory/fixtures/product-seed.ts) but have NOT
- *    been confirmed via introspection on https://cc-bff-qa.one-sky.ai/graphql.
- *    BEFORE executing the mutate scenarios (Add/Edit/Delete), introspect and fix the op names /
- *    input shape. Seed throws loudly on status≠"0" (it will NOT fake a pass).
- *    Override the namespace via env SP_GQL_NS if the schema differs.
+ * ✅ VERIFIED 2026-06-29 via introspection + live create/delete on https://cc-bff-qa.one-sky.ai/graphql:
+ *    - namespace = `Sparepart` (lowercase p) · Create/Update/DeleteSparepart · input SparePartInput! / GetIdInput!
+ *    - SparePartInput requires UUID brandId/categoryId/productId (NOT the numeric master `id`) + mfd/warranty/price/active
+ *    - there is NO `code` field — identity is by `en`
+ *    - DeleteSparepart takes the row's `partId` UUID (NOT numeric `id`)
+ *    - stock level is seeded via SparepartStock (serialNumber[] length = stock count)
  *
- * auth = JWT localStorage "access_token" (read from browser after UI login) — same pattern as product seed.
- * seedSparePart = idempotent: delete same code first, then create → data is always deterministic.
+ * Principle: every scenario Arranges its OWN data here and tears it down in afterAll — NEVER relies on
+ * pre-existing STG inventory. Seed throws loudly on status≠"0" (it will NOT fake a pass).
+ *
+ * auth = JWT localStorage "access_token" (read from browser after UI login).
  */
 export const GQL = process.env.CP_GQL || 'https://cc-bff-qa.one-sky.ai/graphql';
-const NS = process.env.SP_GQL_NS || 'SparePart'; // ⚠️ verify: GraphQL namespace for spare parts
-const CODE_STORE = path.join(__dirname, '..', '..', '..', 'test-results', 'seeded-spareparts.json');
 const TOKEN_CACHE = path.join(__dirname, '..', '..', '..', 'test-results', '.token');
 
-const CREATE = `mutation ($input: ${NS}Input!) { ${NS} { Create${NS} (input: $input) { status msg data desc } } }`;
-const DELETE = `mutation ($input: GetIdInput!) { ${NS} { Delete${NS} (input: $input) { status msg data desc } } }`;
-const LIST   = `query ($input: ListDataInput!) { ${NS} { GetList${NS} (input: $input) { status msg data } } }`;
-const LIST_BRAND = 'query ($input: ListDataInput!) { Brand { GetListBrand (input: $input) { status msg data } } }';
-const LIST_CATEGORY = 'query ($input: ListDataInput!) { Category { GetListCategory (input: $input) { status msg data } } }';
+const CREATE = 'mutation ($input: SparePartInput!) { Sparepart { CreateSparepart (input: $input) { status msg data desc } } }';
+const UPDATE = 'mutation ($input: SparePartInput!) { Sparepart { UpdateSparepart (input: $input) { status msg data desc } } }';
+const DELETE = 'mutation ($input: GetIdInput!) { Sparepart { DeleteSparepart (input: $input) { status msg } } }';
+const LIST   = 'query ($input: ListDataInput!) { Sparepart { GetListSparepart (input: $input) { status msg data } } }';
+const LIST_BRAND = 'query ($input: ListDataInput!) { Brand { GetListBrand (input: $input) { status data } } }';
+const LIST_CATEGORY = 'query ($input: ListDataInput!) { Category { GetListCategory (input: $input) { status data } } }';
+const LIST_PRODUCT = 'query ($input: ListDataInput!) { Product { GetListProduct (input: $input) { status data } } }';
+const STOCK_CREATE = 'mutation ($input: SparepartStockInput!) { SparepartStock { CreateSparepartStock (input: $input) { status msg } } }';
+const STOCK_DELETE = 'mutation ($input: GetIdInput_2!) { SparepartStock { DeleteSparepartStock (input: $input) { status msg } } }';
+const STOCK_SERIALS = 'query ($input: ListDataInput!) { SparepartStock { GetListSparepartSerial (input: $input) { status data } } }';
+const LIST_STORE = 'query ($input: ListDataInput!) { Store { GetListStore (input: $input) { status data } } }';
 
 async function gql(req: APIRequestContext, token: string, query: string, variables: any) {
   const res = await req.post(GQL, {
@@ -53,87 +59,116 @@ export async function getToken(page: Page): Promise<string> {
   return t;
 }
 
-function recordCode(code: string) {
-  fs.mkdirSync(path.dirname(CODE_STORE), { recursive: true });
-  const cur: string[] = fs.existsSync(CODE_STORE) ? JSON.parse(fs.readFileSync(CODE_STORE, 'utf8')) : [];
-  if (!cur.includes(code)) cur.push(code);
-  fs.writeFileSync(CODE_STORE, JSON.stringify(cur, null, 2));
-}
+const norm = (s: any) => String(s ?? '').trim().toLowerCase();
 
-async function resolveId(req: APIRequestContext, token: string, query: string, ns: 'Brand' | 'Category', name: string): Promise<string> {
+/** resolve a master-data UUID by display name. uuidField = the entity's own UUID column (brandId/categoryId/productId). */
+async function resolveUuid(
+  req: APIRequestContext, token: string, query: string, ns: string, fld: string, uuidField: string, name: string,
+): Promise<string> {
   const body = await gql(req, token, query, { input: { search: name, start: 0, length: 200 } });
-  const arr = asArray(body?.data?.[ns]?.[`GetList${ns}`]?.data);
-  const norm = (s: any) => String(s ?? '').trim().toLowerCase();
-  const hit = arr.find((x) => [x.name, x.th, x.en, x.brandName, x.categoryName].some((v) => norm(v) === norm(name)));
+  const arr = asArray(body?.data?.[ns]?.[fld]?.data);
+  const hit = arr.find((x) => [x.en, x.th, x.name].some((v) => norm(v) === norm(name)));
   if (!hit) throw new Error(`spare-seed: หา ${ns} "${name}" ไม่เจอ (มี ${arr.length} รายการ) — ตรวจชื่อใน testdata ให้ตรง master data จริง`);
-  return String(hit.id ?? hit._id);
+  const id = hit[uuidField];
+  if (!id) throw new Error(`spare-seed: ${ns} "${name}" ไม่มี field ${uuidField}`);
+  return String(id);
 }
 
 async function toInput(req: APIRequestContext, token: string, d: SparePartData) {
-  const brandId = await resolveId(req, token, LIST_BRAND, 'Brand', d.brand);
-  const categoryId = await resolveId(req, token, LIST_CATEGORY, 'Category', d.category);
-  const code = d.code ?? d.en;
-  const input: Record<string, any> = {
+  const brandId = await resolveUuid(req, token, LIST_BRAND, 'Brand', 'GetListBrand', 'brandId', d.brand);
+  const categoryId = await resolveUuid(req, token, LIST_CATEGORY, 'Category', 'GetListCategory', 'categoryId', d.category);
+  const productId = await resolveUuid(req, token, LIST_PRODUCT, 'Product', 'GetListProduct', 'productId', d.belongTo!);
+  return {
     id: 'add',
-    active: d.active ?? true,
+    en: d.en,
+    th: d.th ?? d.en,
     brandId,
     categoryId,
-    code,
-    th: d.th ?? d.en,
-    en: d.en,
+    productId,
+    mfd: d.year ?? 2026,
+    warranty: d.warranty ?? 365,
+    price: d.price ?? 0,
+    active: d.active ?? true,
+    ...(d.image ? { image: d.image } : {}),
   };
-  if (d.price != null) input.price = d.price;
-  if (d.warranty != null) input.warranty = d.warranty;
-  if (d.year != null) input.mfd = d.year;
-  if (d.image) input.image = d.image;
-  return input;
 }
 
-export async function findIdsByCode(req: APIRequestContext, token: string, code: string): Promise<string[]> {
-  const ids: string[] = [];
+/** all rows whose en matches (case-insensitive) — returns {id, partId}. */
+export async function findByEn(req: APIRequestContext, token: string, en: string): Promise<Array<{ id: string; partId: string }>> {
+  const out: Array<{ id: string; partId: string }> = [];
   const PAGE = 500;
   for (let start = 0; start < 10000; start += PAGE) {
-    const body = await gql(req, token, LIST, { input: { search: code, start, length: PAGE } });
-    const arr = asArray(body?.data?.[NS]?.[`GetList${NS}`]?.data);
+    const body = await gql(req, token, LIST, { input: { search: en, start, length: PAGE } });
+    const arr = asArray(body?.data?.Sparepart?.GetListSparepart?.data);
     if (!arr.length) break;
-    for (const p of arr) if ([p.code, p.en, p.sparePartCode].some((v) => String(v || '').toLowerCase() === code.toLowerCase())) ids.push(String(p.id ?? p._id));
+    for (const p of arr) if (norm(p.en) === norm(en)) out.push({ id: String(p.id), partId: String(p.partId) });
     if (arr.length < PAGE) break;
   }
-  return ids;
+  return out;
 }
 
-export async function deleteById(req: APIRequestContext, token: string, id: string): Promise<boolean> {
-  const body = await gql(req, token, DELETE, { input: { id } });
-  return body?.data?.[NS]?.[`Delete${NS}`]?.status === '0';
+/** delete every serial under a part (a part with serial stock canNOT be deleted — SP-BC12). */
+async function purgeStock(req: APIRequestContext, token: string, partId: string): Promise<void> {
+  for (let pass = 0; pass < 5; pass++) {
+    const body = await gql(req, token, STOCK_SERIALS, { input: { search: '', start: 0, length: 500, partId } });
+    const serials = asArray(body?.data?.SparepartStock?.GetListSparepartSerial?.data);
+    if (!serials.length) break;
+    for (const s of serials) {
+      await gql(req, token, STOCK_DELETE, { input: { partId, serialNumber: String(s.serialNumber) } });
+    }
+  }
 }
 
-/** Arrange — create a spare part (idempotent). Must login UI first (reads token from page). */
-export async function seedSparePart(page: Page, d: SparePartData): Promise<void> {
+async function deleteByPartId(req: APIRequestContext, token: string, partId: string): Promise<boolean> {
+  await purgeStock(req, token, partId); // serials block delete → clear first
+  const body = await gql(req, token, DELETE, { input: { id: partId } });
+  return body?.data?.Sparepart?.DeleteSparepart?.status === '0';
+}
+
+/** Teardown — remove every spare part with this en (idempotent). Returns count deleted. */
+export async function purgeByEn(page: Page, en: string): Promise<number> {
+  const token = await getToken(page);
+  let removed = 0;
+  for (let pass = 0; pass < 5; pass++) {
+    const rows = await findByEn(page.request, token, en);
+    if (!rows.length) break;
+    for (const r of rows) if (await deleteByPartId(page.request, token, r.partId)) removed++;
+  }
+  return removed;
+}
+
+/** Arrange — clean slate then create one spare part. Returns its partId. Optionally seeds stock (qty serials). */
+export async function seedSparePart(page: Page, d: SparePartData): Promise<string> {
   const token = await getToken(page);
   const req = page.request;
-  const code = d.code ?? d.en;
-  for (let pass = 0; pass < 5; pass++) {
-    const ids = await findIdsByCode(req, token, code);
-    if (!ids.length) break;
-    for (const id of ids) await deleteById(req, token, id);
-  }
+  await purgeByEn(page, d.en);
+
   const body = await gql(req, token, CREATE, { input: await toInput(req, token, d) });
-  const r = body?.data?.[NS]?.[`Create${NS}`];
-  if (r?.status === '0') { recordCode(code); return; }
-  const msg = `${r?.msg || ''} ${r?.desc || ''}`;
-  if (/already exist|exist|duplicate|ซ้ำ/i.test(msg)) return;
-  const existing = await findIdsByCode(req, token, code);
-  if (existing.length) return;
-  throw new Error(`seedSparePart "${code}" failed: status=${r?.status} msg=${r?.msg || r?.desc || JSON.stringify(body).slice(0, 200)} — ⚠️ ยืนยัน SparePart GraphQL ops (UNVERIFIED) ก่อน`);
+  const r = body?.data?.Sparepart?.CreateSparepart;
+  if (r?.status !== '0') {
+    throw new Error(`seedSparePart "${d.en}" failed: status=${r?.status} msg=${r?.msg || r?.desc || JSON.stringify(body).slice(0, 200)}`);
+  }
+  const rows = await findByEn(req, token, d.en);
+  if (!rows.length) throw new Error(`seedSparePart "${d.en}": created but not found on list`);
+  const partId = rows[0].partId;
+
+  if (d.stockQty && d.stockQty > 0) {
+    await seedStock(page, partId, d.stockQty, d.store);
+  }
+  return partId;
 }
 
-/** clean slate before UI add + record for teardown */
-export async function purgeByCode(page: Page, code: string): Promise<void> {
+/** Arrange stock level — create one SparepartStock with `qty` serial numbers (stock count = qty). */
+export async function seedStock(page: Page, partId: string, qty: number, storeName?: string): Promise<void> {
   const token = await getToken(page);
-  for (let p = 0; p < 5; p++) {
-    const ids = await findIdsByCode(page.request, token, code);
-    if (!ids.length) break;
-    for (const id of ids) await deleteById(page.request, token, id);
-  }
-  recordCode(code);
+  const req = page.request;
+  const sBody = await gql(req, token, LIST_STORE, { input: { search: storeName ?? '', start: 0, length: 50 } });
+  const stores = asArray(sBody?.data?.Store?.GetListStore?.data);
+  const store = storeName ? stores.find((s) => norm(s.en) === norm(storeName) || norm(s.name) === norm(storeName)) : stores[0];
+  if (!store) throw new Error(`seedStock: หา Store "${storeName ?? '(any)'}" ไม่เจอ`);
+  const storeId = String(store.storeId ?? store.id);
+  const serials = Array.from({ length: qty }, (_, i) => `QA-${partId.slice(0, 8)}-${Date.now()}-${i}`);
+  const body = await gql(req, token, STOCK_CREATE, { input: { storeId, partId, serialNumber: serials } });
+  const r = body?.data?.SparepartStock?.CreateSparepartStock;
+  if (r?.status !== '0') throw new Error(`seedStock partId=${partId} qty=${qty} failed: ${r?.msg || JSON.stringify(body).slice(0, 200)}`);
 }

@@ -95,6 +95,34 @@ Test Account: `ketwadee` · Role: All Permission - Contact Management
 - HA-VCL2: Grid View มี pagination เหมือน Table ไหม?
 - HA-VCL3: Search ขณะอยู่ใน Grid View ยังคง Grid layout ไหม?
 
+## Automation — Arrange: Field Config (setFieldConfig)
+
+> ตรวจสอบแล้ว 2026-06-29
+
+### ที่มีอยู่ใน spec
+`beforeAll` ของทั้ง 2 describe block (`Success` และ `Alternative`) เรียก:
+```typescript
+await setFieldConfig(page, CP_REQUIRED_FIELDS).catch(() => {});
+```
+
+### CP_REQUIRED_FIELDS (ค่าที่ส่ง)
+```typescript
+{ photo: true, title: true, firstName: true, middleName: true,
+  lastName: true, dob: true, gender: true, citizenId: true,
+  email: true, mobileNo: true, userType: true,
+  note: true, languagePreference: true, contractPreference: true }
+```
+- ส่ง `email: true` และ `mobileNo: true` ทุกครั้ง ✅
+- `displayName` และ `blood` ไม่อยู่ใน patch → ใช้ค่าปัจจุบันจาก server
+
+### Teardown
+- `global-teardown.ts` ของ CP ไม่มี config update ใดเลย — ลบเฉพาะ customer records
+
+### ปัญหา email/phone = false ใน log
+- email และ mobileNo **ไม่มี UI toggle** บนหน้า Form Configuration
+- ต้นเหตุที่ส่ง false: CFC tests ที่กด `cfg.saveConfiguration()` ผ่าน UI — UI ไม่รวม email/phone ใน payload → API ตีความเป็น false
+- ดูรายละเอียดใน [Customer Form Configuration](customer-form-configuration.md#dfc--emailphone-ไม่มี-ui-toggle)
+
 ## Related Pages
 - [Customer Appointment](customer-appointment.md)
 - [Customer Form Configuration](customer-form-configuration.md)

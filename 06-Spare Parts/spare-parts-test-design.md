@@ -5,6 +5,35 @@
 > Source: BRD v0.3 §3.1.3 · Grooming §3.2 · UI Exploration 2026-06-13
 > Prefix: **SP**
 > PO answers applied: 2026-06-19 (confirmed by Watee Thaiprasonk) — all 7 assumptions resolved
+> **Automation data strategy (2026-06-29): API-First Arrange + Teardown — see §0**
+
+---
+
+## 0. Test Data Strategy — API-First Arrange + Teardown (Anti-Dependency)
+
+> **Rule: every scenario creates its OWN data via API and tears it down in `afterAll`. No scenario asserts against pre-existing STG inventory.** All seeded parts carry the `QA-AUTO ` prefix.
+
+**Verified Sparepart GraphQL spec** (introspected + live-validated on `https://cc-bff-qa.one-sky.ai/graphql`, 2026-06-29):
+- Namespace **`Sparepart`** (lowercase p) · `CreateSparepart` / `UpdateSparepart` (input `SparePartInput!`) · `DeleteSparepart` (input `GetIdInput!`).
+- `SparePartInput` requires UUID **brandId / categoryId / productId** (resolve by name — NOT the numeric master `id`), + `mfd` (year), `warranty` (days), `price`, `active`. **No `code` field** — identity is `en`.
+- **DeleteSparepart uses the row's `partId` UUID** (numeric `id` → "Failure").
+- Stock level is seeded via **`SparepartStock.CreateSparepartStock`** (`serialNumber[]` length = stock count). A part holding serial stock **cannot be deleted** (verified "Cannot delete") → teardown deletes serials first.
+- ⚠️ Brand **"Denso" does not exist** in QA master → SP6-TC01 add uses brand **"Mobil"** instead.
+
+**Seeded fixtures (per scenario):**
+
+| Fixture (EN) | Brand / Category / Product | Stock | Used by |
+|---|---|---|---|
+| QA-AUTO Brake Pad Set BR-2001 | Mercedes Benz / Vehicle Accessories / GLE 350de | 0 | TS-01 (search+view), TS-06 |
+| QA-AUTO Brake Disc Rotor BR-2002 | Mercedes Benz / Vehicle Accessories / GLE 350de | 0 | TS-01 (2nd match), TS-06 |
+| QA-AUTO iPhone Battery Cell BT-3001 | Apple / iPhone Battery / iPhone 16 Pro | 0 | TS-02 (brand filter + Out of Stock) |
+| QA-AUTO Mobil Air Filter MAF-1101 | Mobil / Vehicle Accessories / GLE 350de | — | TS-03 (UI add → teardown) |
+| QA-AUTO Engine Oil Filter OF-4001 | Mercedes Benz / Vehicle Engine / GLE 350de | 0 | TS-04 (edit), TA-04 |
+| QA-AUTO Cabin Air Filter CF-5001 | Mercedes Benz / Vehicle Accessories / GLE 350de | 0 | TS-05 (delete OK) |
+| QA-AUTO Spark Plug Set SP-6001 | Mercedes Benz / Vehicle Accessories / GLE 350de | 0 | TA-05 (cancel delete) |
+| QA-AUTO Timing Belt Kit TB-7001 | Mercedes Benz / Vehicle Engine / GLE 350de | **3** | TA-08 (delete blocked by serial stock) |
+
+> **TA-08 note:** delete-blocked is now proven via **serial stock** (SP-BC12), which is fully API-seedable — no dependency on a live Active Order / Order module.
 
 ---
 

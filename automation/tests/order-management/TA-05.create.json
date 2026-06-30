@@ -1,0 +1,30 @@
+[
+  {
+    "field_key": "name",
+    "field_value": "[CC][QA] Order Management - Order list Search ไม่กรองผลลัพธ์ (คืนทุกแถว)"
+  },
+  {
+    "field_key": "priority",
+    "field_value": "1"
+  },
+  {
+    "field_key": "issue_reporter",
+    "field_value": "[\"7519918444209307686\"]"
+  },
+  {
+    "field_key": "field_6f9d27",
+    "field_value": "faeffqtfu"
+  },
+  {
+    "field_key": "template",
+    "field_value": "1314587"
+  },
+  {
+    "field_key": "description",
+    "field_value": "Date: 30 Jun 2026\nProduct/Project: CC Super App\nModule: Order Management > Order list (Search)\nFunction: Search request ID or part in order list\nEnvironment: QA\nURL: https://skyai-cloud-cc-qa.one-sky.ai/cms/inventory/request\nTC: ORD TA-05_TC-01 (Order ID), TA-05_TC-02 (part name)\n----------------------------------------------------------------------\nDescription: ช่อง Search request ID or part... ไม่กรอง list — พิมพ์ Order ID เป๊ะ ๆ แล้วกด Search ผลลัพธ์ไม่เปลี่ยน คืนทุกแถวเหมือนเดิม ค้นด้วย part name ก็ไม่กรอง ทำให้หา order ไม่เจอเมื่อ list ใหญ่ ยืนยันโดย PO (ORD-Q7)\n\nSteps to Reproduce\n1. Login → เปิด Order Management (/cms/inventory/request)\n2. พิมพ์ Order ID เป๊ะ ๆ ในช่อง Search request ID or part... เช่น ORD260610-00004\n3. กดปุ่ม Search\n\nActual Result: List ไม่เปลี่ยน คืนทุกแถวเหมือนเดิม (probe: rows 10 -> 10) · ค้นด้วย part name (iPhone) ก็ไม่กรอง · ปุ่ม Clear Filters ปรากฏหลังกด Search แต่ผลไม่ถูก filter\nExpected Result: List กรองเหลือเฉพาะ order ที่ตรงกับ keyword (Order ID หรือ part name)"
+  },
+  {
+    "field_key": "issue_operator",
+    "field_value": "[\"7519918444209307686\"]"
+  }
+]

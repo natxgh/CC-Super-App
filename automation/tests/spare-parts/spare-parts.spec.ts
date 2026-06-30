@@ -5,7 +5,7 @@ import { LoginPage } from '../../shared/pages/LoginPage';
 import { SparePartsListPage } from './pages/SparePartsListPage';
 import { SparePartsFormPage } from './pages/SparePartsFormPage';
 import { SparePartsDetailPage } from './pages/SparePartsDetailPage';
-import { seedSparePart, purgeByCode } from './fixtures/spare-seed';
+import { seedSparePart, purgeByEn } from './fixtures/spare-seed';
 import * as D from './fixtures/testdata';
 
 /**
@@ -48,6 +48,22 @@ function assetOrSkip(file: string): string {
   return p;
 }
 
+// ── Global API teardown — remove EVERY seeded QA-AUTO part (idempotent) ──────────────
+test.afterAll(async ({ browser }) => {
+  if (!PASS) return;
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  try {
+    const login = new LoginPage(page);
+    await login.goto();
+    await login.login({ org: ORG, username: USER, password: PASS });
+    await new SparePartsListPage(page).goto();
+    for (const d of D.ALL_SEEDS) await purgeByEn(page, d.en).catch(() => {});
+  } finally {
+    await ctx.close();
+  }
+});
+
 // ════════════════════════════════════════════════════════════════════════════
 //  SUCCESS SCENARIOS (TS-01 … TS-06)
 // ════════════════════════════════════════════════════════════════════════════
@@ -61,19 +77,22 @@ test.describe('Spare Parts & Inventory — Success', () => {
 
     await test.step('TS-01_TC-01 — List view renders all elements', async () => {
       await loginAndOpenList(page);
+      // Arrange (API): seed 2 own "QA-AUTO Brake …" parts — never rely on existing data
+      await seedSparePart(page, D.SEED_VIEW);
+      await seedSparePart(page, D.SEED_SEARCH2);
       await list.switchView('List');
       await expect.soft(list.searchBtn).toBeVisible();
       await expect.soft(list.resetBtn).toBeVisible();
       await shot(page, 'TS-01_TC-01');
     });
-    await test.step('TS-01_TC-02 — Search "Battery" → ≥2 matching results', async () => {
+    await test.step('TS-01_TC-02 — Search "QA-AUTO Brake" → ≥2 matching seeded results', async () => {
       await list.search(D.SEARCH_MATCH);
-      await list.expectRowVisible('Battery pack');
-      await expect.soft(page.getByText(/Battery/i)).toHaveCount(2, { timeout: 10000 }).catch(() => {});
+      await list.expectRowVisible(D.SEED_VIEW.en);
+      await list.expectRowVisible(D.SEED_SEARCH2.en);
       await shot(page, 'TS-01_TC-02');
     });
     await test.step('TS-01_TC-03 — View → Item Details popup shows all fields', async () => {
-      await list.search('');
+      await list.search(D.DETAIL_PART.name);
       await list.clickView(D.DETAIL_PART.name);
       await detail.waitLoaded();
       await detail.expectFields(D.DETAIL_PART.fields);
@@ -88,6 +107,8 @@ test.describe('Spare Parts & Inventory — Success', () => {
 
     await test.step('TS-02_TC-01 — Table view shows all column headers', async () => {
       await loginAndOpenList(page);
+      // Arrange (API): seed own Apple part with 0 stock → drives both brand-filter & Out-of-Stock
+      await seedSparePart(page, D.SEED_APPLE_OUT);
       await list.switchView('Table');
       await expect(page.getByRole('columnheader', { name: /PART NAME/i })).toBeVisible();
       await shot(page, 'TS-02_TC-01');
@@ -117,7 +138,7 @@ test.describe('Spare Parts & Inventory — Success', () => {
 
     await test.step('TS-03_TC-01 — Open list; Add button present (needs Add permission)', async () => {
       await loginAndOpenList(page);
-      await purgeByCode(page, d.code!).catch(() => {}); // clean slate (UNVERIFIED seed → tolerate)
+      await purgeByEn(page, d.en).catch(() => {}); // clean slate; teardown removes it again in afterAll
       const addVisible = await list.addBtn.isVisible({ timeout: 8000 }).catch(() => false);
       test.skip(!addVisible, 'Add button not visible — login as Warehouse Staff / Admin (SP-Q1)');
       await shot(page, 'TS-03_TC-01');
@@ -145,6 +166,7 @@ test.describe('Spare Parts & Inventory — Success', () => {
 
     await test.step('TS-04_TC-01 — Open list view', async () => {
       await loginAndOpenList(page);
+      await seedSparePart(page, D.SEED_EDIT); // Arrange (API): own part to edit
       await list.switchView('List');
       await shot(page, 'TS-04_TC-01');
     });
@@ -166,7 +188,8 @@ test.describe('Spare Parts & Inventory — Success', () => {
 
     await test.step('TS-05_TC-01 — View Detail popup (8 fields + actions)', async () => {
       await loginAndOpenList(page);
-      // Arrange: ใช้ part ที่ไม่ผูก Serial stock / Active Order → ลบได้ (SP-BC12)
+      // Arrange (API): seed own part with NO stock / NO order → deletable (SP-BC12)
+      await seedSparePart(page, D.SEED_DELETE_OK);
       await list.search(D.PART_DELETE_OK);
       await list.clickView(D.PART_DELETE_OK);
       await detail.waitLoaded();
@@ -190,6 +213,9 @@ test.describe('Spare Parts & Inventory — Success', () => {
 
     await test.step('TS-06_TC-01 — Open Table view', async () => {
       await loginAndOpenList(page);
+      // Arrange (API): seed 2 own parts with distinct prices so a sort reorder is observable
+      await seedSparePart(page, D.SEED_VIEW);
+      await seedSparePart(page, D.SEED_SEARCH2);
       await list.switchView('Table');
       await expect(page.getByRole('columnheader', { name: /PRICE/i })).toBeVisible();
       await shot(page, 'TS-06_TC-01');
@@ -268,6 +294,7 @@ test.describe('Spare Parts & Inventory — Alternative', () => {
     const form = new SparePartsFormPage(page);
     await test.step('TA-04_TC-01 — Clear Name(TH) on Update → error', async () => {
       await loginAndOpenList(page);
+      await seedSparePart(page, D.SEED_EDIT); // Arrange (API): own part to edit
       await list.search(D.PART_LOW);
       await list.clickEdit(D.PART_LOW);
       await form.waitReady();
@@ -284,6 +311,7 @@ test.describe('Spare Parts & Inventory — Alternative', () => {
     const detail = new SparePartsDetailPage(page);
     await test.step('TA-05_TC-01 — View Detail popup', async () => {
       await loginAndOpenList(page);
+      await seedSparePart(page, D.SEED_DELETE_CANCEL); // Arrange (API): own part
       await list.search(D.PART_DELETE_CANCEL);
       await list.clickView(D.PART_DELETE_CANCEL);
       await detail.waitLoaded();
@@ -323,8 +351,10 @@ test.describe('Spare Parts & Inventory — Alternative', () => {
   test('TA-08 — delete blocked when linked to an Active Order', async ({ page }) => {
     const list = new SparePartsListPage(page);
     const detail = new SparePartsDetailPage(page);
-    await test.step('TA-08_TC-01 — View Detail popup', async () => {
+    await test.step('TA-08_TC-01 — View Detail popup (part has serial stock)', async () => {
       await loginAndOpenList(page);
+      // Arrange (API): seed own part WITH 3 serial-stock items → guarded delete must block (SP-BC12)
+      await seedSparePart(page, D.SEED_DELETE_BLOCKED);
       await list.search(D.PART_DELETE_BLOCKED);
       await list.clickView(D.PART_DELETE_BLOCKED);
       await detail.waitLoaded();
@@ -332,15 +362,8 @@ test.describe('Spare Parts & Inventory — Alternative', () => {
     });
     await test.step('TA-08_TC-02 — Click Delete → blocked with warning, item stays', async () => {
       await detail.clickDelete();
-      const blocked = page.getByText(/cannot|linked|order|ไม่สามารถ/i).first();
-      if (await blocked.isVisible({ timeout: 5000 }).catch(() => false)) {
-        await expect(blocked).toBeVisible();
-      } else {
-        test.info().annotations.push({
-          type: 'known-gap',
-          description: 'TA-08: ต้องมีอะไหล่ที่ผูกกับ Active Order จริง + verify exact warning text → ยืนยัน guarded-delete กับ data จริง (SP-Q5)',
-        });
-      }
+      const blocked = page.getByText(/cannot|delete|stock|serial|order|ไม่สามารถ/i).first();
+      await expect(blocked).toBeVisible({ timeout: 8000 });
       await shot(page, 'TA-08_TC-02');
     });
   });

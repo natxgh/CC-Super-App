@@ -26,7 +26,26 @@ const CONTROL = 'mutation ($input: OrderControlInput!) { OrderWorkflow { OrderCo
 
 const ORDER_STORE = path.join(__dirname, '..', '..', '..', 'test-results', 'seeded-orders.json');
 
-export interface OrderItemSeed { name: string; quantity: number; price: number; }
+export interface OrderItemSeed { name: string; quantity: number; price: number; productId?: string; partId?: string; }
+
+const PRODUCT_SEARCH = '{ Product { GetListProduct(input: { search: "__TERM__", start: 0, length: 10 }) { status msg data } } }';
+
+/**
+ * Resolve a productId from an item name via GetListProduct (CreateOrder requires productId/partId,
+ * NOT a free-text name — verified live 2026-06-29: items with only {name} → "productId or partId required").
+ */
+async function resolveProductId(req: APIRequestContext, token: string, name: string): Promise<string> {
+  const res = await req.post(GQL, {
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    data: { query: PRODUCT_SEARCH.replace('__TERM__', name) },
+  });
+  const body = await res.json();
+  let prods = body?.data?.Product?.GetListProduct?.data;
+  if (typeof prods === 'string') { try { prods = JSON.parse(prods); } catch { prods = []; } }
+  if (!Array.isArray(prods)) prods = prods?.data || prods?.list || [];
+  const hit = prods.find((p: any) => (p.en || p.name || p.productName || '') === name) || prods[0];
+  return hit?.productId || hit?.id || '';
+}
 export interface OrderSeed {
   title: string;
   billTo: string; billAddr: string;
@@ -44,7 +63,7 @@ async function gql(req: APIRequestContext, token: string, query: string, variabl
   return res.json();
 }
 
-function recordOrder(id: string) {
+export function recordOrder(id: string) {
   fs.mkdirSync(path.dirname(ORDER_STORE), { recursive: true });
   const cur: string[] = fs.existsSync(ORDER_STORE) ? JSON.parse(fs.readFileSync(ORDER_STORE, 'utf8')) : [];
   if (id && !cur.includes(id)) cur.push(id);
@@ -57,21 +76,47 @@ function recordOrder(id: string) {
  */
 export async function seedOrder(page: Page, d: OrderSeed): Promise<string> {
   const token = await getToken(page);
+  // CreateOrder requires productId/partId per line item (not free-text name) — resolve from name if needed.
+  const items = [];
+  for (const it of d.items) {
+    let productId = it.productId;
+    if (!productId && !it.partId) {
+      productId = await resolveProductId(page.request, token, it.name);
+      if (!productId) throw new Error(`seedOrder: could not resolve productId for "${it.name}" (GetListProduct returned no match)`);
+    }
+    items.push({ ...(productId ? { productId } : {}), ...(it.partId ? { partId: it.partId } : {}), quantity: it.quantity, price: it.price });
+  }
   const input = {
     title: d.title,
     billTo: d.billTo, billAddr: d.billAddr,
     shipTo: d.shipTo, shipAddr: d.shipAddr,
     shipBy: d.shipBy,
-    items: d.items, // JSON scalar
+    items, // JSON scalar — each item carries productId/partId
     remark: d.remark ?? null,
   };
   const body = await gql(page.request, token, CREATE, { input });
   const r = body?.data?.OrderWorkflow?.CreateOrder;
   if (r?.status !== '0') {
+    // ⚠️ KNOWN BLOCKER (verified live 2026-06-29): msg "Forbidden" = the login account is not in the
+    //    inventory_order_workflow pic list. Only apiwat / watee.tha can CreateOrder; ketwadee cannot.
+    //    → seed-dependent scenarios must skip with this reason (see spec preflight), never fake-pass.
+    if (/forbidden/i.test(r?.msg || '')) {
+      throw new Error(`SEED_FORBIDDEN: CreateOrder returned Forbidden — login account not in inventory_order_workflow pic list (need apiwat/watee.tha, or BE to add the account). See order-workflow-config memory / FIXME-PLAN.md`);
+    }
     throw new Error(`seedOrder failed: status=${r?.status} msg=${r?.msg || r?.desc || JSON.stringify(body).slice(0, 200)}`);
   }
-  // r.data expected to carry the new order id (string or {id}); record for teardown
-  const id = typeof r.data === 'string' ? r.data : String(r.data?.id ?? r.data ?? '');
+  // r.data carries the order id — may be plain string "ORD260629-00001" or JSON-encoded {"orderId":"…"}
+  let id = '';
+  if (typeof r.data === 'string') {
+    try {
+      const parsed = JSON.parse(r.data);
+      id = String(parsed?.orderId || parsed?.id || r.data);
+    } catch {
+      id = r.data;
+    }
+  } else {
+    id = String(r.data?.orderId ?? r.data?.id ?? r.data ?? '');
+  }
   if (id) recordOrder(id);
   return id;
 }

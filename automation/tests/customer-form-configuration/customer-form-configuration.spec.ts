@@ -109,9 +109,10 @@ test.describe('Customer Form Configuration — Custom Form / Success', () => {
       await shot(page, 'TS-01_TC-06');
     });
     await test.step('TS-01_TC-07 — Save Configuration', async () => {
-      await b.saveForm();
+      await b.close();
       await b.waitClosed();
       registerCreatedForm(D.FORM_B2B);
+      await cfg.saveConfiguration();
       await shot(page, 'TS-01_TC-07');
     });
     await test.step('TS-01_TC-08 — Verify form in dropdown', async () => {
@@ -141,8 +142,9 @@ test.describe('Customer Form Configuration — Custom Form / Success', () => {
     });
     await test.step('TS-02_TC-02 — Edit Label → Save (new revision)', async () => {
       await b.setLabel(D.COMPANY_LABEL_NEW, 0);
-      await b.saveForm();
+      await b.close();
       await b.waitClosed();
+      await cfg.saveConfiguration();
       await shot(page, 'TS-02_TC-02');
     });
   });
@@ -235,7 +237,7 @@ test.describe('Customer Form Configuration — Custom Form / Success', () => {
       await b.setColumnSpan('50%', 0);
       await b.addElement('Single-Select');
       await b.addOptions(D.SELECT_OPTIONS, 1);
-      await b.saveForm();
+      await b.close();
       await b.waitClosed();
       registerCreatedForm(D.FORM_B2B);
       // App doesn't auto-select the new form — select it and save config to activate it
@@ -270,7 +272,7 @@ test.describe('Customer Form Configuration — Custom Form / Alternative', () =>
       await cfg.clickAdd();
       await b.waitOpen();
       await b.clearFormName();
-      await b.saveForm();
+      await b.close();
       // If staging validates: builder stays open with inline error
       // If staging allows empty name: modal closes (no client-side validation)
       const modalOpen = await b.modal.isVisible().catch(() => false);
@@ -320,9 +322,10 @@ test.describe('Customer Form Configuration — Custom Form / Alternative', () =>
       await b.setFormName(D.FORM_B2B);
       await b.addElement('Text');
       await b.clearLabel(0);
-      await b.saveForm(); // Q4: Label ไม่ required → save ได้
+      await b.close(); // Q4: Label ไม่ required → save ได้
       await b.waitClosed();
       registerCreatedForm(D.FORM_B2B);
+      await cfg.saveConfiguration();
       await shot(page, 'TA-04_TC-01');
     });
   });
@@ -376,7 +379,7 @@ test.describe('Customer Form Configuration — Custom Form / Alternative', () =>
       await cfg.clickAdd();
       await b.waitOpen();
       await b.setFormName(D.FORM_EXISTING);
-      await b.saveForm();
+      await b.close();
       // If staging validates: builder stays open with inline error
       // If staging allows duplicate names: modal closes (no validation)
       const modalOpen = await b.modal.isVisible().catch(() => false);

@@ -22,13 +22,17 @@ export default defineConfig({
   // CASE_TEARDOWN=1 → ลบ case + customer (Case feature) · CP_TEARDOWN=1 → ลบ customer (Customer feature)
   // PIM_TEARDOWN=1 → ลบ product ที่ automation สร้าง (Product & Inventory feature)
   // CFC_TEARDOWN=1 → ลบ custom form ที่ test สร้าง + restore Default Field Config (global) จาก snapshot
+  // ORD_TEARDOWN=1 → CancelOrder ออเดอร์ที่ seed สร้าง (soft: ไม่มี hard delete) — สำหรับ isolated Order run
+  //   หมายเหตุ: CP_TEARDOWN=1 รัน cross-feature รวม Order ด้วยอยู่แล้ว ไม่ต้องใช้ ORD_TEARDOWN ซ้ำ
   globalTeardown: process.env.CFC_TEARDOWN
     ? './tests/customer-form-configuration/teardown/global-teardown.ts'
     : (process.env.PIM_TEARDOWN
       ? './tests/product-inventory/teardown/global-teardown.ts'
       : (process.env.CASE_TEARDOWN
         ? './tests/case-ticket-management/teardown/global-teardown.ts'
-        : (process.env.CP_TEARDOWN ? './tests/customer-profile/teardown/global-teardown.ts' : undefined))),
+        : (process.env.CP_TEARDOWN
+          ? './tests/customer-profile/teardown/global-teardown.ts'
+          : (process.env.ORD_TEARDOWN ? './tests/order-management/teardown/global-teardown.ts' : undefined)))),
   use: {
     // CC Super App staging — override ผ่าน env, ห้าม hardcode cred
     baseURL: process.env.CP_BASE_URL || 'https://skyai-cloud-cc-qa.one-sky.ai',

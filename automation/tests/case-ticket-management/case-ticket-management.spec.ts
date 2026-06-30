@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import { LoginPage } from '../../shared/pages/LoginPage';
 import { CasePage } from './pages/CasePage';
 import { seedCustomer } from '../customer-profile/fixtures/seed';
+import { purgeCasesByDetail, registerCreatedCase } from './fixtures/case-seed';
 import * as D from './fixtures/testdata';
 
 /**
@@ -51,6 +52,7 @@ test.describe('Case and Ticket Management — Success', () => {
     await test.step('TS-01_TC-01 — Contact Method shows all 5 options', async () => {
       await login(page);
       await seedCustomer(page, D.CUST_FOR_CASE); // Arrange: customer for phone auto-link (API-first)
+      await purgeCasesByDetail(page, D.NEW_CASE.caseDetail); // clean-slate: ลบ case detail เดิมก่อน create (idempotent)
       await c.gotoCreation();
       await c.contactMethodTrigger.click();
       for (const m of D.CONTACT_METHODS) await expect(page.getByText(m, { exact: true })).toBeVisible();
@@ -81,6 +83,7 @@ test.describe('Case and Ticket Management — Success', () => {
     await test.step('TS-01_TC-06 — Confirm → case is created (New)', async () => {
       await c.confirmButton().click();
       await expect(c.successToast()).toBeVisible();
+      await registerCreatedCase(page, D.NEW_CASE.caseDetail); // จับ case ที่เพิ่งสร้างผ่าน UI → ให้ teardown ลบ
       await shot(page, 'TS-01_TC-06');
     });
     await test.step('TS-01_TC-07 — Case appears in the New Kanban column', async () => {

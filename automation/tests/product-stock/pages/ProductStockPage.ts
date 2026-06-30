@@ -36,6 +36,9 @@ export class ProductStockPage {
   readonly store: Locator;
   readonly registeredDate: Locator;
   readonly manufacturingWarranty: Locator;
+  // photo upload — file input inside the Add modal (selector probed 2026-06-29)
+  // ⚠️ BUG: FE uploads file to storage but does NOT call UploadFileCRM mutation → image URL not persisted
+  readonly photoInput: Locator;
   readonly createBtn: Locator;
   readonly cancelBtn: Locator;
 
@@ -48,6 +51,11 @@ export class ProductStockPage {
   readonly detailCloseBtn: Locator;
   readonly detailEditBtn: Locator;
   readonly detailDeleteBtn: Locator;
+
+  // ── Delete confirmation modal ──
+  // ✅ verified 2026-06-29: no dialog role; heading "Delete Confirmation"; buttons Cancel · Delete (red)
+  readonly deleteConfirmHeading: Locator;
+  readonly deleteConfirmBtn: Locator;
 
   // ── Edit modal ──
   // ✅ verified 2026-06-22: title "Edit Products Stock", submit "Update Products Stock"
@@ -65,22 +73,37 @@ export class ProductStockPage {
     this.heading = page.getByRole('heading', { name: /Products?\s*Stock/i });
     this.searchBox = page.getByRole('textbox', { name: /search/i }).or(page.getByPlaceholder(/search/i)).first();
     this.list = page.getByText(/Serial No\.:/i).first();
-    this.addBtn = page.getByRole('button', { name: /Add Product Stock/i });
+    // ✅ verified 2026-06-29: list page button = "Create Products Stock" (not "Add Product Stock")
+    this.addBtn = page.getByRole('button', { name: /Create Products?\s*Stock/i }).first();
 
-    // Add modal fields (design-based, not yet probed — Add not in staging)
-    this.serialNo = page.getByLabel(/Serial No/i).or(page.getByPlaceholder(/Serial No/i)).first();
-    this.product = page.getByLabel(/^Product/i).or(page.getByPlaceholder(/Search Product|Select Product|Product/i)).first();
-    this.store = page.getByLabel(/^Store/i).or(page.getByPlaceholder(/Search Store|Select Store|Store/i)).first();
-    this.registeredDate = page.getByLabel(/Registered Date/i).or(page.getByPlaceholder(/Registered Date|yyyy-mm-dd|mm\/dd\/yyyy/i)).first();
-    this.manufacturingWarranty = page.getByLabel(/Manufacturing Warranty/i).or(page.getByPlaceholder(/Manufacturing Warranty/i)).first();
-    this.createBtn = page.getByRole('button', { name: /^Create$/i });
+    // Add modal fields ✅ verified live 2026-06-29 via probe-ps-fullform.mjs:
+    //   serialNumber = input[name="serialNumber"] placeholder="Enter serial no."
+    //   registerDate = input[type="datetime-local"][name="registerDate"]
+    //   mfw          = input[type="datetime-local"][name="mfw"]
+    //   Product/Store = custom div dropdowns (no native select) — click trigger → Search input
+    // ⚠️ image upload NOT present on QA staging (feature not yet deployed) — selector kept for when it lands
+    this.serialNo = page.locator('input[name="serialNumber"]');
+    // custom div dropdowns: click the div following the label → input[placeholder="Search..."] appears
+    this.product = page.locator('label:has-text("Product")').locator('xpath=following-sibling::div[1]').first();
+    this.store = page.locator('label:has-text("Store")').locator('xpath=following-sibling::div[1]').first();
+    this.registeredDate = page.locator('input[name="registerDate"]');
+    this.manufacturingWarranty = page.locator('input[name="mfw"]');
+    // photo upload: ⚠️ NOT on QA staging yet — selector for when image field is deployed
+    this.photoInput = page.locator('#photo-upload').or(page.locator('input[type="file"]')).first();
+    // modal submit = "Create Products Stock" (last button with this text after modal opens)
+    this.createBtn = page.getByRole('button', { name: /Create Products?\s*Stock/i }).last();
     this.cancelBtn = page.getByRole('button', { name: /^Cancel$/i });
 
     // Item Details overlay — ✅ verified 2026-06-22
     this.itemDetailsHeading = page.getByText('Item Details', { exact: true });
     this.detailCloseBtn = page.getByRole('button', { name: /^Close$/i });
     this.detailEditBtn = page.getByRole('button', { name: /^Edit$/i });
-    this.detailDeleteBtn = page.getByRole('button', { name: /^Delete$/i });
+    this.detailDeleteBtn = page.getByRole('button', { name: /^Delete$/i }).first();
+
+    // Delete confirmation modal — ✅ verified 2026-06-29 (no dialog role)
+    this.deleteConfirmHeading = page.getByText('Delete Confirmation', { exact: true });
+    // after overlay Delete is clicked the confirmation modal stacks — last Delete btn = confirm
+    this.deleteConfirmBtn = page.getByRole('button', { name: /^Delete$/i }).last();
 
     // Edit modal — ✅ verified 2026-06-22
     this.editModalHeading = page.getByText('Edit Products Stock', { exact: true });
@@ -107,29 +130,57 @@ export class ProductStockPage {
     await expect(this.createBtn).toBeVisible();
   }
 
-  private async selectFromMaster(field: Locator, value: string) {
-    await field.click();
-    await field.fill(value).catch(() => {});
-    await this.page.getByRole('option', { name: new RegExp(value, 'i') })
-      .or(this.page.getByText(value, { exact: false })).first().click();
+  // ✅ pattern verified live (same as product-inventory selectCustom 2026-06-22):
+  //    click container div → input[placeholder="Search..."] appears (may be portal) → fill at page level
+  //    → JS click option (avoids blur-closes-dropdown race)
+  private async selectFromMaster(container: Locator, value: string) {
+    await container.click();
+    await this.page.waitForTimeout(400);
+    // search input may render as portal outside container — locate at page level
+    const searchInput = this.page.locator('input[placeholder="Search..."]').last();
+    await searchInput.fill(value);
+    await this.page.waitForTimeout(500);
+    await this.page.evaluate((val) => {
+      const opts = Array.from(document.querySelectorAll('div.cursor-pointer'));
+      const opt = opts.find((d) => (d as HTMLElement).textContent?.trim() === val);
+      if (opt) (opt as HTMLElement).click();
+    }, value);
+    await this.page.waitForTimeout(300);
   }
 
-  async fillAddForm(d: { serialNumber?: string; product?: string; store?: string; registerDate?: string; mfw?: string }) {
+  async fillAddForm(d: { serialNumber?: string; product?: string; store?: string; registerDate?: string; mfw?: string; image?: string }) {
     if (d.serialNumber !== undefined) await this.serialNo.fill(d.serialNumber);
     if (d.product) await this.selectFromMaster(this.product, d.product);
     if (d.store) await this.selectFromMaster(this.store, d.store);
-    if (d.registerDate) await this.registeredDate.fill(d.registerDate);
-    if (d.mfw) await this.manufacturingWarranty.fill(d.mfw);
+    // datetime-local inputs require "YYYY-MM-DDTHH:MM" — append T00:00 if only date given
+    if (d.registerDate) {
+      const v = d.registerDate.includes('T') ? d.registerDate : `${d.registerDate}T00:00`;
+      await this.registeredDate.fill(v);
+    }
+    if (d.mfw) {
+      const v = d.mfw.includes('T') ? d.mfw : `${d.mfw}T00:00`;
+      await this.manufacturingWarranty.fill(v);
+    }
+    // image upload: skip gracefully if field not yet deployed on current env
+    if (d.image && (await this.photoInput.count()) > 0) await this.photoInput.setInputFiles(d.image);
   }
 
   async submitCreate() {
     await this.createBtn.click();
   }
 
-  async expectNoMasterOption(field: Locator, value: string) {
-    await field.click();
-    await field.fill(value).catch(() => {});
-    await expect(this.page.getByRole('option', { name: new RegExp(value, 'i') })).toHaveCount(0);
+  async expectNoMasterOption(container: Locator, value: string) {
+    await container.click();
+    await this.page.waitForTimeout(400);
+    const searchInput = this.page.locator('input[placeholder="Search..."]').last();
+    await searchInput.fill(value);
+    await this.page.waitForTimeout(400);
+    // no option = no cursor-pointer div with that exact text
+    const opts = await this.page.evaluate((val) => {
+      return Array.from(document.querySelectorAll('div.cursor-pointer'))
+        .some((d) => (d as HTMLElement).textContent?.trim() === val);
+    }, value);
+    expect(opts).toBe(false);
   }
 
   // ── list row ──
@@ -155,6 +206,19 @@ export class ProductStockPage {
   async closeDetail() {
     await this.detailCloseBtn.click();
     await this.itemDetailsHeading.waitFor({ state: 'hidden' });
+  }
+
+  // ── Delete flow ──
+  // Click Delete in overlay → confirmation modal → click Confirm Delete
+  // ✅ verified 2026-06-29: overlay closes after confirm regardless of success/failure
+  async confirmDeleteFromDetail() {
+    await this.detailDeleteBtn.click();
+    await this.deleteConfirmHeading.waitFor({ state: 'visible' });
+    await this.deleteConfirmBtn.click();
+  }
+
+  async expectDeleteFailed() {
+    await expect(this.page.getByText(/delete.*fail/i).first()).toBeVisible({ timeout: 5000 });
   }
 
   // ── badges ── ✅ verified live 2026-06-21 on /cms/inventory/ and /cms/products/

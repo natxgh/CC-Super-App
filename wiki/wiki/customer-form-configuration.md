@@ -98,6 +98,28 @@ toggle ON again ──► Save ──► Add Customer: field shows again
 
 ---
 
+## DFC — email/phone ไม่มี UI toggle
+
+> ตรวจสอบแล้ว 2026-06-29
+
+### ข้อเท็จจริง
+- Fields `email` และ `mobileNo` **ไม่มี toggle** บนหน้า Form Configuration UI
+- API `UpdateCustomerForm(CustomerFormConfigUpdateInput)` รองรับ key เหล่านี้ผ่าน `DFC_KEYS`:
+  ```
+  displayName, title, firstName, middleName, lastName, citizenId, dob, blood, gender,
+  mobileNo, email, userType, note, languagePreference, contractPreference, photo
+  ```
+- UI Save Configuration ส่งเฉพาะ fields ที่มี toggle บน UI → ไม่รวม email, mobileNo
+
+### ผลกระทบต่อ automation
+- ทุกครั้งที่ CFC test เรียก `cfg.saveConfiguration()` (TS-06, TS-07, TA-09, DFC_TA02, DFC_TA03) → email/mobileNo ไม่อยู่ใน payload → API ตีความเป็น `false`
+- CP test แก้ด้วย `setFieldConfig(page, CP_REQUIRED_FIELDS)` ใน `beforeAll` → reset กลับ `email=true, mobileNo=true` ก่อนรัน
+- **ถ้า CFC suite และ CP suite รันใน order เดียวกัน** CFC teardown + CP beforeAll ต้องทำงานถูกลำดับ
+
+### CFC Teardown
+- `restoreFieldConfig` คืน snapshot ที่บันทึกไว้ก่อน DFC tests (`snapshotFieldConfig`)
+- ถ้า snapshot ถูกบันทึกหลัง email/phone ถูก set เป็น false ไปแล้ว → restore จะคืนค่า false ด้วย
+
 ## PO Answers Applied (13/06/2026 + 22/06/2026)
 All CFC Q1–Q9 and DFC HA-DFC1–4 answered. No pending HAs.
 

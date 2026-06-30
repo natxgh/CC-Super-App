@@ -8,6 +8,9 @@
 # Internal loop state
 .po-loop/
 
+# Disposable DOM/GraphQL probe scratch (kept locally, not versioned)
+probe-*.mjs
+
 # Dependencies
 node_modules/
 

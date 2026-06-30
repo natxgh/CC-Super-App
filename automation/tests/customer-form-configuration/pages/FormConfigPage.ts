@@ -156,9 +156,9 @@ export class FormConfigPage {
   }
 
   async selectForm(name: string) {
-    // formDropdown is the hardcoded trigger for known forms (e.g. "Contact Customization")
-    await this.formDropdown.click();
-    // Dropdown renders <li> elements (not role=option) with Tailwind hover classes
+    // Use openFormDropdown() — finds the trigger dynamically regardless of which form is currently selected.
+    // formDropdown (hardcoded "Contact Customization") only works when that form is active.
+    await this.openFormDropdown();
     await this.page.locator('li[class*="hover:bg-gray-100"]', { hasText: name }).first().click();
   }
 
@@ -166,11 +166,14 @@ export class FormConfigPage {
   async clickEdit() { await this.editBtn.click(); }
 
   async saveConfiguration() {
-    // Outer page "Save Configuration" button — modal backdrop (fixed inset-0) can intercept
-    await this.saveConfigBtn.click({ force: true });
+    // Probe 2026-06-29: button may be below viewport fold (y≈808). Scroll into view first,
+    // then click without force so the real event handler fires reliably.
+    await this.saveConfigBtn.scrollIntoViewIfNeeded();
+    await this.saveConfigBtn.click();
   }
 
   async saveConfigurationAndWait() {
+    await this.saveConfigBtn.scrollIntoViewIfNeeded();
     await this.saveConfigBtn.click();
     await this.page.waitForLoadState('domcontentloaded').catch(() => {});
   }

@@ -1,0 +1,8 @@
+[
+  {"field_key":"name","field_value":"[CC][QA] Order Management - ปุ่ม Cancel ยังแสดงหลัง order \"Request Approved\""},
+  {"field_key":"priority","field_value":"2"},
+  {"field_key":"issue_reporter","field_value":"[\"7519918444209307686\"]"},
+  {"field_key":"field_6f9d27","field_value":"faeffqtfu"},
+  {"field_key":"template","field_value":"1314587"},
+  {"field_key":"description","field_value":"Date: 30 Jun 2026\nProduct/Project: CC Super App\nModule: Order Management > Order detail (Cancel)\nFunction: Cancel order action on order detail\nEnvironment: QA\nURL: https://skyai-cloud-cc-qa.one-sky.ai/cms/inventory/request\nTC: ORD TA-03_TC-02 · Sample order: ORD260610-00001 (status Request Approved)\n----------------------------------------------------------------------\nDescription: ปุ่ม Cancel ยังแสดง/กดได้บนหน้า detail ของ order ที่สถานะ Request Approved ทั้งที่ business rule ห้าม (Cancel ได้เฉพาะก่อน Approved) → ผู้ใช้ยกเลิก order ที่อนุมัติแล้วได้ ยืนยันโดย PO (ORD-Q5)\n\nSteps to Reproduce\n1. Login → เปิด Order Management\n2. เปิด order ที่สถานะ Request Approved (เช่น ORD260610-00001)\n3. สังเกตปุ่ม Cancel บนหน้า detail\n\nActual Result: ปุ่ม Cancel ยังแสดงอยู่ (probe: Cancel button visible = true) → กดยกเลิก order ที่ Approved แล้วได้\nExpected Result: ปุ่ม Cancel ถูกซ่อน/disable เมื่อ order status >= Request Approved (OS003)"}
+]
